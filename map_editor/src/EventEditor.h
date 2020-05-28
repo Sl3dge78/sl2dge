@@ -31,6 +31,10 @@ private:
 	int plug_out = -1;
 	EventNodeBox* plugging_in_box = nullptr;
 
+	EventNodeBox* selected_box = nullptr;
+	bool is_resizing_ = false;
+	bool is_moving_ = false;
+
 	EventNodeBox* get_box_from_uuid(const Guid& i) {
 		for (auto& n : boxes) {
 			if (n->guid() == i)

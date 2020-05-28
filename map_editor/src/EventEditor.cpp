@@ -2,7 +2,7 @@
 
 void EventEditor::start(Game* game) {
 	camera = std::make_unique<Camera>(1280, 720);
-	game->set_main_camera (camera.get());
+	game->set_main_camera(camera.get());
 	SDL_StopTextInput();
 
 	auto entry_box = std::make_unique<TriggerBox>();
@@ -13,7 +13,7 @@ void EventEditor::start(Game* game) {
 void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 
 	if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
-		if(SDL_GetModState() & KMOD_CTRL && e.key.keysym.scancode == SDL_SCANCODE_N) {
+		if (SDL_GetModState() & KMOD_CTRL && e.key.keysym.scancode == SDL_SCANCODE_N) {
 			boxes.push_back(std::make_unique<DialogNodeBox>());
 		}
 	}
@@ -23,8 +23,19 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 		if (e.button.button == SDL_BUTTON_LEFT) {
 			bool clicked_on_smth = false;
 			for (auto& b : boxes) {
-				// checking if clicking on in plug
-				
+
+				// Clicking inside a box
+				if (SDL_PointInRect(&mouse_pos, b->rect())) {
+					selected_box = b.get();
+					clicked_on_smth = true;
+					if (SDL_PointInRect(&mouse_pos, &b->get_corner())) {
+						is_resizing_ = true;
+					} else {
+						is_moving_ = true;
+					}
+				} 
+
+				// Clicking on in plug
 				if (b->has_in() && SDL_PointInRect(&mouse_pos, &b->in_plug())) {
 					is_plugging = true;
 					plugging_in_box = b.get();
@@ -32,7 +43,7 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 					break;
 				}
 
-				// Checking if clicking on out plug. there can be multiple, so we get the id if we clicked on one.
+				// Clicking on out plug. there can be multiple, so we get the id if we clicked on one.
 				int plug = b->is_point_in_plug(&mouse_pos);
 				if (plug != -1) { // We clicked on an out plug
 					is_plugging = true;
@@ -53,13 +64,16 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 			if (!clicked_on_smth) {
 				plugging_in_box = nullptr;
 				plugging_out_box = nullptr;
+				selected_box = nullptr;
+				is_resizing_ = false;
+				is_moving_= false;
 				plug_out = -1;
 				is_plugging = false;
 			} else if (plugging_out_box != nullptr && plugging_in_box != nullptr) { // We clicked on both in and out of nodes
-				
+
 				// OUT
 				// Remove the previous plug if it exists
-				if ( !plugging_out_box->next[plug_out].isNil()) {
+				if (!plugging_out_box->next[plug_out].isNil()) {
 					get_box_from_uuid(plugging_out_box->next[plug_out])->has_prev = false;
 				}
 				// Plug it!
@@ -74,7 +88,22 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 				plug_out = -1;
 				is_plugging = false;
 			}
-		} 
+		}
+	}
+
+	if (e.type == SDL_MOUSEBUTTONUP) {
+		is_resizing_ = false;
+		is_moving_ = false;
+		selected_box = nullptr;
+	}
+
+	if (e.type == SDL_MOUSEMOTION) {
+		if (is_resizing_) {
+			selected_box->resize(e.motion.xrel, e.motion.yrel);
+		} else if (is_moving_) {
+			selected_box->translate(e.motion.xrel, e.motion.yrel);
+			
+		}
 	}
 
 	for (auto& b : boxes) {
@@ -134,7 +163,7 @@ void EventEditor::draw(Game* game) {
 				SDL_RenderDrawLine(game->renderer(), b->out_plug(i).x - camera->viewport().x, b->out_plug(i).y - camera->viewport().y, x2 - camera->viewport().x, y2 - camera->viewport().y);
 			}
 		}
-		
+
 	}
 
 	if (is_plugging) {

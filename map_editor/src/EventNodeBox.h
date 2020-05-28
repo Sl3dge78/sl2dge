@@ -12,41 +12,42 @@
 
 using namespace sl2dge;
 
-class EventNodeBox  {
+class EventNodeBox {
 public:
 	EventNodeBox(int out_amt = 1);
+
+	Guid guid() const { return uuid_; }
 
 	SDL_Rect in_plug();
 	SDL_Rect out_plug(int i = 0);
 	void set_out_amt(int i);
-
-	Guid guid() const { return uuid_; }
+	int is_point_in_plug(SDL_Point* point);
+	bool has_in() const { return has_in_; }
+	bool has_prev = false;
 
 	std::vector<Guid> next;
 
 	virtual void draw(Game* game);
 	virtual void handle_events(Game* game, const SDL_Event& e);
+
 	void resize(int x, int y);
-
-	int is_point_in_plug(SDL_Point* point);
-	bool has_in() const { return has_in_; }
-
-	bool has_prev = false;
+	void translate(int x, int y);
+	SDL_Rect get_corner() const { return SDL_Rect{ rect_.x + rect_.w - 5, rect_.y + rect_.h - 5, 5, 5 }; }
+	const SDL_Rect* rect() const { return &rect_; }
 
 protected:
 	std::string title = "";
 	bool has_in_ = true;
-	SDL_Rect rect = { 0, 0, 100, 100 };
+	SDL_Rect rect_ = { 0, 0, 100, 100 };
 
 	virtual void on_box_moved() {}
 
 private:
+
 	
-	SDL_Rect get_corner() const { return SDL_Rect{ rect.x + rect.w - 5, rect.y + rect.h - 5, 5, 5 };	}
 
 	Guid uuid_;
-	bool is_resizing_ = false;
-	bool is_moving_ = false;
+	
 	int out_amt_ = 1;
 
 
@@ -69,7 +70,7 @@ public:
 protected:
 	void on_box_moved() override;
 
-private : 
+private:
 
 	SDL_Point map_pos;
 	ToggleBox interactable_ = ToggleBox("Inter", false);
@@ -91,7 +92,7 @@ public:
 private:
 	bool is_editing_text = false;
 
-	SDL_Rect get_text_box() { return SDL_Rect{ rect.x + 1, rect.y + 32, rect.w - 2, rect.h - 32 - 5 }; }
+	SDL_Rect get_text_box() { return SDL_Rect{ rect_.x + 1, rect_.y + 32, rect_.w - 2, rect_.h - 32 - 5 }; }
 
 };
 

@@ -14,7 +14,7 @@ EventNodeBox::EventNodeBox(int out_amt) {
 
 SDL_Rect EventNodeBox::in_plug() {
 	if (has_in_)
-		return SDL_Rect{ rect.x - 10, rect.y + rect.h / 2, 10, 10 };
+		return SDL_Rect{ rect_.x - 10, rect_.y + rect_.h / 2, 10, 10 };
 	else
 		throw std::runtime_error("No in");
 }
@@ -23,9 +23,9 @@ SDL_Rect EventNodeBox::out_plug(int i) {
 	if (out_amt_ == 0) {
 		throw std::runtime_error("No out");
 	} else if (out_amt_ == 1) {
-		return SDL_Rect{ rect.x + rect.w, rect.y + rect.h / 2, 10, 10 };
+		return SDL_Rect{ rect_.x + rect_.w, rect_.y + rect_.h / 2, 10, 10 };
 	} else {
-		return SDL_Rect{ rect.x + rect.w, rect.y + (rect.h / (out_amt_ + 1) * (i + 1)), 10, 10 };
+		return SDL_Rect{ rect_.x + rect_.w, rect_.y + (rect_.h / (out_amt_ + 1) * (i + 1)), 10, 10 };
 	}
 }
 
@@ -47,7 +47,7 @@ void EventNodeBox::set_out_amt(int i) {
 
 void EventNodeBox::draw(Game* game) {
 
-	auto pos = game->main_camera()->world_to_screen_transform(rect);
+	auto pos = game->main_camera()->world_to_screen_transform(rect_);
 
 	// BOX
 	SDL_SetRenderDrawColor(game->renderer(), 220, 220, 220, 255);
@@ -80,9 +80,10 @@ void EventNodeBox::draw(Game* game) {
 }
 
 void EventNodeBox::handle_events(Game* game, const SDL_Event& e) {
+	/*
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
 		auto mouse_pos = game->main_camera()->screen_to_world_transform(SDL_Point{ e.button.x, e.button.y });
-		if (SDL_PointInRect(&mouse_pos, &rect)) {
+		if (SDL_PointInRect(&mouse_pos, &rect_)) {
 			if (e.button.button == SDL_BUTTON_LEFT) {
 
 				if (SDL_PointInRect(&mouse_pos, &get_corner())) {
@@ -98,6 +99,7 @@ void EventNodeBox::handle_events(Game* game, const SDL_Event& e) {
 			}
 		}
 	}
+	
 
 	if (e.type == SDL_MOUSEBUTTONUP) {
 		is_resizing_ = false;
@@ -109,25 +111,32 @@ void EventNodeBox::handle_events(Game* game, const SDL_Event& e) {
 			resize(e.motion.xrel, e.motion.yrel);
 			on_box_moved();
 		} else if (is_moving_) {
-			rect.x += e.motion.xrel;
-			rect.y += e.motion.yrel;
+			rect_.x += e.motion.xrel;
+			rect_.y += e.motion.yrel;
 			on_box_moved();
 		}
-	}
+	}*/
 }
 
 
 void EventNodeBox::resize(int x, int y) {
 
-	rect.w += x;
-	rect.h += y;
+	rect_.w += x;
+	rect_.h += y;
 
-	if (rect.w < 100)
-		rect.w = 100;
+	if (rect_.w < 100)
+		rect_.w = 100;
 
-	if (rect.h < 100)
-		rect.h = 100;
+	if (rect_.h < 100)
+		rect_.h = 100;
 
+	on_box_moved();
+}
+
+void EventNodeBox::translate(int x, int y) {
+	rect_.x += x;
+	rect_.y += y;
+	on_box_moved();
 }
 
 int EventNodeBox::is_point_in_plug(SDL_Point* point) {
@@ -214,11 +223,11 @@ void TriggerBox::handle_events(Game* game, const SDL_Event& e) {
 
 void TriggerBox::on_box_moved() {
 
-	SDL_Point pos = { rect.x + 8, rect.y + (rect.h / 4) };
+	SDL_Point pos = { rect_.x + 8, rect_.y + (rect_.h / 4) };
 	interactable_.set_position(pos);
-	pos.y += (rect.h / 4);
+	pos.y += (rect_.h / 4);
 	is_in_place_.set_position(pos);
-	pos.y += (rect.h / 4);
+	pos.y += (rect_.h / 4);
 	activate_once_.set_position(pos);
 
 }
