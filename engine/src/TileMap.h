@@ -1,0 +1,60 @@
+#pragma once
+
+#include <string>
+
+#include "SDL/SDL.h"
+
+#include "Point.h"
+#include "Camera.h"
+#include "Atlas.h"
+
+
+namespace sl2dge {
+
+	class Game;
+
+	class TileMap {
+	public:
+		TileMap(SDL_Renderer& renderer, const std::string& map_path);
+		~TileMap();
+
+		enum DrawParams {
+			Back = 1 << 0,
+			Middle = 1 << 1,
+			Front = 1 << 2
+		};
+		void draw(Game* game, int params);
+
+		// Returns a rect containing all tiles to be drawn by the camera provided
+		Rect get_bounds(const Camera& camera);
+
+		Rect map_to_pixel_transform(const Rect& rect) const { return Rect(rect * tile_size_); }
+		Rect pixel_to_map_transform(const Rect& rect) const { return Rect(rect / tile_size_); }
+		Point map_to_pixel_transform(const Point& point) const { return Point(point * tile_size_); }
+		Point pixel_to_map_transform(const Point& point) const { return Point(point / tile_size_); }
+
+		// Return true if there is collision at tile position point
+		bool get_collision_at_tile(const Point& point) const;
+		void set_collision_at_tile(const Point& point, const bool val);
+
+		// Changes the value of a tile
+		void set_tile(const int layer, const Point& pos, const int tile);
+		void save(const std::string& path);
+
+		int tile_size() const { return tile_size_; }
+		Atlas* atlas() { return atlas_; }
+		
+	private:
+		Atlas* atlas_ = nullptr;
+
+		int* back_layer_ = nullptr;
+		int* middle_layer_ = nullptr;
+		int* front_layer_ = nullptr;
+		bool* collision_layer_ = nullptr;
+
+		int tile_size_ = 16;
+		int width_ = 0, height_ = 0;
+
+	};
+}
+

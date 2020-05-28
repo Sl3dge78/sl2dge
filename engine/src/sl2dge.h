@@ -1,0 +1,25 @@
+#pragma once
+
+#include "Atlas.h"
+#include "Camera.h"
+#include "Character.h"
+#include "Components.h"
+#include "DialogState.h"
+#include "Entity.h"
+#include "EventManagers.h"
+#include "EventManagers.h"
+#include "Game.h"
+#include "GameEvent.h"
+#include "GameState.h"
+#include "HelperFunctions.h"
+#include "Item.h"
+#include "Point.h"
+#include "Quest.h"
+#include "QuestManager.h"
+#include "Rect.h"
+#include "SceneManager.h"
+#include "SDL_FontCache.h"
+#include "Sprites.h"
+#include "TileMap.h"
+
+namespace sl2dge {};
