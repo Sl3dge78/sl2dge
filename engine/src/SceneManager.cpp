@@ -10,7 +10,7 @@ namespace sl2dge {
 
 	void SceneManager::Init() {
 		// TODO : Find all possible scenes in a specific folder and init the table
-		std::string path = "../resources/levels/";
+		std::string path = "resources/levels/";
 		for (const auto& entry : std::filesystem::recursive_directory_iterator(path)) {
 			auto file = entry.path();
 			if (file.extension() == ".map") {

@@ -7,7 +7,7 @@ void PostOffice::start(Game* game) {
 
 	event_manager = std::make_unique<GameEventManager>(game);
 
-	map = std::make_unique<TileMap>(*game->renderer(), "../resources/levels/post-office.map");
+	map = std::make_unique<TileMap>(*game->renderer(), "resources/levels/post-office.map");
 	game->set_current_map (map.get());
 
 	player = std::make_unique<Player>(game);
@@ -19,7 +19,7 @@ void PostOffice::start(Game* game) {
 	main_camera->set_target(dynamic_cast<IMoveable*>(player.get()));
 	game->set_main_camera (main_camera.get());
 
-	pnj1 = std::make_unique<Character>(game, "../resources/images/char2.png");
+	pnj1 = std::make_unique<Character>(game, "resources/images/char2.png");
 	pnj1->teleport_to(Point(15, 11), 16);
 	pnj1->play_animation("idle_down");
 

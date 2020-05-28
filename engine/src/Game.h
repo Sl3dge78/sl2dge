@@ -55,7 +55,7 @@ namespace sl2dge {
 		SDL_Renderer* renderer_;
 		
 		FC_Font* font_;
-		const std::string font_path_ = "../resources/fonts/Kenney Mini.ttf";
+		const std::string font_path_ = "resources/fonts/Kenney Mini.ttf";
 		const int font_size_ = 16;
 
 		int delta_time_ = 0;

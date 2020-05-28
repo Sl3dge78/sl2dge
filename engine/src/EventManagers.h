@@ -55,10 +55,10 @@ namespace sl2dge {
 		GameEvent* current_event = nullptr;
 		
 		SDL_Texture* dialog_box_ = nullptr;
-		const std::string box_path = "../resources/images/ui/dialogbox.png";
+		const std::string box_path = "resources/images/ui/dialogbox.png";
 
 		SDL_Texture* selection_texture_ = nullptr;
-		const std::string selection_icon_path = "../resources/images/ui/selection.png";
+		const std::string selection_icon_path = "resources/images/ui/selection.png";
 
 		void activate_trigger(Trigger* trigger);
 	};
