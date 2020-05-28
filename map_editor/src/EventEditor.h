@@ -24,7 +24,7 @@ private:
 	std::vector<std::unique_ptr<EventNodeBox>> boxes;
 	std::unique_ptr<Camera> camera;
 
-	EntryPointBox* entry;
+	TriggerBox* entry;
 
 	bool is_plugging = false;
 	EventNodeBox* plugging_out_box = nullptr;

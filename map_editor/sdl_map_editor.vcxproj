@@ -176,6 +176,7 @@
     <ClInclude Include="src\MapEditor.h" />
     <ClInclude Include="src\EventEditor.h" />
     <ClInclude Include="src\EventNodeBox.h" />
+    <ClInclude Include="src\UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

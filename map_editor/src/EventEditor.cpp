@@ -5,7 +5,7 @@ void EventEditor::start(Game* game) {
 	game->set_main_camera (camera.get());
 	SDL_StopTextInput();
 
-	auto entry_box = std::make_unique<EntryPointBox>();
+	auto entry_box = std::make_unique<TriggerBox>();
 	entry = entry_box.get();
 	boxes.push_back(std::move(entry_box));
 }

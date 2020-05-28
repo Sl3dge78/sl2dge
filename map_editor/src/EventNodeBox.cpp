@@ -105,11 +105,13 @@ void EventNodeBox::handle_events(Game* game, const SDL_Event& e) {
 	}
 
 	if (e.type == SDL_MOUSEMOTION) {
-		if (is_resizing_)
+		if (is_resizing_) {
 			resize(e.motion.xrel, e.motion.yrel);
-		else if (is_moving_) {
+			on_box_moved();
+		} else if (is_moving_) {
 			rect.x += e.motion.xrel;
 			rect.y += e.motion.yrel;
+			on_box_moved();
 		}
 	}
 }
@@ -145,7 +147,10 @@ void DialogNodeBox::draw(Game* game) {
 	EventNodeBox::draw(game);
 
 	// Draw text box
-	SDL_SetRenderDrawColor(game->renderer(), 0, 0, 0, 255);
+	if(!is_editing_text)
+		SDL_SetRenderDrawColor(game->renderer(), 0, 0, 0, 255);
+	else
+		SDL_SetRenderDrawColor(game->renderer(), 255, 0, 0, 255);
 	auto pos = game->main_camera()->world_to_screen_transform(get_text_box());
 	SDL_RenderDrawRect(game->renderer(), &pos);
 
@@ -184,4 +189,36 @@ void DialogNodeBox::handle_events(Game* game, const SDL_Event& e) {
 	}
 
 	EventNodeBox::handle_events(game, e);
+}
+
+// TRIGGER //
+
+void TriggerBox::draw(Game* game) {
+
+	EventNodeBox::draw(game);
+
+	interactable_.draw(game);
+	is_in_place_.draw(game);
+	activate_once_.draw(game);
+	
+}
+
+void TriggerBox::handle_events(Game* game, const SDL_Event& e) {
+	interactable_.handle_events(game, e);
+	is_in_place_.handle_events(game, e);
+	activate_once_.handle_events(game, e);
+
+	EventNodeBox::handle_events(game, e);
+
+}
+
+void TriggerBox::on_box_moved() {
+
+	SDL_Point pos = { rect.x + 8, rect.y + (rect.h / 4) };
+	interactable_.set_position(pos);
+	pos.y += (rect.h / 4);
+	is_in_place_.set_position(pos);
+	pos.y += (rect.h / 4);
+	activate_once_.set_position(pos);
+
 }
