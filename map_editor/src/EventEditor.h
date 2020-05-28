@@ -21,10 +21,10 @@ class EventEditor : public GameState {
 	virtual void on_state_pause() override;
 
 private:
-	std::vector<std::unique_ptr<EventNodeBox>> boxes;
+	std::unique_ptr<std::vector<std::unique_ptr<EventNodeBox>>> boxes;
 	std::unique_ptr<Camera> camera;
 
-	TriggerBox* entry;
+	TriggerBox entry;
 
 	bool is_plugging = false;
 	EventNodeBox* plugging_out_box = nullptr;
@@ -36,7 +36,7 @@ private:
 	bool is_moving_ = false;
 
 	EventNodeBox* get_box_from_uuid(const Guid& i) {
-		for (auto& n : boxes) {
+		for (auto& n : *boxes) {
 			if (n->guid() == i)
 				return n.get();
 		}

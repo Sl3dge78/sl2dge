@@ -5,16 +5,15 @@ void EventEditor::start(Game* game) {
 	game->set_main_camera(camera.get());
 	SDL_StopTextInput();
 
-	auto entry_box = std::make_unique<TriggerBox>();
-	entry = entry_box.get();
-	boxes.push_back(std::move(entry_box));
+	boxes = std::make_unique<std::vector<std::unique_ptr<EventNodeBox>>>();
+	boxes->push_back(std::make_unique<TriggerBox>());
 }
 
 void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 
 	if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
 		if (SDL_GetModState() & KMOD_CTRL && e.key.keysym.scancode == SDL_SCANCODE_N) {
-			boxes.push_back(std::make_unique<DialogNodeBox>());
+			boxes->push_back(std::make_unique<DialogNodeBox>());
 		}
 	}
 
@@ -22,11 +21,11 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 		auto mouse_pos = game->main_camera()->screen_to_world_transform(SDL_Point{ e.button.x, e.button.y });
 		if (e.button.button == SDL_BUTTON_LEFT) {
 			bool clicked_on_smth = false;
-			for (auto& b : boxes) {
+			for (auto& b : *boxes) {
 
 				// Clicking inside a box
 				if (SDL_PointInRect(&mouse_pos, b->rect())) {
-					selected_box = b.get();
+					selected_box = b.get(); 
 					clicked_on_smth = true;
 					if (SDL_PointInRect(&mouse_pos, &b->get_corner())) {
 						is_resizing_ = true;
@@ -62,6 +61,7 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 
 			// We clicked in the void, clear the current selection
 			if (!clicked_on_smth) {
+
 				plugging_in_box = nullptr;
 				plugging_out_box = nullptr;
 				selected_box = nullptr;
@@ -69,6 +69,7 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 				is_moving_= false;
 				plug_out = -1;
 				is_plugging = false;
+
 			} else if (plugging_out_box != nullptr && plugging_in_box != nullptr) { // We clicked on both in and out of nodes
 
 				// OUT
@@ -106,7 +107,7 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 		}
 	}
 
-	for (auto& b : boxes) {
+	for (auto& b : *boxes) {
 		b->handle_events(game, e);
 	}
 
@@ -149,7 +150,7 @@ void EventEditor::draw(Game* game) {
 	SDL_SetRenderDrawColor(game->renderer(), 25, 25, 25, 255);
 	SDL_RenderClear(game->renderer());
 
-	for (auto& b : boxes) {
+	for (auto& b : *boxes) {
 		b->draw(game);
 		for (int i = 0; i < b->next.size(); ++i) {
 			if (!b->next[i].isNil()) {

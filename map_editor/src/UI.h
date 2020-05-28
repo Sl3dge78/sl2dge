@@ -5,7 +5,12 @@ using namespace sl2dge;
 class ToggleBox {
 
 public:
-	ToggleBox(const std::string& name, const bool default_val) : name_(name), value_(default_val) {}
+	
+	ToggleBox(const std::string& name, const bool default_val) {
+		value_ = default_val;
+		name_ = name;
+	}
+
 	void draw(Game* game) {
 		SDL_SetRenderDrawColor(game->renderer(), 0, 0, 0, 255);
 		if (!value_)

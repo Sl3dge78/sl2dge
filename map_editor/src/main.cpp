@@ -49,7 +49,7 @@ void NewMap(const std::string& path, const std::string& atlas_path, const int ti
 }
 
 int main(int argc, char* argv[]) {
-	//_crtBreakAlloc = 3724;
+	//_crtBreakAlloc = 285;
 
 	//NewMap("resources/levels/map2.map", "images\\roguelikeSheet_transparent.png", 16, 57, 32, 100, 100);
 

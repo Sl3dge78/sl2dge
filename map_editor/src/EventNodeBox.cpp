@@ -9,7 +9,6 @@ EventNodeBox::EventNodeBox(int out_amt) {
 	uuid_ = newGuid();
 	out_amt_ = out_amt;
 	next = std::vector<Guid>(out_amt, Guid());
-
 }
 
 SDL_Rect EventNodeBox::in_plug() {
@@ -202,20 +201,30 @@ void DialogNodeBox::handle_events(Game* game, const SDL_Event& e) {
 
 // TRIGGER //
 
+TriggerBox::TriggerBox() : EventNodeBox(1) {
+	title = "Entry";
+	has_in_ = false;
+
+	interactable_ = std::make_unique<ToggleBox>("Inter", false);
+	is_in_place_ = std::make_unique<ToggleBox>("In Place", true);
+	activate_once_ = std::make_unique<ToggleBox>("Once", false);
+	on_box_moved();
+}
+
 void TriggerBox::draw(Game* game) {
 
 	EventNodeBox::draw(game);
 
-	interactable_.draw(game);
-	is_in_place_.draw(game);
-	activate_once_.draw(game);
+	interactable_->draw(game);
+	is_in_place_->draw(game);
+	activate_once_->draw(game);
 	
 }
 
 void TriggerBox::handle_events(Game* game, const SDL_Event& e) {
-	interactable_.handle_events(game, e);
-	is_in_place_.handle_events(game, e);
-	activate_once_.handle_events(game, e);
+	interactable_->handle_events(game, e);
+	is_in_place_->handle_events(game, e);
+	activate_once_->handle_events(game, e);
 
 	EventNodeBox::handle_events(game, e);
 
@@ -223,11 +232,12 @@ void TriggerBox::handle_events(Game* game, const SDL_Event& e) {
 
 void TriggerBox::on_box_moved() {
 
+	
 	SDL_Point pos = { rect_.x + 8, rect_.y + (rect_.h / 4) };
-	interactable_.set_position(pos);
+	interactable_->set_position(pos);
 	pos.y += (rect_.h / 4);
-	is_in_place_.set_position(pos);
+	is_in_place_->set_position(pos);
 	pos.y += (rect_.h / 4);
-	activate_once_.set_position(pos);
-
+	activate_once_->set_position(pos);
+	
 }

@@ -14,7 +14,7 @@ using namespace sl2dge;
 
 class EventNodeBox {
 public:
-	EventNodeBox(int out_amt = 1);
+	virtual ~EventNodeBox() = default;
 
 	Guid guid() const { return uuid_; }
 
@@ -36,6 +36,8 @@ public:
 	const SDL_Rect* rect() const { return &rect_; }
 
 protected:
+	EventNodeBox(int out_amt = 1);
+
 	std::string title = "";
 	bool has_in_ = true;
 	SDL_Rect rect_ = { 0, 0, 100, 100 };
@@ -43,26 +45,15 @@ protected:
 	virtual void on_box_moved() {}
 
 private:
-
-	
-
 	Guid uuid_;
-	
 	int out_amt_ = 1;
-
-
-	//GameEvent::EventTypes type = GameEvent::EventTypes::RandomBranch;
 };
 
 
 /* TRIGGER */
 class TriggerBox : public EventNodeBox {
 public:
-	TriggerBox() : EventNodeBox(1) {
-		title = "Entry";
-		has_in_ = false;
-		on_box_moved();
-	}
+	TriggerBox();
 
 	void draw(Game* game) override;
 	void handle_events(Game* game, const SDL_Event& e) override;
@@ -73,9 +64,9 @@ protected:
 private:
 
 	SDL_Point map_pos;
-	ToggleBox interactable_ = ToggleBox("Inter", false);
-	ToggleBox is_in_place_ = ToggleBox("In Place", true); //  you need to stand on the item to trigger the event
-	ToggleBox activate_once_ = ToggleBox("Once", false); // If true, won't activate ever again
+	std::unique_ptr<ToggleBox> interactable_ = nullptr;
+	std::unique_ptr<ToggleBox> is_in_place_ = nullptr; //  you need to stand on the item to trigger the event
+	std::unique_ptr<ToggleBox> activate_once_ = nullptr; // If true, won't activate ever again
 };
 
 class DialogNodeBox : public EventNodeBox {
