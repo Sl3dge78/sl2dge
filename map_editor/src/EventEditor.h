@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector> 
-#include <concepts>
 
 #include "sl2dge.h"
 
@@ -25,14 +24,16 @@ private:
 	std::vector<std::unique_ptr<EventNodeBox>> boxes;
 	std::unique_ptr<Camera> camera;
 
-	bool is_plugging = false;
-	int plugging_out_id = -1;
-	int plug_out = -1;
-	int plugging_in_id = -1;
+	EntryPointBox* entry;
 
-	EventNodeBox* get_box_from_id(int i) {
+	bool is_plugging = false;
+	EventNodeBox* plugging_out_box = nullptr;
+	int plug_out = -1;
+	EventNodeBox* plugging_in_box = nullptr;
+
+	EventNodeBox* get_box_from_uuid(const Guid& i) {
 		for (auto& n : boxes) {
-			if (n->id() == i)
+			if (n->guid() == i)
 				return n.get();
 		}
 		return nullptr;

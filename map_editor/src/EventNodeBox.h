@@ -7,8 +7,7 @@
 //#include "GameEvent.h"
 #include "SDL/SDL.h"
 
-#include "Point.h"
-#include "Game.h"
+#include "sl2dge.h"
 
 using namespace sl2dge;
 
@@ -20,10 +19,9 @@ public:
 	SDL_Rect out_plug(int i = 0);
 	void set_out_amt(int i);
 
-	
-	int id() const { return id_; }
+	Guid guid() const { return uuid_; }
 
-	std::vector<int> next;
+	std::vector<Guid> next;
 	static int next_id;
 
 	virtual void draw(Game* game);
@@ -31,25 +29,34 @@ public:
 	void resize(int x, int y);
 
 	int is_point_in_plug(SDL_Point* point);
+	bool has_in() const { return has_in_; }
 
 	bool has_prev = false;
 
 protected:
 	std::string title = "";
-	bool has_in = true;
+	bool has_in_ = true;
 	SDL_Rect rect = { 0, 0, 100, 100 };
 
 private:
 	
 	SDL_Rect get_corner() const { return SDL_Rect{ rect.x + rect.w - 5, rect.y + rect.h - 5, 5, 5 };	}
 
-	int id_;
+	Guid uuid_;
 	bool is_resizing_ = false;
 	bool is_moving_ = false;
 	int out_amt_ = 1;
 
 
 	//GameEvent::EventTypes type = GameEvent::EventTypes::RandomBranch;
+};
+
+class EntryPointBox : public EventNodeBox {
+public:
+	EntryPointBox() : EventNodeBox(1) {
+		title = "Entry";
+		has_in_ = false;
+	}
 };
 
 class DialogNodeBox : public EventNodeBox {

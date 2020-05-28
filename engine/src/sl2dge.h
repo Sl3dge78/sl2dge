@@ -21,5 +21,6 @@
 #include "SDL_FontCache.h"
 #include "Sprites.h"
 #include "TileMap.h"
+#include "guid.h"
 
 namespace sl2dge {};

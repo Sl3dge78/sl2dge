@@ -4,6 +4,10 @@ void EventEditor::start(Game* game) {
 	camera = std::make_unique<Camera>(1280, 720);
 	game->set_main_camera (camera.get());
 	SDL_StopTextInput();
+
+	auto entry_box = std::make_unique<EntryPointBox>();
+	entry = entry_box.get();
+	boxes.push_back(std::move(entry_box));
 }
 
 void EventEditor::handle_events(Game* game, const SDL_Event& e) {
@@ -15,14 +19,15 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 	}
 
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
+		auto mouse_pos = game->main_camera()->screen_to_world_transform(SDL_Point{ e.button.x, e.button.y });
 		if (e.button.button == SDL_BUTTON_LEFT) {
 			bool clicked_on_smth = false;
 			for (auto& b : boxes) {
-				auto mouse_pos = game->main_camera()->screen_to_world_transform(SDL_Point{ e.button.x, e.button.y });
 				// checking if clicking on in plug
-				if (SDL_PointInRect(&mouse_pos, &b->in_plug())) {
+				
+				if (b->has_in() && SDL_PointInRect(&mouse_pos, &b->in_plug())) {
 					is_plugging = true;
-					plugging_in_id = b->id();
+					plugging_in_box = b.get();
 					clicked_on_smth = true;
 					break;
 				}
@@ -32,12 +37,12 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 				if (plug != -1) { // We clicked on an out plug
 					is_plugging = true;
 					plug_out = plug;
-					plugging_out_id = b->id();
+					plugging_out_box = b.get();
 
-					if (b->next[plug_out] != -1) { // If something is already plugged where we clicked
+					if (!b->next[plug_out].isNil()) { // If something is already plugged where we clicked
 						// remove it						
-						get_box_from_id(b->next[plug_out])->has_prev = false;
-						b->next[plug_out] = -1;
+						get_box_from_uuid(b->next[plug_out])->has_prev = false;
+						b->next[plug_out] = Guid();
 					}
 					clicked_on_smth = true;
 					break;
@@ -46,31 +51,30 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 
 			// We clicked in the void, clear the current selection
 			if (!clicked_on_smth) {
-				plugging_in_id = -1;
-				plugging_out_id = -1;
+				plugging_in_box = nullptr;
+				plugging_out_box = nullptr;
 				plug_out = -1;
 				is_plugging = false;
-			} else if (plugging_out_id != -1 && plugging_in_id != -1) { // We clicked on both in and out of nodes
+			} else if (plugging_out_box != nullptr && plugging_in_box != nullptr) { // We clicked on both in and out of nodes
 				
 				// OUT
-				auto b = get_box_from_id(plugging_out_id);
 				// Remove the previous plug if it exists
-				if (b->next[plug_out] != -1) {
-					get_box_from_id(b->next[plug_out])->has_prev = false;
+				if ( !plugging_out_box->next[plug_out].isNil()) {
+					get_box_from_uuid(plugging_out_box->next[plug_out])->has_prev = false;
 				}
 				// Plug it!
-				b->next[plug_out] = plugging_in_id;
+				plugging_out_box->next[plug_out] = plugging_in_box->guid();
 
 				// IN
-				get_box_from_id(plugging_in_id)->has_prev = true;
+				plugging_in_box->has_prev = true;
 
 				// Cleanup
-				plugging_in_id = -1;
-				plugging_out_id = -1;
+				plugging_in_box = nullptr;
+				plugging_out_box = nullptr;
 				plug_out = -1;
 				is_plugging = false;
 			}
-		}
+		} 
 	}
 
 	for (auto& b : boxes) {
@@ -119,9 +123,9 @@ void EventEditor::draw(Game* game) {
 	for (auto& b : boxes) {
 		b->draw(game);
 		for (int i = 0; i < b->next.size(); ++i) {
-			if (b->next[i] != -1) {
+			if (!b->next[i].isNil()) {
 				int x2 = 0, y2 = 0;
-				auto next = get_box_from_id(b->next[i]);
+				auto next = get_box_from_uuid(b->next[i]);
 				if (next != nullptr) {
 					x2 = next->in_plug().x;
 					y2 = next->in_plug().y;
@@ -138,8 +142,8 @@ void EventEditor::draw(Game* game) {
 		SDL_GetMouseState(&mouse_x, &mouse_y);
 		SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 255);
 		// TODO : Cleanup
-		SDL_Point orig = plugging_out_id != -1 ? camera->world_to_screen_transform(SDL_Point{ get_box_from_id(plugging_out_id)->out_plug(plug_out).x, get_box_from_id(plugging_out_id)->out_plug(plug_out).y }) : SDL_Point{ mouse_x, mouse_y };
-		SDL_Point dst = plugging_in_id != -1 ? camera->world_to_screen_transform(SDL_Point{ get_box_from_id(plugging_in_id)->in_plug().x, get_box_from_id(plugging_in_id)->in_plug().y }) : SDL_Point{ mouse_x, mouse_y };
+		SDL_Point orig = plugging_out_box != nullptr ? camera->world_to_screen_transform(SDL_Point{ plugging_out_box->out_plug(plug_out).x, plugging_out_box->out_plug(plug_out).y }) : SDL_Point{ mouse_x, mouse_y };
+		SDL_Point dst = plugging_in_box != nullptr ? camera->world_to_screen_transform(SDL_Point{ plugging_in_box->in_plug().x, plugging_in_box->in_plug().y }) : SDL_Point{ mouse_x, mouse_y };
 
 		SDL_RenderDrawLine(game->renderer(), orig.x, orig.y, dst.x, dst.y);
 	}

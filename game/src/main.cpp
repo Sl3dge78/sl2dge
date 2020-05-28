@@ -16,6 +16,9 @@ using namespace sl2dge;
 int main(int argc, char* argv[]) {
 	//_crtBreakAlloc = 3724;
 	Game* app = new Game("", 320, 288);
+
+	auto fllf = newGuid();
+
 	app->change_state(std::make_unique<MainState>());
 	app->loop();
 	delete app;
