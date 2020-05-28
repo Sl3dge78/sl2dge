@@ -51,11 +51,11 @@ void NewMap(const std::string& path, const std::string& atlas_path, const int ti
 int main(int argc, char* argv[]) {
 	//_crtBreakAlloc = 3724;
 
-	//NewMap("levels/map2.map", "images\\roguelikeSheet_transparent.png", 16, 57, 32, 100, 100);
+	//NewMap("../resources/levels/map2.map", "images\\roguelikeSheet_transparent.png", 16, 57, 32, 100, 100);
 
 	Game* app = new Game("Super Map Editor 3000", 1280, 720);
 
-	//app->change_state(std::make_unique<Editor>("levels/map2.map"));
+	//app->change_state(std::make_unique<Editor>("../resources/levels/map2.map"));
 	app->change_state(std::make_unique<EventEditor>());
 
 	app->loop();

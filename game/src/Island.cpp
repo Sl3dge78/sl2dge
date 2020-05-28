@@ -7,7 +7,7 @@ void Island::start(Game* game) {
 
 	event_manager = std::make_unique<GameEventManager>(game);
 
-	map = std::make_unique<TileMap>(*game->renderer(), "levels/map2.map");
+	map = std::make_unique<TileMap>(*game->renderer(), "../resources/levels/map2.map");
 	game->set_current_map(map.get());
 
 	player = std::make_unique<Player>(game);

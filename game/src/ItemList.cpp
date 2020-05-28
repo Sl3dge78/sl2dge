@@ -7,7 +7,7 @@ void Items::InitItems(Game* game) {
 			0,
 			"Letter for West House",
 			"A letter for West House",
-			std::make_unique<Sprite>(*game->renderer(), "images/items/letter.png", 16, 16)
+			std::make_unique<Sprite>(*game->renderer(), "../resources/images/items/letter.png", 16, 16)
 			)
 	);
 	item_list->push_back(
@@ -15,7 +15,7 @@ void Items::InitItems(Game* game) {
 			1,
 			"Letter for South House",
 			"A letter for South House",
-			std::make_unique<Sprite>(*game->renderer(), "images/items/letter.png", 16, 16)
+			std::make_unique<Sprite>(*game->renderer(), "../resources/images/items/letter.png", 16, 16)
 			)
 	);
 	item_list->push_back(
@@ -23,7 +23,7 @@ void Items::InitItems(Game* game) {
 			2,
 			"Letter for East House",
 			"A letter for East House",
-			std::make_unique<Sprite>(*game->renderer(), "images/items/letter.png", 16, 16)
+			std::make_unique<Sprite>(*game->renderer(), "../resources/images/items/letter.png", 16, 16)
 			)
 	);
 	item_list->push_back(
@@ -31,7 +31,7 @@ void Items::InitItems(Game* game) {
 			3,
 			"Letter for Center House",
 			"A letter for Center House",
-			std::make_unique<Sprite>(*game->renderer(), "images/items/letter.png", 16, 16)
+			std::make_unique<Sprite>(*game->renderer(), "../resources/images/items/letter.png", 16, 16)
 			)
 	);
 }

@@ -8,11 +8,11 @@ InventoryState::InventoryState(Inventory* inventory) {
 
 void InventoryState::start(Game* game) {
 
-	auto tmp = IMG_Load("images/ui/inventoryscreen.png");
+	auto tmp = IMG_Load("../resources/images/ui/inventoryscreen.png");
 	this->background = SDL_CreateTextureFromSurface(game->renderer(), tmp);
 	SDL_FreeSurface(tmp);
 
-	tmp = IMG_Load("images/ui/selectionbox.png");
+	tmp = IMG_Load("../resources/images/ui/selectionbox.png");
 	this->selection = SDL_CreateTextureFromSurface(game->renderer(), tmp);
 	SDL_FreeSurface(tmp);
 

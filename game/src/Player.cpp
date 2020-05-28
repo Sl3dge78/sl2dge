@@ -9,7 +9,7 @@ using namespace sl2dge;
 
 Player::Player(Game* game) {
 
-	sprite_ = std::make_unique<AnimatedSprite>(*game->renderer(), "images/char.png", 16, 16, 4, 3);
+	sprite_ = std::make_unique<AnimatedSprite>(*game->renderer(), "../resources/images/char.png", 16, 16, 4, 3);
 	sprite_->animator()->add_animation("idle_down", 5, { 1 });
 	sprite_->animator()->add_animation("idle_up", 5, { 2 });
 	sprite_->animator()->add_animation("idle_left", 5, { 0 });
@@ -43,8 +43,8 @@ void Player::handle_events(Game* game, const SDL_Event& e) {
 			break;
 		case SDL_SCANCODE_0 :
 			break;
-			//inventory->AddItem(new Item(0, "Nom", "Ceci est une description", std::make_unique<Sprite>(*game->renderer, "images/items/letter.png", 16, 16)));
-			//inventory->AddItem(new Item(2, "Nom2", "Ceci est une description2", std::make_unique<Sprite>(*game->renderer, "images/items/letter.png", 16, 16)));
+			//inventory->AddItem(new Item(0, "Nom", "Ceci est une description", std::make_unique<Sprite>(*game->renderer, "../resources/images/items/letter.png", 16, 16)));
+			//inventory->AddItem(new Item(2, "Nom2", "Ceci est une description2", std::make_unique<Sprite>(*game->renderer, "../resources/images/items/letter.png", 16, 16)));
 		}
 	}
 
