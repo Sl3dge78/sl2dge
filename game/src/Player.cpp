@@ -19,8 +19,6 @@ Player::Player(Game* game) {
 	sprite_->animator()->add_animation("up", 5, { 2,6,2,10 });
 	sprite_->animator()->add_animation("down", 5, { 1,5,1,9 });
 
-	//fdfd
-
 	position_ = Vector2(0, 0);
 	movement_ = Vector2(0, 0);
 	collider_ = Rect(2, 1, 11, 15);

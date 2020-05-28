@@ -3,15 +3,14 @@
 void EventEditor::start(Game* game) {
 	camera = std::make_unique<Camera>(1280, 720);
 	game->set_main_camera (camera.get());
+	SDL_StopTextInput();
 }
 
 void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 
 	if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
-		switch (e.key.keysym.scancode) {
-		case SDL_SCANCODE_N:
-			boxes.push_back(DialogNodeBox());
-			break;
+		if(SDL_GetModState() & KMOD_CTRL && e.key.keysym.scancode == SDL_SCANCODE_N) {
+			boxes.push_back(std::make_unique<DialogNodeBox>());
 		}
 	}
 
@@ -21,24 +20,24 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 			for (auto& b : boxes) {
 				auto mouse_pos = game->main_camera()->screen_to_world_transform(SDL_Point{ e.button.x, e.button.y });
 				// checking if clicking on in plug
-				if (SDL_PointInRect(&mouse_pos, &b.in_plug())) {
+				if (SDL_PointInRect(&mouse_pos, &b->in_plug())) {
 					is_plugging = true;
-					plugging_in_id = b.id();
+					plugging_in_id = b->id();
 					clicked_on_smth = true;
 					break;
 				}
 
 				// Checking if clicking on out plug. there can be multiple, so we get the id if we clicked on one.
-				int plug = b.is_point_in_plug(&mouse_pos);
+				int plug = b->is_point_in_plug(&mouse_pos);
 				if (plug != -1) { // We clicked on an out plug
 					is_plugging = true;
 					plug_out = plug;
-					plugging_out_id = b.id();
+					plugging_out_id = b->id();
 
-					if (b.next[plug_out] != -1) { // If something is already plugged where we clicked
+					if (b->next[plug_out] != -1) { // If something is already plugged where we clicked
 						// remove it						
-						get_box_from_id(b.next[plug_out])->has_prev = false;
-						b.next[plug_out] = -1;
+						get_box_from_id(b->next[plug_out])->has_prev = false;
+						b->next[plug_out] = -1;
 					}
 					clicked_on_smth = true;
 					break;
@@ -75,7 +74,7 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 	}
 
 	for (auto& b : boxes) {
-		b.handle_events(game, e);
+		b->handle_events(game, e);
 	}
 
 }
@@ -83,24 +82,27 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 void EventEditor::input(Game* game) {
 
 	// cam movement
-	const auto state = SDL_GetKeyboardState(NULL);
-	Vector2 movement = { 0,0 };
-	if (state[SDL_SCANCODE_W]) {
-		movement.y += -1;
-	}
-	if (state[SDL_SCANCODE_S]) {
-		movement.y += 1;
-	}
-	if (state[SDL_SCANCODE_D]) {
-		movement.x += 1;
-	}
-	if (state[SDL_SCANCODE_A]) {
-		movement.x += -1;
-	}
+	if (!SDL_IsTextInputActive()) {
+		const auto state = SDL_GetKeyboardState(NULL);
+		Vector2 movement = { 0,0 };
+		if (state[SDL_SCANCODE_W]) {
+			movement.y += -1;
+		}
+		if (state[SDL_SCANCODE_S]) {
+			movement.y += 1;
+		}
+		if (state[SDL_SCANCODE_D]) {
+			movement.x += 1;
+		}
+		if (state[SDL_SCANCODE_A]) {
+			movement.x += -1;
+		}
 
-	movement.normalize();
-	movement *= 700 * float(game->delta_time()) / 1000.0f;
-	camera->translate(movement);
+
+		movement.normalize();
+		movement *= 700 * float(game->delta_time()) / 1000.0f;
+		camera->translate(movement);
+	}
 
 }
 
@@ -115,17 +117,17 @@ void EventEditor::draw(Game* game) {
 	SDL_RenderClear(game->renderer());
 
 	for (auto& b : boxes) {
-		b.draw(game);
-		for (int i = 0; i < b.next.size(); ++i) {
-			if (b.next[i] != -1) {
+		b->draw(game);
+		for (int i = 0; i < b->next.size(); ++i) {
+			if (b->next[i] != -1) {
 				int x2 = 0, y2 = 0;
-				auto next = get_box_from_id(b.next[i]);
+				auto next = get_box_from_id(b->next[i]);
 				if (next != nullptr) {
 					x2 = next->in_plug().x;
 					y2 = next->in_plug().y;
 				}
 				SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 255);
-				SDL_RenderDrawLine(game->renderer(), b.out_plug(i).x - camera->viewport().x, b.out_plug(i).y - camera->viewport().y, x2 - camera->viewport().x, y2 - camera->viewport().y);
+				SDL_RenderDrawLine(game->renderer(), b->out_plug(i).x - camera->viewport().x, b->out_plug(i).y - camera->viewport().y, x2 - camera->viewport().x, y2 - camera->viewport().y);
 			}
 		}
 		

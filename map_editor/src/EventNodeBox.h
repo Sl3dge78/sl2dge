@@ -20,14 +20,14 @@ public:
 	SDL_Rect out_plug(int i = 0);
 	void set_out_amt(int i);
 
-	SDL_Rect rect = { 0, 0, 100, 100 };
+	
 	int id() const { return id_; }
 
 	std::vector<int> next;
 	static int next_id;
 
-	void draw(Game* game);
-	void handle_events(Game* game, const SDL_Event& e);
+	virtual void draw(Game* game);
+	virtual void handle_events(Game* game, const SDL_Event& e);
 	void resize(int x, int y);
 
 	int is_point_in_plug(SDL_Point* point);
@@ -37,6 +37,7 @@ public:
 protected:
 	std::string title = "";
 	bool has_in = true;
+	SDL_Rect rect = { 0, 0, 100, 100 };
 
 private:
 	
@@ -58,6 +59,14 @@ public:
 	}
 
 	std::string text = "";
+
+	void draw(Game* game);
+	void handle_events(Game* game, const SDL_Event& e) override;
+
+private:
+	bool is_editing_text = false;
+
+	SDL_Rect get_text_box() { return SDL_Rect{ rect.x, rect.y + 32, rect.w, rect.h - 32 - 5 }; }
 
 };
 

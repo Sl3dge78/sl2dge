@@ -131,3 +131,53 @@ int EventNodeBox::is_point_in_plug(SDL_Point* point) {
 	}
 	return -1;
 }
+
+
+// DIALOG NODE //
+
+void DialogNodeBox::draw(Game* game)  {
+
+	EventNodeBox::draw(game);
+
+	// Draw text box
+	SDL_SetRenderDrawColor(game->renderer(), 0, 0, 0, 255);
+	auto pos = game->main_camera()->world_to_screen_transform(get_text_box());
+	SDL_RenderDrawRect(game->renderer(), &pos);
+
+	FC_Draw(game->font(), game->renderer(), float(pos.x), float(pos.y), text.c_str());
+}
+
+void DialogNodeBox::handle_events(Game* game, const SDL_Event& e) {
+	
+	if (e.type == SDL_MOUSEBUTTONDOWN) {
+		if (e.button.button == SDL_BUTTON_LEFT) {
+			auto mouse_pos = game->main_camera()->screen_to_world_transform(SDL_Point{ e.button.x, e.button.y });
+			if (SDL_PointInRect(&mouse_pos, &get_text_box()) && !is_editing_text) { // Clicking in the text box
+				is_editing_text = true;
+				SDL_StartTextInput();
+			} else if(is_editing_text){
+				is_editing_text = false;
+				SDL_StopTextInput();
+			}
+		}
+	} 
+	
+	if (is_editing_text) {
+		if (e.type == SDL_TEXTINPUT) {
+			text += e.text.text;
+		}
+		else if (e.type == SDL_KEYDOWN) {
+			//Handle backspace
+			if (e.key.keysym.sym == SDLK_BACKSPACE && text.length() > 0) {
+				//lop off character
+				text.pop_back();
+			}
+			if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_ESCAPE) {
+				is_editing_text = false;
+				SDL_StopTextInput();
+			}
+		}
+	}
+	
+	EventNodeBox::handle_events(game, e);
+}

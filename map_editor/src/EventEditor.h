@@ -22,7 +22,7 @@ class EventEditor : public GameState {
 	virtual void on_state_pause() override;
 
 private:
-	std::vector<EventNodeBox> boxes;
+	std::vector<std::unique_ptr<EventNodeBox>> boxes;
 	std::unique_ptr<Camera> camera;
 
 	bool is_plugging = false;
@@ -32,8 +32,8 @@ private:
 
 	EventNodeBox* get_box_from_id(int i) {
 		for (auto& n : boxes) {
-			if (n.id() == i)
-				return &n;
+			if (n->id() == i)
+				return n.get();
 		}
 		return nullptr;
 	}
