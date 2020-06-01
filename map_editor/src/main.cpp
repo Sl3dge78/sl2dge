@@ -55,8 +55,8 @@ int main(int argc, char* argv[]) {
 
 	Game* app = new Game("Super Map Editor 3000", 1280, 720);
 
-	//app->change_state(std::make_unique<Editor>("resources/levels/map2.map"));
-	app->change_state(std::make_unique<EventEditor>("maptest.map", SDL_Point{ 0, 0 }));
+	app->change_state(std::make_unique<Editor>("resources/levels/maptest.map"));
+	//app->change_state(std::make_unique<EventEditor>("resources/levels/maptest.map", SDL_Point{ 0, 0 }));
 
 	app->loop();
 	delete app;

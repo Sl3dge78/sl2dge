@@ -8,8 +8,8 @@
 namespace sl2dge {
 	class Atlas {
 	public:
-		Atlas(SDL_Renderer& renderer, const std::string& atlas_path, const int tile_size_,
-			const int nb_tiles_atlas_width, const int nb_tiles_atlas_height);
+		Atlas(SDL_Renderer& renderer, const std::string& atlas_path, const int tile_size_,	const int nb_tiles_atlas_width, const int nb_tiles_atlas_height);
+		Atlas(SDL_Renderer& renderer, const std::string& atlas_path, const int tile_size_);
 		~Atlas();
 		SDL_Texture* texture() { return texture_; }
 		Rect* get_tile_rect(const int pos) { return &tiles_[pos]; }

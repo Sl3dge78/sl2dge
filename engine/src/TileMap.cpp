@@ -1,6 +1,6 @@
 #include "TileMap.h"
 
-#include <iostream>
+#include <sstream>
 #include <fstream>
 #include <string>
 
@@ -11,11 +11,72 @@
 #include "Atlas.h"
 #include "HelperFunctions.h"
 #include "Game.h"
+#include "pugixml.hpp"
 
 namespace sl2dge {
 	TileMap::TileMap(SDL_Renderer& renderer, const std::string& map_path) {
-		using namespace std;
+		using namespace pugi;
 
+		xml_document doc;
+		xml_parse_result result = doc.load_file(map_path.c_str());
+		if (!result) {
+			SDL_Log("Unable to read xml %s : %s", map_path.c_str(), result.description());
+			if (result.status == pugi::xml_parse_status::status_bad_attribute) {
+				std::ifstream file;
+				file.open(map_path);
+				file.seekg(result.offset);
+
+				std::string s;
+				s.resize(20);
+				file.read(&s[0], 20);
+				SDL_Log("Error at %s", s.c_str());
+			}
+			doc = xml_document();
+		}
+
+		SDL_Log("%s successfully loaded", map_path.c_str());
+
+		auto map_node = doc.child("Map");
+		if (!map_node) {
+			map_node = doc.append_child("Map");
+		}
+
+		std::string atlas_path = map_node.attribute("tile_map").as_string();
+		tile_size_ = map_node.attribute("tile_size").as_int();
+		atlas_ = new Atlas(renderer, atlas_path, tile_size_);
+		width_ = map_node.attribute("width").as_int();
+		height_ = map_node.attribute("height").as_int();
+
+		int tmp;
+
+		std::stringstream text = std::stringstream(map_node.child("Layer_1").text().as_string());
+		this->back_layer_ = new int[width_ * height_]{};
+		for (int i = 0; i < width_ * height_; ++i) {
+			text >> tmp;
+			this->back_layer_[i] = tmp;
+		}
+
+		 text = std::stringstream(map_node.child("Layer_2").text().as_string());
+		this->middle_layer_ = new int[width_ * height_]{};
+		for (int i = 0; i < width_ * height_; ++i) {
+			text >> tmp;
+			this->middle_layer_[i] = tmp;
+		}
+
+		text = std::stringstream(map_node.child("Layer_3").text().as_string());
+		this->front_layer_ = new int[width_ * height_]{};
+		for (int i = 0; i < width_ * height_; ++i) {
+			text >> tmp;
+			this->front_layer_[i] = tmp;
+		}
+
+		 text = std::stringstream(map_node.child("Collision").text().as_string());
+		this->collision_layer_ = new bool[width_ * height_]{};
+		for (int i = 0; i < width_ * height_; ++i) {
+			text >> this->collision_layer_[i];
+		}
+
+		/*
 		ifstream file;
 		file.open(map_path);
 		if (!file.is_open()) {
@@ -61,6 +122,7 @@ namespace sl2dge {
 		}
 
 		file.close();
+		*/
 	}
 
 	TileMap::~TileMap() {
@@ -146,6 +208,76 @@ namespace sl2dge {
 	}
 
 	void TileMap::save(const std::string& map_path) {
+
+		using namespace pugi;
+		xml_document doc;
+		xml_parse_result result = doc.load_file(map_path.c_str());
+		if (!result) {
+			SDL_Log("Unable to read xml %s : %s", map_path.c_str(), result.description());
+			if (result.status == pugi::xml_parse_status::status_bad_attribute) {
+				std::ifstream file;
+				file.open(map_path);
+				file.seekg(result.offset);
+
+				std::string s;
+				s.resize(20);
+				file.read(&s[0], 20);
+				SDL_Log("Error at %s", s.c_str());
+			}
+			doc = xml_document();
+		}
+
+		SDL_Log("%s successfully loaded", map_path.c_str());
+
+		auto map_node = doc.child("Map");
+		if (!map_node) {
+			map_node = doc.append_child("Map");
+		}
+		// Cleanup
+		map_node.remove_attributes();
+		map_node.remove_children();
+
+		map_node.append_attribute("tile_map").set_value(atlas_->path.c_str());
+		map_node.append_attribute("tile_size").set_value(tile_size_);
+		
+		
+		map_node.append_attribute("width").set_value(width_);
+		map_node.append_attribute("height").set_value(height_);
+
+		int tmp;
+
+
+		std::stringstream text = std::stringstream();
+		for (int i = 0; i < width_ * height_; ++i) {
+			text << this->back_layer_[i] << " ";
+		}
+		auto layer_1 = map_node.append_child("Layer_1");
+		layer_1.text() = text.str().c_str();
+
+		text = std::stringstream();
+		for (int i = 0; i < width_ * height_; ++i) {
+			text <<	this->middle_layer_[i]<< " ";
+		}
+		auto layer_2 = map_node.append_child("Layer_2");
+		layer_2.text() = text.str().c_str();
+		
+		text = std::stringstream();
+		for (int i = 0; i < width_ * height_; ++i) {
+			text << this->front_layer_[i]<<" ";
+		}
+		auto layer_3 = map_node.append_child("Layer_3");
+		layer_3.text() = text.str().c_str();
+		
+		text = std::stringstream();
+		for (int i = 0; i < width_ * height_; ++i) {
+			text << this->collision_layer_[i] << " ";
+		}
+		auto collision = map_node.append_child("Collision");
+		collision.text() = text.str().c_str();
+
+		doc.save_file(map_path.c_str());
+
+		/*
 		using namespace std;
 
 		ofstream file;
@@ -182,5 +314,6 @@ namespace sl2dge {
 			file << this->collision_layer_[i] << " ";
 		}
 		file.close();
+		*/
 	}
 }
