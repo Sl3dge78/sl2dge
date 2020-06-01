@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<Events>
+	<Event_Chain x_pos="0" y_pos="0">
+		<Event guid="5a19a47a-7a93-45a3-b727-c867613798c4" amt_next="1" x="-445" y="-77" w="325" h="100" next_0="5b8c7566-2891-4ba3-b234-c19375eb5870" type="trigger" interactable="false" in_place="true" once="false" />
+		<Event guid="5b8c7566-2891-4ba3-b234-c19375eb5870" amt_next="1" x="-50" y="-66" w="100" h="100" next_0="cd9ac4f4-89a4-48a4-b4f3-a4dd9589ff57" type="dialog" dialog="dsdsd" />
+		<Event guid="cd9ac4f4-89a4-48a4-b4f3-a4dd9589ff57" amt_next="1" x="92" y="-184" w="100" h="100" next_0="4969e3cc-38a0-48f4-9b10-d302d253d520" type="dialog" dialog="Ca marche!!!" />
+		<Event guid="4969e3cc-38a0-48f4-9b10-d302d253d520" amt_next="1" x="284" y="-59" w="100" h="100" next_0="00000000-0000-0000-0000-000000000000" type="dialog" dialog="Youpi" />
+	</Event_Chain>
+</Events>

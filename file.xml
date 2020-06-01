@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<Events>
+	<Event_Chain x_pos="0" y_pos="0" interactable="false" in_place="true" once="false" next="c2ca4644-6e76-4a59-85d9-85fcd5458fb6">
+		<Event guid="c2ca4644-6e76-4a59-85d9-85fcd5458fb6" amt_next="1" next_0="00000000-0000-0000-0000-000000000000" type="dialog" dialog="" />
+	</Event_Chain>
+	<Event_Chain x_pos="1" y_pos="0" interactable="false" in_place="true" once="false" next="4963b6a3-a67d-4c7a-b928-cb102ca03792">
+		<Event guid="4963b6a3-a67d-4c7a-b928-cb102ca03792" amt_next="1" next_0="0955435a-2c77-414e-aed0-e477fb0c343d" type="dialog" dialog="fdfdddddf" />
+		<Event guid="0955435a-2c77-414e-aed0-e477fb0c343d" amt_next="1" next_0="00000000-0000-0000-0000-000000000000" type="dialog" dialog="fdfdfddd" />
+	</Event_Chain>
+</Events>

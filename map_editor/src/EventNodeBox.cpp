@@ -4,11 +4,52 @@
 
 #include "SDL_FontCache.h"
 
-EventNodeBox::EventNodeBox(int out_amt) {
+EventNodeBox::EventNodeBox(int const out_amt, pugi::xml_node* const node) {
 
-	uuid_ = newGuid();
-	out_amt_ = out_amt;
-	next = std::vector<Guid>(out_amt, Guid());
+
+	if (node != nullptr) {
+		out_amt_ = node->attribute("amt_next").as_int();
+		//next = std::vector<Guid>(out_amt, Guid());
+		for (int i = 0; i < out_amt_; ++i) {
+			std::stringstream attr;
+			attr << "next_" << i;
+			next.push_back(Guid(node->attribute(attr.str().c_str()).as_string()));
+			
+		}
+
+		rect_.x = node->attribute("x").as_int();
+		rect_.y = node->attribute("y").as_int();
+		rect_.w = node->attribute("w").as_int();
+		rect_.h = node->attribute("h").as_int();
+
+		resize(0, 0); // To avoid having boxes with 0 size
+
+		std::string guid = node->attribute("guid").as_string();
+
+		if (guid != "") {
+			uuid_ = Guid(guid);
+			return;
+		}
+	} else {
+		out_amt_ = out_amt;
+		next = std::vector<Guid>(out_amt, Guid());
+		uuid_ = newGuid();
+	}
+	
+}
+
+std::unique_ptr<EventNodeBox> EventNodeBox::create_node(pugi::xml_node& node) {
+
+	std::string type = node.attribute("type").as_string();
+
+	if (type == "trigger") {
+		return std::move(std::make_unique<TriggerBox>(node));
+	}else if (type == "dialog") {
+		return std::move(std::make_unique<DialogNodeBox>(node));
+	} else {
+		SDL_Log("Type %s unknown", type);
+		throw std::exception("Type unknown");
+	}
 }
 
 SDL_Rect EventNodeBox::in_plug() {
@@ -79,44 +120,32 @@ void EventNodeBox::draw(Game* game) {
 }
 
 void EventNodeBox::handle_events(Game* game, const SDL_Event& e) {
-	/*
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
 		auto mouse_pos = game->main_camera()->screen_to_world_transform(SDL_Point{ e.button.x, e.button.y });
-		if (SDL_PointInRect(&mouse_pos, &rect_)) {
-			if (e.button.button == SDL_BUTTON_LEFT) {
-
-				if (SDL_PointInRect(&mouse_pos, &get_corner())) {
-					is_resizing_ = true;
-				} else {
-					is_moving_ = true;
-				}
-			} else if (e.button.button == SDL_BUTTON_RIGHT) {
-				SDL_Log("Me : %s", uuid_.str().c_str());
-				for (int i = 0; i < next.size(); i++) {
-					SDL_Log("Next %d : %s", i, next[i].str().c_str());
-				}
+		if (e.button.button == SDL_BUTTON_RIGHT) {
+			if (SDL_PointInRect(&mouse_pos, rect())) {
+				SDL_Log("===\nMe : %s", guid().str().c_str());
+				SDL_Log("Next : %s\n===\n", next[0].str().c_str());
 			}
 		}
 	}
-	
-
-	if (e.type == SDL_MOUSEBUTTONUP) {
-		is_resizing_ = false;
-		is_moving_ = false;
-	}
-
-	if (e.type == SDL_MOUSEMOTION) {
-		if (is_resizing_) {
-			resize(e.motion.xrel, e.motion.yrel);
-			on_box_moved();
-		} else if (is_moving_) {
-			rect_.x += e.motion.xrel;
-			rect_.y += e.motion.yrel;
-			on_box_moved();
-		}
-	}*/
 }
 
+void EventNodeBox::get_xml_data(pugi::xml_node& node) {
+	node.append_attribute("guid").set_value(guid().str().c_str());
+	node.append_attribute("amt_next").set_value(next.size());
+
+	node.append_attribute("x").set_value(rect_.x);
+	node.append_attribute("y").set_value(rect_.y);
+	node.append_attribute("w").set_value(rect_.w);
+	node.append_attribute("h").set_value(rect_.h);
+
+	for (int i = 0; i < next.size(); ++i) {
+		std::stringstream str;
+		str << "next_" << i;
+		node.append_attribute(str.str().c_str()).set_value(next[i].str().c_str());
+	}
+}
 
 void EventNodeBox::resize(int x, int y) {
 
@@ -148,6 +177,68 @@ int EventNodeBox::is_point_in_plug(SDL_Point* point) {
 }
 
 
+// TRIGGER //
+
+TriggerBox::TriggerBox(bool interactable, bool is_in_place, bool activate_once) : EventNodeBox(1) {
+	title = "Entry";
+	has_in_ = false;
+
+	interactable_ = std::make_unique<ToggleBox>("Inter", interactable);
+	is_in_place_ = std::make_unique<ToggleBox>("In Place", is_in_place);
+	activate_once_ = std::make_unique<ToggleBox>("Once", activate_once);
+	on_box_moved();
+}
+
+TriggerBox::TriggerBox(pugi::xml_node& const node) : EventNodeBox(1, &node) {
+
+	title = "Entry";
+	has_in_ = false;
+
+	interactable_ = std::make_unique<ToggleBox>("Inter", node.attribute("interactable").as_bool());
+	is_in_place_ = std::make_unique<ToggleBox>("In Place", node.attribute("in_place").as_bool());
+	activate_once_ = std::make_unique<ToggleBox>("Once", node.attribute("once").as_bool());
+	on_box_moved();
+}
+
+void TriggerBox::draw(Game* game) {
+
+	EventNodeBox::draw(game);
+
+	interactable_->draw(game);
+	is_in_place_->draw(game);
+	activate_once_->draw(game);
+
+}
+
+void TriggerBox::handle_events(Game* game, const SDL_Event& e) {
+	interactable_->handle_events(game, e);
+	is_in_place_->handle_events(game, e);
+	activate_once_->handle_events(game, e);
+
+	EventNodeBox::handle_events(game, e);
+
+}
+
+void TriggerBox::get_xml_data(pugi::xml_node& node) {
+	EventNodeBox::get_xml_data(node);
+	node.append_attribute("type").set_value("trigger");
+	node.append_attribute("interactable").set_value(interactable());
+	node.append_attribute("in_place").set_value(is_in_place());
+	node.append_attribute("once").set_value(activate_once());
+}
+
+void TriggerBox::on_box_moved() {
+
+	SDL_Point pos = { rect_.x + 8, rect_.y + (rect_.h / 4) };
+	interactable_->set_position(pos);
+	pos.y += (rect_.h / 4);
+	is_in_place_->set_position(pos);
+	pos.y += (rect_.h / 4);
+	activate_once_->set_position(pos);
+
+}
+
+
 // DIALOG NODE //
 
 void DialogNodeBox::draw(Game* game) {
@@ -155,7 +246,7 @@ void DialogNodeBox::draw(Game* game) {
 	EventNodeBox::draw(game);
 
 	// Draw text box
-	if(!is_editing_text)
+	if (!is_editing_text)
 		SDL_SetRenderDrawColor(game->renderer(), 0, 0, 0, 255);
 	else
 		SDL_SetRenderDrawColor(game->renderer(), 255, 0, 0, 255);
@@ -199,45 +290,11 @@ void DialogNodeBox::handle_events(Game* game, const SDL_Event& e) {
 	EventNodeBox::handle_events(game, e);
 }
 
-// TRIGGER //
+void DialogNodeBox::get_xml_data(pugi::xml_node& node) {
 
-TriggerBox::TriggerBox() : EventNodeBox(1) {
-	title = "Entry";
-	has_in_ = false;
-
-	interactable_ = std::make_unique<ToggleBox>("Inter", false);
-	is_in_place_ = std::make_unique<ToggleBox>("In Place", true);
-	activate_once_ = std::make_unique<ToggleBox>("Once", false);
-	on_box_moved();
-}
-
-void TriggerBox::draw(Game* game) {
-
-	EventNodeBox::draw(game);
-
-	interactable_->draw(game);
-	is_in_place_->draw(game);
-	activate_once_->draw(game);
-	
-}
-
-void TriggerBox::handle_events(Game* game, const SDL_Event& e) {
-	interactable_->handle_events(game, e);
-	is_in_place_->handle_events(game, e);
-	activate_once_->handle_events(game, e);
-
-	EventNodeBox::handle_events(game, e);
+	EventNodeBox::get_xml_data(node);
+	node.append_attribute("type").set_value("dialog");
+	node.append_attribute("dialog").set_value(text.c_str());
 
 }
 
-void TriggerBox::on_box_moved() {
-
-	
-	SDL_Point pos = { rect_.x + 8, rect_.y + (rect_.h / 4) };
-	interactable_->set_position(pos);
-	pos.y += (rect_.h / 4);
-	is_in_place_->set_position(pos);
-	pos.y += (rect_.h / 4);
-	activate_once_->set_position(pos);
-	
-}

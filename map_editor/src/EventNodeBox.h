@@ -14,6 +14,9 @@ using namespace sl2dge;
 
 class EventNodeBox {
 public:
+
+	static std::unique_ptr<EventNodeBox>create_node(pugi::xml_node& node);
+
 	virtual ~EventNodeBox() = default;
 
 	Guid guid() const { return uuid_; }
@@ -29,6 +32,7 @@ public:
 
 	virtual void draw(Game* game);
 	virtual void handle_events(Game* game, const SDL_Event& e);
+	virtual void get_xml_data(pugi::xml_node& node);
 
 	void resize(int x, int y);
 	void translate(int x, int y);
@@ -36,7 +40,7 @@ public:
 	const SDL_Rect* rect() const { return &rect_; }
 
 protected:
-	EventNodeBox(int out_amt = 1);
+	EventNodeBox(int const out_amt = 1, pugi::xml_node* const node = nullptr);
 
 	std::string title = "";
 	bool has_in_ = true;
@@ -53,17 +57,21 @@ private:
 /* TRIGGER */
 class TriggerBox : public EventNodeBox {
 public:
-	TriggerBox();
+	TriggerBox(bool interactable = false, bool is_in_place = true, bool activate_once = false);
+	TriggerBox(pugi::xml_node& const node);
 
 	void draw(Game* game) override;
 	void handle_events(Game* game, const SDL_Event& e) override;
+	void get_xml_data(pugi::xml_node& node) override;
+
+	bool interactable() { return interactable_->value(); }
+	bool is_in_place() { return is_in_place_->value(); }
+	bool activate_once() { return activate_once_->value(); }
 
 protected:
 	void on_box_moved() override;
 
 private:
-
-	SDL_Point map_pos;
 	std::unique_ptr<ToggleBox> interactable_ = nullptr;
 	std::unique_ptr<ToggleBox> is_in_place_ = nullptr; //  you need to stand on the item to trigger the event
 	std::unique_ptr<ToggleBox> activate_once_ = nullptr; // If true, won't activate ever again
@@ -71,14 +79,20 @@ private:
 
 class DialogNodeBox : public EventNodeBox {
 public:
-	DialogNodeBox() : EventNodeBox(2) {
+	DialogNodeBox() : EventNodeBox(1) {
 		title = "Dialog";
+	}
+	
+	DialogNodeBox(pugi::xml_node& const node) : EventNodeBox(1, &node) {
+		title = "Dialog";
+		text = node.attribute("dialog").as_string();;
 	}
 
 	std::string text = "";
 
 	void draw(Game* game);
 	void handle_events(Game* game, const SDL_Event& e) override;
+	void get_xml_data(pugi::xml_node& node) override;
 
 private:
 	bool is_editing_text = false;

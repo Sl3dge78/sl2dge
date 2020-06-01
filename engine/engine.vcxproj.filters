@@ -60,6 +60,9 @@
     <ClCompile Include="src\guid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\pugixml.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Atlas.h">
@@ -126,6 +129,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\guid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pugiconfig.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pugixml.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

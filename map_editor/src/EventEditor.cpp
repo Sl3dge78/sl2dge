@@ -1,12 +1,42 @@
 #include "EventEditor.h"
 
+#include <iostream>
+#include <fstream>
+
+
 void EventEditor::start(Game* game) {
 	camera = std::make_unique<Camera>(1280, 720);
 	game->set_main_camera(camera.get());
 	SDL_StopTextInput();
-
 	boxes = std::make_unique<std::vector<std::unique_ptr<EventNodeBox>>>();
-	boxes->push_back(std::make_unique<TriggerBox>());
+	
+	pugi::xml_document doc;
+	open_xml_doc(&doc, map_path_);
+
+	pugi::xml_node node;
+	if (get_event_chain_node(doc, map_path_, node)) { // There is stuff!
+		SDL_Log("Loading existing event data...");
+
+		for (auto child : node.children()) {
+			auto b = EventNodeBox::create_node(child);
+			// Set the next nodes
+			
+			boxes->push_back(std::move(b));
+		}
+
+		// Create the link between the boxes
+		for (auto& box : *boxes) {
+			for (auto id : box->next) {
+				auto p = get_box_from_uuid(id);
+				if(p != nullptr)
+					p->has_prev = true;
+			}
+		}
+
+		SDL_Log("Event data loaded!");
+	} else { // No data, start from scratch
+		boxes->push_back(std::make_unique<TriggerBox>());
+	}
 }
 
 void EventEditor::handle_events(Game* game, const SDL_Event& e) {
@@ -15,24 +45,29 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 		if (SDL_GetModState() & KMOD_CTRL && e.key.keysym.scancode == SDL_SCANCODE_N) {
 			boxes->push_back(std::make_unique<DialogNodeBox>());
 		}
+		if (SDL_GetModState() & KMOD_CTRL && e.key.keysym.scancode == SDL_SCANCODE_S) {
+			save();
+			
+		}
 	}
 
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
 		auto mouse_pos = game->main_camera()->screen_to_world_transform(SDL_Point{ e.button.x, e.button.y });
 		if (e.button.button == SDL_BUTTON_LEFT) {
 			bool clicked_on_smth = false;
+
 			for (auto& b : *boxes) {
 
 				// Clicking inside a box
 				if (SDL_PointInRect(&mouse_pos, b->rect())) {
-					selected_box = b.get(); 
+					selected_box = b.get();
 					clicked_on_smth = true;
 					if (SDL_PointInRect(&mouse_pos, &b->get_corner())) {
 						is_resizing_ = true;
 					} else {
 						is_moving_ = true;
 					}
-				} 
+				}
 
 				// Clicking on in plug
 				if (b->has_in() && SDL_PointInRect(&mouse_pos, &b->in_plug())) {
@@ -66,7 +101,7 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 				plugging_out_box = nullptr;
 				selected_box = nullptr;
 				is_resizing_ = false;
-				is_moving_= false;
+				is_moving_ = false;
 				plug_out = -1;
 				is_plugging = false;
 
@@ -103,7 +138,7 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 			selected_box->resize(e.motion.xrel, e.motion.yrel);
 		} else if (is_moving_) {
 			selected_box->translate(e.motion.xrel, e.motion.yrel);
-			
+
 		}
 	}
 
@@ -183,4 +218,28 @@ void EventEditor::on_state_resume() {
 }
 
 void EventEditor::on_state_pause() {
+}
+
+void EventEditor::save() {
+	pugi::xml_document doc;
+	open_xml_doc(&doc, map_path_);
+
+	pugi::xml_node event_chain;
+	get_event_chain_node(doc, map_path_, event_chain);
+
+	// Remove everything and write from scratch
+	event_chain.remove_attributes();
+	event_chain.remove_children();
+
+	event_chain.append_attribute("x_pos").set_value(map_pos_.x);
+	event_chain.append_attribute("y_pos").set_value(map_pos_.y);
+
+	for (auto& b : *boxes) {
+		auto event_node = event_chain.append_child("Event");
+		b->get_xml_data(event_node);
+	}
+
+	doc.save_file(map_path_.c_str());
+	SDL_Log("Saved!");
+
 }

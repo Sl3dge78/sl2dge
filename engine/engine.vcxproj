@@ -165,6 +165,7 @@
     <ClCompile Include="src\GameEvent.cpp" />
     <ClCompile Include="src\guid.cpp" />
     <ClCompile Include="src\HelperFunctions.cpp" />
+    <ClCompile Include="src\pugixml.cpp" />
     <ClCompile Include="src\QuestManager.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\SDL_FontCache.c" />
@@ -186,6 +187,8 @@
     <ClInclude Include="src\HelperFunctions.h" />
     <ClInclude Include="src\Item.h" />
     <ClInclude Include="src\Point.h" />
+    <ClInclude Include="src\pugiconfig.hpp" />
+    <ClInclude Include="src\pugixml.hpp" />
     <ClInclude Include="src\Quest.h" />
     <ClInclude Include="src\QuestManager.h" />
     <ClInclude Include="src\Rect.h" />

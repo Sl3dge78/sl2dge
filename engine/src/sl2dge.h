@@ -22,5 +22,6 @@
 #include "Sprites.h"
 #include "TileMap.h"
 #include "guid.h"
+#include "pugixml.hpp"
 
 namespace sl2dge {};
