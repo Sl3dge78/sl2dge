@@ -15,7 +15,7 @@ void MainState::start(Game* game) {
 	game->quest_manager()->add_game_quest(new Quest(Q_STD_DELIVERY_ANY, "Standard delivery"));
 	
 	
-	game->push_state(std::make_unique<Island>());
+	game->push_state(std::make_unique<Scene>("resources/levels/maptest.map"));
 }
 
 void MainState::handle_events(Game* game, const SDL_Event& e) {

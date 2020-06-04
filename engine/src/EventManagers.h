@@ -11,7 +11,8 @@
 #include "GameEvent.h"
 #include "Point.h"
 #include "HelperFunctions.h"
-
+#include "Player.h"
+#include "pugixml.hpp"
 
 namespace sl2dge {
 
@@ -20,7 +21,7 @@ namespace sl2dge {
 	class GameEventManager {
 	public:
 
-		GameEventManager(Game* game);
+		GameEventManager(Game* game, pugi::xml_node& const events_node);
 		~GameEventManager();
 
 		// Adds an event to the list. Events can be triggered via in-game Triggers or directly using TriggerEvent.
@@ -31,24 +32,24 @@ namespace sl2dge {
 		// See Trigger class constructor for more details.
 		void add_trigger(Trigger* trigger);
 
-		GameEvent* find_game_event(const int id);
+		GameEvent* find_game_event(const Guid id);
 		
 		// Triggers event id
-		bool trigger_event(const int id);
+		bool trigger_event(const Guid id);
 
 		// Triggers the next event in the chain
 		bool next_event();
 
-		void update(const Point& player_position);
+		void update(Player* player);
 
 		// Call this when the player presses the interact button. This will trigger triggers if they can be triggered.
-		void on_interact(const Point& player_position, Direction direction);
+		void on_interact(Player* player);
 
 		SDL_Texture* dialog_box() { return dialog_box_; }
 		SDL_Texture* selection_texture() { return selection_texture_; }
 
 	private:
-		Game* game;
+		Game* game = nullptr;
 		std::vector<std::unique_ptr<GameEvent>> event_list;
 		std::vector<std::unique_ptr<Trigger>> triggers;
 

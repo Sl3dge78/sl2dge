@@ -167,7 +167,6 @@
     <ClInclude Include="src\Island.h" />
     <ClInclude Include="src\ItemList.h" />
     <ClInclude Include="src\MainState.h" />
-    <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\PostOffice.h" />
     <ClInclude Include="src\QuestIDs.h" />
   </ItemGroup>

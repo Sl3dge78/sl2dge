@@ -2,7 +2,6 @@
 
 #include <sl2dge.h>
 
-#include "Player.h"
 
 using namespace sl2dge;
 

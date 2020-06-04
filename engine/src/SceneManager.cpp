@@ -22,7 +22,7 @@ namespace sl2dge {
 	}
 
 	std::unique_ptr<TileMap> SceneManager::LoadScene(Game* game, std::string name) {
-		auto path = scenes_paths->find(name)->second;
+		//auto path = scenes_paths->find(name)->second;
 		/*
 		if (path == "") {
 			if (game->map == nullptr) {
@@ -34,7 +34,8 @@ namespace sl2dge {
 			}
 		}
 		*/
-		return std::make_unique<TileMap>(*game->renderer(), path);
+		//return std::make_unique<TileMap>(*game->renderer(), path);
+		return nullptr;
 	}
 
 	void SceneManager::Exit() {

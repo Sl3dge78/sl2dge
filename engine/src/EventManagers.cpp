@@ -3,14 +3,15 @@
 #include "Game.h"
 #include "DialogState.h"
 
+
 namespace sl2dge {
 
 #pragma region GAMEEVENT MANAGER
 
-	GameEventManager::GameEventManager(Game* game) {
-
+	GameEventManager::GameEventManager(Game* game, pugi::xml_node& const events_node) {
+		
 		this->game = game;
-
+		
 		auto s = IMG_Load(box_path.c_str());
 		dialog_box_ = SDL_CreateTextureFromSurface(game->renderer(), s);
 		SDL_FreeSurface(s);
@@ -19,6 +20,22 @@ namespace sl2dge {
 		selection_texture_ = SDL_CreateTextureFromSurface(game->renderer(), s);
 		SDL_FreeSurface(s);
 
+		if (events_node.child("Event_Chain")) {
+			//We found events, iterate through them and add them to the list !
+			for (auto event_chain : events_node.children("Event_Chain")) {
+				Point position = { event_chain.attribute("x_pos").as_int(), event_chain.attribute("y_pos").as_int() };
+				for (auto event : event_chain.children("Event")) {
+					std::string type = event.attribute("type").as_string();
+					if (type == "trigger") {
+						triggers.push_back(std::make_unique<Trigger>(position, Guid(event.attribute("next_0").as_string()), event.attribute("interactable").as_bool(), event.attribute("in_place").as_bool(), event.attribute("once").as_bool()));
+					} else if (type == "dialog") {
+						event_list.push_back(std::make_unique<Dialog>(Guid(event.attribute("guid").as_string()), event.attribute("dialog").as_string(), Guid(event.attribute("next_0").as_string())));
+					} else {
+						SDL_Log("Event type %s not implemented", type.c_str());
+					}
+				}
+			}
+		}
 	}
 
 	GameEventManager::~GameEventManager() {
@@ -34,7 +51,7 @@ namespace sl2dge {
 		event_list.push_back(std::unique_ptr<GameEvent>(e));
 	}
 
-	GameEvent* GameEventManager::find_game_event(const int id) {
+	GameEvent* GameEventManager::find_game_event(const Guid id) {
 		for (auto&& x : event_list) {
 			if (x->GetID() == id)
 				return x.get();
@@ -42,7 +59,7 @@ namespace sl2dge {
 		return nullptr;
 	}
 
-	bool GameEventManager::trigger_event(const int id) {
+	bool GameEventManager::trigger_event(const Guid id) {
 		if (current_event != nullptr)
 			SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Triggering Event id %d but there already is an event playing (id %d)", id, current_event->GetID());
 
@@ -62,8 +79,7 @@ namespace sl2dge {
 		auto next = current_event->GetNext();
 		current_event = nullptr;
 
-		if (next == -1) {
-			
+		if (next.isNil()) {
 			return false;
 		}
 		return trigger_event(next);
@@ -73,9 +89,9 @@ namespace sl2dge {
 		triggers.push_back(std::unique_ptr<Trigger>(trigger));
 	}
 
-	void GameEventManager::update(const Point& player_position) {
+	void GameEventManager::update(Player* player) {
 		for (auto it = triggers.begin(); it != triggers.end(); it++) {
-			if (!it->get()->is_interactable() && it->get()->position() == player_position) {
+			if (!it->get()->is_interactable() && it->get()->position() == player->tiled_position()) {
 				activate_trigger(it->get());
 				return;
 			} else {
@@ -84,23 +100,23 @@ namespace sl2dge {
 		}
 	}
 
-	void GameEventManager::on_interact(const Point& player_position, Direction direction) {
+	void GameEventManager::on_interact(Player* player) {
 		for (auto& trig : triggers) {
 			if (trig->is_interactable()) {
 				if (trig->is_in_place()) {
-					if (trig->position() == player_position) {
+					if (trig->position() == player->tiled_position()) {
 						activate_trigger(trig.get());
 						return;
 					}
 				} else {
-					auto target_position = player_position;
-					if (direction == Direction::Up) {
+					auto target_position = player->tiled_position();
+					if (player->facing_direction() == Direction::Up) {
 						target_position.y += -1;
-					} else if (direction == Direction::Down) {
+					} else if (player->facing_direction() == Direction::Down) {
 						target_position.y += 1;
-					} else if (direction == Direction::Left) {
+					} else if (player->facing_direction() == Direction::Left) {
 						target_position.x += -1;
-					} else if (direction == Direction::Right) {
+					} else if (player->facing_direction() == Direction::Right) {
 						target_position.x += 1;
 					}
 					if (trig->position() == target_position) {
@@ -112,8 +128,8 @@ namespace sl2dge {
 		}
 	}
 	void GameEventManager::activate_trigger(Trigger* trigger) {
-		int next = trigger->on_trigger_activate();
-		if (next == -1)
+		Guid next = trigger->on_trigger_activate();
+		if (next.isNil())
 			return;
 
 		trigger_event(next);

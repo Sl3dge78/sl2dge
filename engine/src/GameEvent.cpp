@@ -11,11 +11,11 @@
 
 namespace sl2dge {
 
-	Trigger::Trigger(const Point& position, const int event_id, const bool interactable_, const bool is_in_place_, const bool activate_once_) :
+	Trigger::Trigger(const Point& position, const Guid event_id, const bool interactable_, const bool is_in_place_, const bool activate_once_) :
 		position_(position), triggered_event_id_(event_id), interactable_(interactable_), is_in_place_(is_in_place_), activate_once_(activate_once_) {
 	}
 
-	int Trigger::on_trigger_activate() {
+	Guid Trigger::on_trigger_activate() {
 		if (!entered_ && !activated) {
 			SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Event %d triggered", triggered_event_id_);
 			if (!interactable_) {
@@ -30,7 +30,7 @@ namespace sl2dge {
 		}
 
 		
-		return -1;
+		return Guid();
 	}
 
 	void Trigger::reset() {
@@ -41,7 +41,7 @@ namespace sl2dge {
 
 	/* DIALOG */
 	
-	Dialog::Dialog(int id, const std::string& text, int next) :
+	Dialog::Dialog(Guid id, const std::string& text, Guid next) :
 		GameEvent(id, next), text_(text) {
 	}
 
@@ -55,7 +55,7 @@ namespace sl2dge {
 
 	/* CHOICE */
 
-	DialogChoice::DialogChoice(int id, std::string text, std::vector<std::string> choices, std::vector<int> next_nodes) :
+	DialogChoice::DialogChoice(Guid id, std::string text, std::vector<std::string> choices, std::vector<Guid> next_nodes) :
 		Dialog(id,text, next_nodes_[0]), choices_(choices) {
 	}
 
@@ -75,7 +75,7 @@ namespace sl2dge {
 
 	/* TELEPORT */
 
-	Teleport::Teleport(const int id, IMoveable* obj, const Point& pos, const int next)
+	Teleport::Teleport(const Guid id, IMoveable* obj, const Point& pos, const Guid next)
 		: GameEvent(id, next), pos(pos), obj(obj){
 	}
 	void Teleport::on_activate(Game* game, GameEventManager* gem) {

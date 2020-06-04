@@ -4,7 +4,8 @@
 
 #include <SDL/SDL.h>
 
-#include <sl2dge.h>
+#include "Components.h"
+#include "Sprites.h"
 
 using namespace sl2dge;
 

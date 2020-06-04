@@ -23,5 +23,7 @@
 #include "TileMap.h"
 #include "guid.h"
 #include "pugixml.hpp"
+#include "Player.h"
+#include "Scene.h"
 
 namespace sl2dge {};

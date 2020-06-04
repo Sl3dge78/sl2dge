@@ -12,7 +12,17 @@ void Editor::start(Game* game) {
 	map_camera = std::make_unique<Camera>(1000, 720, 1);
 	game->set_main_camera(map_camera.get());
 
-	map = std::make_unique<TileMap>(*game->renderer(), map_path);
+	pugi::xml_document doc;
+	pugi::xml_parse_result result = doc.load_file(map_path.c_str());
+	if (!result) {
+		SDL_Log("Unable to read xml %s : %s", map_path.c_str(), result.description());
+		throw std::exception("Unable to load XML");
+	}
+
+	SDL_Log("%s successfully loaded", map_path.c_str());
+	auto map_node = doc.child("Map");
+
+	map = std::make_unique<TileMap>(*game->renderer(), map_node);
 	game->set_current_map(map.get());
 
 	atlas_ = map->atlas();
@@ -116,12 +126,15 @@ void Editor::input(Game* game) {
 	int x = 0;
 	int y = 0;
 	auto mouse_state = SDL_GetMouseState(&x, &y);
-	if (mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-		auto pos = map->pixel_to_map_transform(map_camera->screen_to_world_transform(Point(x, y)));
-		map->set_tile(current_layer, pos, current_atlas_tile);
-	} else if (mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
-		auto pos = map->pixel_to_map_transform(map_camera->screen_to_world_transform(Point(x, y)));
-		map->set_tile(current_layer, pos, -1);
+
+	if (x < atlas_position.x) {
+		if (mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+			auto pos = map->pixel_to_map_transform(map_camera->screen_to_world_transform(Point(x, y)));
+			map->set_tile(current_layer, pos, current_atlas_tile);
+		} else if (mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
+			auto pos = map->pixel_to_map_transform(map_camera->screen_to_world_transform(Point(x, y)));
+			map->set_tile(current_layer, pos, -1);
+		}
 	}
 }
 

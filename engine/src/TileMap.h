@@ -7,7 +7,7 @@
 #include "Point.h"
 #include "Camera.h"
 #include "Atlas.h"
-
+#include "pugixml.hpp"
 
 namespace sl2dge {
 
@@ -15,7 +15,7 @@ namespace sl2dge {
 
 	class TileMap {
 	public:
-		TileMap(SDL_Renderer& renderer, const std::string& map_path);
+		TileMap(SDL_Renderer& renderer, pugi::xml_node& const map_node);
 		~TileMap();
 
 		enum DrawParams {

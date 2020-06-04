@@ -41,7 +41,7 @@ public:
 
 class InventoryAddEvent : public GameEvent {
 public:
-	InventoryAddEvent(int id, Inventory* inventory, int item_id, int qty, int next) : GameEvent(id, next), inventory(inventory), item_id(item_id), qty(qty) {};
+	InventoryAddEvent(Guid id, Inventory* inventory, int item_id, int qty, Guid next) : GameEvent(id, next), inventory(inventory), item_id(item_id), qty(qty) {};
 
 	virtual void on_activate(Game* game, GameEventManager* gem) override;
 	virtual void on_end(Game* game) override {};
@@ -54,7 +54,7 @@ private:
 
 class ConditionalInventoryEvent : public GameEvent {
 public:
-	ConditionalInventoryEvent(const int id, Inventory* inventory, const int item_id, const int item_qty, const int id_true, const int id_false) :
+	ConditionalInventoryEvent(const Guid id, Inventory* inventory, const int item_id, const int item_qty, const Guid id_true, const Guid id_false) :
 		GameEvent(id, id_false), inventory(inventory), item_id(item_id), item_qty(item_qty), id_true(id_true), id_false(id_false) {
 	}
 	virtual void on_activate(Game* game, GameEventManager* gem) override;
@@ -64,6 +64,6 @@ private:
 	Inventory* inventory;
 	int item_id;
 	int item_qty;
-	int id_true;
-	int id_false;
+	Guid id_true;
+	Guid id_false;
 };

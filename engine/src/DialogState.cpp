@@ -37,23 +37,26 @@ namespace sl2dge {
 
 		if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
 			switch (e.key.keysym.scancode) {
-				if (is_choice) {
-			case SDL_SCANCODE_S:
-				current_choice++;
-				if (current_choice > int(current_choice_dialog->choice_amnt()) - 2)
-					current_choice = int(current_choice_dialog->choice_amnt()) - 2;
 
-				if (current_choice < 0)
-					current_choice = 0;
-				current_choice_dialog->set_choice(current_choice);
+			case SDL_SCANCODE_S:
+				if (is_choice) {
+					current_choice++;
+					if (current_choice > int(current_choice_dialog->choice_amnt()) - 2)
+						current_choice = int(current_choice_dialog->choice_amnt()) - 2;
+
+					if (current_choice < 0)
+						current_choice = 0;
+					current_choice_dialog->set_choice(current_choice);
+				}
 				break;
 			case SDL_SCANCODE_W:
-				current_choice--;
-				if (current_choice < 0)
-					current_choice = 0;
-				current_choice_dialog->set_choice(current_choice);
-				break;
+				if (is_choice) {
+					current_choice--;
+					if (current_choice < 0)
+						current_choice = 0;
+					current_choice_dialog->set_choice(current_choice);
 				}
+				break;
 			case SDL_SCANCODE_E:
 				event_manager->next_event();
 				break;
@@ -75,12 +78,12 @@ namespace sl2dge {
 		}
 
 		// Bottom
-		FC_DrawBox(game->font(), game->renderer(), single_rect + Rect(8,8,-8,-8), current_dialog->text()->c_str());
-		
+		FC_DrawBox(game->font(), game->renderer(), single_rect + Rect(8, 8, -8, -8), current_dialog->text()->c_str());
+
 		// Choices
 		if (is_choice) {
 			for (int i = 0; i < current_choice_dialog->choice_amnt(); ++i) {
-				FC_DrawAlign(game->font(), game->renderer(), float(choice_anchor.x - 8), float(8 + choice_rect.y + ((16+8) * (i))), FC_ALIGN_RIGHT, current_choice_dialog->choice_text(i)->c_str());
+				FC_DrawAlign(game->font(), game->renderer(), float(choice_anchor.x - 8), float(8 + choice_rect.y + ((16 + 8) * (i))), FC_ALIGN_RIGHT, current_choice_dialog->choice_text(i)->c_str());
 			}
 		}
 

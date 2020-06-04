@@ -11,34 +11,15 @@
 #include "Atlas.h"
 #include "HelperFunctions.h"
 #include "Game.h"
-#include "pugixml.hpp"
+
 
 namespace sl2dge {
-	TileMap::TileMap(SDL_Renderer& renderer, const std::string& map_path) {
-		using namespace pugi;
-
-		xml_document doc;
-		xml_parse_result result = doc.load_file(map_path.c_str());
-		if (!result) {
-			SDL_Log("Unable to read xml %s : %s", map_path.c_str(), result.description());
-			if (result.status == pugi::xml_parse_status::status_bad_attribute) {
-				std::ifstream file;
-				file.open(map_path);
-				file.seekg(result.offset);
-
-				std::string s;
-				s.resize(20);
-				file.read(&s[0], 20);
-				SDL_Log("Error at %s", s.c_str());
-			}
-			doc = xml_document();
-		}
-
-		SDL_Log("%s successfully loaded", map_path.c_str());
-
-		auto map_node = doc.child("Map");
+	TileMap::TileMap(SDL_Renderer& renderer, pugi::xml_node& const map_node) {
+		
 		if (!map_node) {
-			map_node = doc.append_child("Map");
+			// Throw error
+			SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "No map data to read");
+			throw std::exception("No map data to read!");
 		}
 
 		std::string atlas_path = map_node.attribute("tile_map").as_string();

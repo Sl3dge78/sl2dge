@@ -10,6 +10,7 @@
 
 #include "Point.h"
 #include "Components.h"
+#include "guid.h"
 
 namespace sl2dge {
 	
@@ -32,18 +33,18 @@ namespace sl2dge {
 			RandomBranch = 7,
 		};*/
 
-		int GetID() const { return id; }
-		int GetNext() const { return next; }
+		Guid GetID() const { return id; }
+		Guid GetNext() const { return next; }
 		virtual ~GameEvent() = default;
 		virtual void on_activate(Game* game, GameEventManager* gem) = 0;
 		virtual void on_end(Game* game) = 0;
 
 	protected:
-		 GameEvent(const int id, const int next = -1) :id(id), next(next) {};
-		int next;
+		 GameEvent(const Guid id, const Guid next = Guid()) :id(id), next(next) {};
+		 Guid next;
 
 	private:
-		int id;
+		Guid id;
 
 	};
 
@@ -53,7 +54,7 @@ namespace sl2dge {
 		// Creates an event that will display a dialog. The first text will be displayed in the dialog box, the rest will be displayed as choices.
 		// Each choice will trigger next_nodes in their respective order.
 		// Upon triggering, this event will push a gamestate to the gamestate manager.
-		Dialog(int id, const std::string& text, int next);
+		Dialog(Guid id, const std::string& text, Guid next);
 		~Dialog() {};
 		
 		virtual void on_activate(Game* game, GameEventManager* gem) override;
@@ -69,7 +70,7 @@ namespace sl2dge {
 		// Creates an event that will display a dialog. The first text will be displayed in the dialog box, the rest will be displayed as choices.
 		// Each choice will trigger next_nodes in their respective order.
 		// Upon triggering, this event will push a gamestate to the gamestate manager.
-		DialogChoice(int id, std::string text, std::vector<std::string> choices, std::vector<int> next_nodes);
+		DialogChoice(Guid id, std::string text, std::vector<std::string> choices, std::vector<Guid> next_nodes);
 		~DialogChoice() {};
 		
 		void set_choice(const int choice = 0);
@@ -82,13 +83,13 @@ namespace sl2dge {
 	private:
 		std::vector<std::string> choices_;
 		int choice_ = 0;
-		std::vector<int> next_nodes_;
+		std::vector<Guid> next_nodes_;
 	};
 
 	class Teleport : public GameEvent {
 	public:
 		// Creates a new event that will teleport an IMoveable obj to a specified position.
-		Teleport(const int id, IMoveable* obj, const Point& pos, const int next = -1);
+		Teleport(const Guid id, IMoveable* obj, const Point& pos, const Guid next = Guid());
 
 		// Inherited via GameEvent
 		virtual void on_activate(Game* game, GameEventManager* gem) override;
@@ -102,7 +103,7 @@ namespace sl2dge {
 	class SceneChange : public GameEvent {
 	public:
 		// Creates a new event that will change the current scene to scene_name. Don't forget to TP the player afterwards!
-		SceneChange(const int id, std::unique_ptr <GameState> state, const int next = -1) : GameEvent(id, next), state_(std::move(state)) {};
+		SceneChange(const Guid id, std::unique_ptr <GameState> state, const Guid next = Guid()) : GameEvent(id, next), state_(std::move(state)) {};
 		virtual void on_activate(Game* game, GameEventManager* gem) override;
 		virtual void on_end(Game* game) override {};	
 
@@ -115,7 +116,7 @@ namespace sl2dge {
 
 	public:
 		// Creates a new event that will change quest quest_id to new_status.
-		QuestStatus(const int id, const int quest_id, const int new_status, const int next = -1) : GameEvent(id, next), quest_id_(quest_id), new_status_(new_status) {};
+		QuestStatus(const Guid id, const int quest_id, const int new_status, const Guid next = Guid()) : GameEvent(id, next), quest_id_(quest_id), new_status_(new_status) {};
 
 		virtual void on_activate(Game* game, GameEventManager* gem) override;
 		virtual void on_end(Game* game) override {};
@@ -129,7 +130,7 @@ namespace sl2dge {
 
 	public:
 		// Creates a new event that will jump to a specific event depending on the quest's status.
-		QuestEQBranch(const int id, const int quest_id, const int status_to_check, const int next_if_true, const int next_if_false = -1)
+		QuestEQBranch(const Guid id, const int quest_id, const int status_to_check, const Guid next_if_true, const Guid next_if_false = Guid())
 			: GameEvent(id), quest_id_(quest_id), status_to_check_(status_to_check), 
 			next_if_true_(next_if_true), next_if_false_(next_if_false) {
 		};
@@ -138,8 +139,8 @@ namespace sl2dge {
 		virtual void on_end(Game* game) override {};
 
 	private:
-		int next_if_true_;
-		int next_if_false_;
+		Guid next_if_true_;
+		Guid next_if_false_;
 		int quest_id_;
 		int status_to_check_;
 	};
@@ -148,7 +149,7 @@ namespace sl2dge {
 
 	public:
 		// Creates a new event that will jump to a specific event if status is over or equals status_to_check
-		QuestGTBranch(const int id, const int quest_id, const int status_to_check, const int next_if_greater, const int next_if_lower = -1)
+		QuestGTBranch(const Guid id, const int quest_id, const int status_to_check, const Guid next_if_greater, const Guid next_if_lower = Guid())
 			: GameEvent(id), quest_id_(quest_id), status_to_check_(status_to_check),
 			next_if_greater_(next_if_greater), next_if_lower_(next_if_lower) {
 		};
@@ -157,8 +158,8 @@ namespace sl2dge {
 		virtual void on_end(Game* game) override {};
 
 	private:
-		int next_if_greater_;
-		int next_if_lower_;
+		Guid next_if_greater_;
+		Guid next_if_lower_;
 		int quest_id_;
 		int status_to_check_;
 
@@ -167,12 +168,12 @@ namespace sl2dge {
 	class RandomBranch : public GameEvent {
 	public:
 
-		RandomBranch(const int id, std::vector<int> next_nodes) : GameEvent(id), next_nodes_(next_nodes) {};
+		RandomBranch(const Guid id, std::vector<Guid> next_nodes) : GameEvent(id), next_nodes_(next_nodes) {};
 		virtual void on_activate(Game* game, GameEventManager* gem) override;
 		virtual void on_end(Game* game) override;
 
 	private:
-		std::vector<int> next_nodes_;
+		std::vector<Guid> next_nodes_;
 		
 	};
 
@@ -183,9 +184,9 @@ namespace sl2dge {
 		// interactable: does the player need to press the action button to trigger the event?
 		// is_in_place: true : the player will have to be at the position specified to trigger the event. false : looking at it will trigger it. Note : this only works on interactable = true.
 		// activate_once : does the trigger trigger once?
-		Trigger(const Point& position, const int triggered_event_id, const bool interactable_ = false, const bool is_in_place_ = true, const bool activate_once_ = false);
+		Trigger(const Point& position, const Guid triggered_event_id, const bool interactable_ = false, const bool is_in_place_ = true, const bool activate_once_ = false);
 
-		int on_trigger_activate();
+		Guid on_trigger_activate();
 		void reset();
 
 		bool is_interactable() const { return interactable_; }
@@ -195,7 +196,7 @@ namespace sl2dge {
 		Point position() const { return position_; }
 
 	private:
-		int triggered_event_id_;
+		Guid triggered_event_id_;
 		bool interactable_ = false; // you need to activate it
 		bool is_in_place_ = true; //  you need to stand on the item to trigger the event
 		bool activate_once_ = false; // If true, won't activate ever again

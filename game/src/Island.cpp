@@ -4,22 +4,22 @@
 #include "QuestIDs.h"
 
 void Island::start(Game* game) {
+	/*
+	event_manager = std::make_unique<GameEventManager>();
 
-	event_manager = std::make_unique<GameEventManager>(game);
-
-	map = std::make_unique<TileMap>(*game->renderer(), "resources/levels/map2.map");
+	//map = std::make_unique<TileMap>(*game->renderer(), "resources/levels/maptest.map");
 	game->set_current_map(map.get());
 
 	player = std::make_unique<Player>(game);
 	player->start(game);
-	player->teleport_to(Point(35, 27), 16);
+	player->teleport_to(Point(5, 5), 16);
 
 	main_camera = std::make_unique<Camera>(320, 288, 2);
 	main_camera->start(game);
 	main_camera->set_target(dynamic_cast<IMoveable*>(player.get()));
 	game->set_main_camera(main_camera.get());
 
-
+	/*
 	// Teleport player to post office
 	event_manager->add_trigger(new Trigger(Point(35, 26), 0, true));
 	event_manager->add_game_event(new SceneChange(0, std::make_unique<PostOffice>(), -1));
@@ -51,6 +51,7 @@ void Island::start(Game* game) {
 	event_manager->add_game_event(new Dialog(401, { "Hey thank you for the delivery kid!" }, { 402 }));
 	event_manager->add_game_event(new QuestStatus(402, Q_STD_DELIVERY_ANY, 0, 403));
 	event_manager->add_game_event(new QuestStatus(403, Q_STD_DELIVERY_SOUTH, 0));
+	*/
 }
 
 void Island::input(Game* game) {
@@ -63,7 +64,7 @@ void Island::update(Game* game) {
 	player->update(game);
 	game->main_camera()->update(game);
 
-	event_manager->update(player->rounded_tiled_position());
+	event_manager->update(player.get());
 }
 
 void Island::handle_events(Game* game, const SDL_Event& e) {
@@ -72,7 +73,7 @@ void Island::handle_events(Game* game, const SDL_Event& e) {
 	if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
 		switch (e.key.keysym.scancode) {
 		case SDL_SCANCODE_E:
-			event_manager->on_interact(player->rounded_tiled_position(), player->facing_direction());
+			event_manager->on_interact(player.get());
 			break;
 		}
 	}

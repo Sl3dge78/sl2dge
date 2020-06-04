@@ -1,9 +1,14 @@
-#include <sl2dge.h>
+#include "player.h"
+
+#include <memory>
+
+#include "Sprites.h"
+
 
 using namespace sl2dge;
-
+/*
 Player::Player(Game* game) {
-
+	
 	sprite_ = std::make_unique<AnimatedSprite>(*game->renderer(), "resources/images/char.png", 16, 16, 4, 3);
 	sprite_->animator()->add_animation("idle_down", 5, { 1 });
 	sprite_->animator()->add_animation("idle_up", 5, { 2 });
@@ -17,6 +22,7 @@ Player::Player(Game* game) {
 	position_ = Vector2(0, 0);
 	movement_ = Vector2(0, 0);
 	collider_ = Rect(2, 1, 11, 15);
+	
 
 }
 
@@ -26,11 +32,11 @@ Player::~Player() {
 
 
 void Player::start(Game* game) {
-
+	
 }
 
 void Player::handle_events(Game* game, const SDL_Event& e) {
-
+	
 	if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
 		switch (e.key.keysym.scancode) {
 		case SDL_SCANCODE_I:
@@ -42,13 +48,13 @@ void Player::handle_events(Game* game, const SDL_Event& e) {
 			//inventory->AddItem(new Item(2, "Nom2", "Ceci est une description2", std::make_unique<Sprite>(*game->renderer, "resources/images/items/letter.png", 16, 16)));
 		}
 	}
-
+	
 
 
 }
 
 void Player::input(Game* game) {
-
+	
 	const auto state = SDL_GetKeyboardState(NULL);
 	if (state[SDL_SCANCODE_W]) {
 		movement_.y += -1;
@@ -68,13 +74,13 @@ void Player::input(Game* game) {
 	}
 	movement_.normalize();
 	movement_ *= speed_ * float(game->delta_time()) / 1000.0f;
-
+	
 }
 
 
 void Player::update(Game* game) {
 
-
+	
 	std::string anim = "";
 	if (movement_.length() <= 0)
 		anim += "idle_";
@@ -92,13 +98,13 @@ void Player::update(Game* game) {
 
 	if(movement_.length() > 0)
 		move_and_slide(*game->current_map());
-
+		
 }
 
 void Player::draw(Game* game) {
-
+	
 	sprite_->draw(*game->renderer(), *game->main_camera(), position_);
-
+	
 }
 
 void Player::on_state_resume() {
@@ -106,3 +112,4 @@ void Player::on_state_resume() {
 
 void Player::on_state_pause() {
 }
+*/

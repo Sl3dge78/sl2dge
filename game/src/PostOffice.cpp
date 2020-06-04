@@ -4,8 +4,8 @@
 #include "QuestIDs.h"
 
 void PostOffice::start(Game* game) {
-
-	event_manager = std::make_unique<GameEventManager>(game);
+	/*
+	event_manager = std::make_unique<GameEventManager>();
 
 	map = std::make_unique<TileMap>(*game->renderer(), "resources/levels/post-office.map");
 	game->set_current_map (map.get());
@@ -60,6 +60,7 @@ void PostOffice::start(Game* game) {
 	event_manager->add_trigger(new Trigger(Point(10, 18), 0, false, true, false));
 	event_manager->add_trigger(new Trigger(Point(9, 18), 0, false, true, false));
 	event_manager->add_game_event(new SceneChange(0, std::make_unique<Island>(), -1));
+	*/
 }
 
 void PostOffice::handle_events(Game* game, const SDL_Event& e) {
@@ -69,7 +70,7 @@ void PostOffice::handle_events(Game* game, const SDL_Event& e) {
 	if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
 		switch (e.key.keysym.scancode) {
 		case SDL_SCANCODE_E:
-			event_manager->on_interact(player->rounded_tiled_position(), player->facing_direction());
+			event_manager->on_interact(player.get());
 			break;
 		}
 	}
@@ -86,7 +87,7 @@ void PostOffice::update(Game* game) {
 
 	player->update(game);
 	main_camera->update(game);
-	event_manager->update(player->rounded_tiled_position());
+	event_manager->update(player.get());
 }
 
 void PostOffice::draw(Game* game) {
