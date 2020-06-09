@@ -119,7 +119,12 @@ static void set_clip(FC_Target* dest, FC_Rect* rect)
     else
         GPU_UnsetClip(dest);
     #elif defined(ENABLE_SDL_CLIPPING)
-    SDL_RenderSetClipRect(dest, rect);
+    if (rect != NULL)
+        if (SDL_RenderSetClipRect(dest, rect) != 0) {
+            SDL_Log("ERROROROROROR");
+        }
+    else
+        SDL_RenderSetClipRect(dest, NULL);
     #endif
 }
 
@@ -134,7 +139,6 @@ static void set_color(FC_Image* src, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 }
 
 
-
 static char* new_concat(const char* a, const char* b)
 {
     // Create new buffer
@@ -143,7 +147,7 @@ static char* new_concat(const char* a, const char* b)
 
     // Concatenate strings in the new buffer
     strcpy_s(new_string, strlen(a)+1, a);
-    strcat_s(new_string, strlen(b)+1, b);
+    strcat_s(new_string, size+1, b);
 
     return new_string;
 }
@@ -433,6 +437,7 @@ struct FC_Font
 
     SDL_Color default_color;
     Uint16 height;
+    Uint16 line_height;
 
     Uint16 maxWidth;
     Uint16 baseline;
@@ -702,7 +707,10 @@ FC_Rect FC_DefaultRenderCallback(FC_Image* src, FC_Rect* srcrect, FC_Target* des
 
         SDL_Rect r = *srcrect;
         SDL_Rect dr = {(int)x, (int)y, (int)(xscale*r.w), (int)(yscale*r.h)};
-        SDL_RenderCopyEx(dest, src, &r, &dr, 0, NULL, flip);
+        
+        //SDL_RenderCopyEx(dest, src, &r, &dr, 0, NULL, flip);
+        SDL_RenderCopy(dest, src, &r, &dr);
+        
     }
     #endif
 
@@ -863,7 +871,7 @@ static void FC_Init(FC_Font* font)
     font->ttf_source = NULL;
     font->owns_ttf_source = 0;
 
-    font->filter = FC_FILTER_NEAREST;
+    font->filter = FC_FILTER_LINEAR;
 
     font->default_color.r = 0;
     font->default_color.g = 0;
@@ -1003,6 +1011,7 @@ Uint8 FC_UploadGlyphCache(FC_Font* font, int cache_level, SDL_Surface* data_surf
 
         new_level = SDL_CreateTexture(renderer, data_surface->format->format, SDL_TEXTUREACCESS_TARGET, data_surface->w, data_surface->h);
         SDL_SetTextureBlendMode(new_level, SDL_BLENDMODE_BLEND);
+        //SDL_SetTextureBlendMode(new_level, SDL_BLENDMODE_ADD);
 
         // Reset filter mode for the temp texture
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
@@ -1196,10 +1205,12 @@ Uint8 FC_LoadFontFromTTF(FC_Font* font, SDL_Renderer* renderer, TTF_Font* ttf, S
 
     font->ttf_source = ttf;
 
-    //font->line_height = TTF_FontLineSkip(ttf);
+    font->line_height = TTF_FontLineSkip(ttf);
     font->height = TTF_FontHeight(ttf);
     font->ascent = TTF_FontAscent(ttf);
     font->descent = -TTF_FontDescent(ttf);
+
+    
 
     // Some bug for certain fonts can result in an incorrect height.
     if(font->height < font->ascent - font->descent)
@@ -1211,6 +1222,7 @@ Uint8 FC_LoadFontFromTTF(FC_Font* font, SDL_Renderer* renderer, TTF_Font* ttf, S
 
     {
         SDL_Color white = {255, 255, 255, 255};
+        SDL_Color black = {0, 0, 0, 0};
         SDL_Surface* glyph_surf;
         char buff[5];
         const char* buff_ptr = buff;
@@ -1236,7 +1248,8 @@ Uint8 FC_LoadFontFromTTF(FC_Font* font, SDL_Renderer* renderer, TTF_Font* ttf, S
             memset(buff, 0, 5);
             if(!U8_charcpy(buff, source_string, 5))
                 continue;
-            glyph_surf = TTF_RenderUTF8_Blended(ttf, buff, white);
+            glyph_surf = TTF_RenderUTF8_Solid(ttf, buff, white);
+            //glyph_surf = TTF_RenderUTF8_Blended(ttf, buff, white);
             if(glyph_surf == NULL)
                 continue;
 
@@ -1726,6 +1739,7 @@ static FC_Rect FC_RenderLeft(FC_Font* font, FC_Target* dest, float x, float y, F
         #else
         srcRect = glyph.rect;
         #endif
+        
         dstRect = fc_render_callback(FC_GetGlyphCacheLevel(font, glyph.cache_level), &srcRect, dest, destX, destY, scale.x, scale.y);
         if(dirtyRect.w == 0 || dirtyRect.h == 0)
             dirtyRect = dstRect;
@@ -1982,7 +1996,7 @@ static FC_StringList* FC_GetBufferFitToColumn(FC_Font* font, int width, FC_Scale
     for(iter = ls; iter != NULL; iter = iter->next)
     {
         char* line = iter->value;
-
+        auto flf = FC_GetWidth(font, "%s", line);
         // If line is too long, then add words one at a time until we go over.
         if(width > 0 && FC_GetWidth(font, "%s", line) > width)
         {
@@ -2032,7 +2046,7 @@ static void FC_DrawColumnFromBuffer(FC_Font* font, FC_Target* dest, FC_Rect box,
     for(iter = ls; iter != NULL; iter = iter->next)
     {
         FC_RenderAlign(font, dest, box.x, y, box.w, scale, align, iter->value);
-        y += FC_GetLineHeight(font);
+        y += FC_GetLineHeight(font) + FC_GetLineSpacing(font);
     }
     FC_StringListFree(ls);
 
@@ -2467,6 +2481,8 @@ FC_FilterEnum FC_GetFilterMode(FC_Font* font)
 
     return font->filter;
 }
+
+
 
 Uint16 FC_GetLineHeight(FC_Font* font)
 {
@@ -2911,4 +2927,11 @@ void FC_SetDefaultColor(FC_Font* font, SDL_Color color)
         return;
 
     font->default_color = color;
+}
+
+void FC_SetLineHeight(FC_Font* font, Uint16 height) {
+    if (font == NULL)
+        return 0;
+    font->line_height = height;
+
 }

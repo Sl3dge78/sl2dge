@@ -14,7 +14,7 @@ namespace sl2dge {
 
 		this->font_ = FC_CreateFont();
 		FC_LoadFont(font_, renderer_, font_path_.c_str(), font_size_, SDL_Color{ 0, 0, 0, 255 }, TTF_STYLE_NORMAL);
-
+		
 		quest_manager_ = std::make_unique<QuestManager>();
 
 		//SceneManager::Init();
@@ -29,7 +29,6 @@ namespace sl2dge {
 		//SceneManager::Exit();
 
 		FC_FreeFont(font_);
-
 
 		SDL_DestroyRenderer(this->renderer_);
 		SDL_DestroyWindow(this->window_);

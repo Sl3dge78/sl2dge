@@ -184,7 +184,7 @@ void EventEditor::draw(Game* game) {
 
 	SDL_SetRenderDrawColor(game->renderer(), 25, 25, 25, 255);
 	SDL_RenderClear(game->renderer());
-
+	
 	for (auto& b : *boxes) {
 		b->draw(game);
 		for (int i = 0; i < b->next.size(); ++i) {
@@ -212,6 +212,7 @@ void EventEditor::draw(Game* game) {
 
 		SDL_RenderDrawLine(game->renderer(), orig.x, orig.y, dst.x, dst.y);
 	}
+	//SDL_RenderClear(game->renderer());
 }
 
 void EventEditor::on_state_resume() {

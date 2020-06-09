@@ -86,37 +86,41 @@ void EventNodeBox::set_out_amt(int i) {
 }
 
 void EventNodeBox::draw(Game* game) {
-
+	
 	auto pos = game->main_camera()->world_to_screen_transform(rect_);
-
+	
 	// BOX
 	SDL_SetRenderDrawColor(game->renderer(), 220, 220, 220, 255);
 	SDL_RenderFillRect(game->renderer(), &pos);
-
+	
 	// Resize Corner
 	SDL_SetRenderDrawColor(game->renderer(), 50, 50, 50, 255);
 	SDL_RenderFillRect(game->renderer(), &game->main_camera()->world_to_screen_transform(get_corner()));
-
+	
 	// TITLE
 	FC_Draw(game->font(), game->renderer(), float(pos.x), float(pos.y), title.c_str());
-
+	
 	// In
 	SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 255);
 	if (has_in_) {
 
-		if (!has_prev)
+		if (!has_prev) {
 			SDL_RenderDrawRect(game->renderer(), &game->main_camera()->world_to_screen_transform(in_plug()));
-		else
+		} else {
 			SDL_RenderFillRect(game->renderer(), &game->main_camera()->world_to_screen_transform(in_plug()));
+		}
 	}
-
+	
 	// Out
 	for (int i = 0; i < next.size(); i++) {
-		if (next[i].isNil())
+		if (next[i].isNil()) {
 			SDL_RenderDrawRect(game->renderer(), &game->main_camera()->world_to_screen_transform(out_plug(i)));
-		else
+		} else {
 			SDL_RenderFillRect(game->renderer(), &game->main_camera()->world_to_screen_transform(out_plug(i)));
+		}
 	}
+	
+	
 }
 
 void EventNodeBox::handle_events(Game* game, const SDL_Event& e) {
@@ -201,12 +205,13 @@ TriggerBox::TriggerBox(pugi::xml_node& const node) : EventNodeBox(1, &node) {
 }
 
 void TriggerBox::draw(Game* game) {
-
+	
 	EventNodeBox::draw(game);
-
+	
 	interactable_->draw(game);
 	is_in_place_->draw(game);
 	activate_once_->draw(game);
+	
 
 }
 
@@ -242,9 +247,9 @@ void TriggerBox::on_box_moved() {
 // DIALOG NODE //
 
 void DialogNodeBox::draw(Game* game) {
-
+	
 	EventNodeBox::draw(game);
-
+	
 	// Draw text box
 	if (!is_editing_text)
 		SDL_SetRenderDrawColor(game->renderer(), 0, 0, 0, 255);
@@ -253,7 +258,9 @@ void DialogNodeBox::draw(Game* game) {
 	auto pos = game->main_camera()->world_to_screen_transform(get_text_box());
 	SDL_RenderDrawRect(game->renderer(), &pos);
 
-	FC_Draw(game->font(), game->renderer(), float(pos.x), float(pos.y), text.c_str());
+	//FC_Draw(game->font(), game->renderer(), float(pos.x), float(pos.y), text.c_str());
+	
+	FC_DrawBox(game->font(), game->renderer(), pos, text.c_str());
 }
 
 void DialogNodeBox::handle_events(Game* game, const SDL_Event& e) {
