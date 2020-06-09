@@ -60,8 +60,8 @@ void sl2dge::Scene::draw(Game* game) {
 	map_->draw(game, TileMap::DrawParams::Front);
 }
 
-void sl2dge::Scene::on_state_resume() {
+void sl2dge::Scene::on_state_resume(Game* game) {
 }
 
-void sl2dge::Scene::on_state_pause() {
+void sl2dge::Scene::on_state_pause(Game* game) {
 }

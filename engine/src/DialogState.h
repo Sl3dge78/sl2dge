@@ -26,8 +26,6 @@ namespace sl2dge {
 		virtual void update(Game* game) override;
 		virtual void input(Game* game) override;
 		virtual void draw(Game* game) override;
-		virtual void on_state_resume() override;
-		virtual void on_state_pause() override;
 
 	private:
 		const Rect single_rect = Rect(0, 224, 320, 64);
@@ -46,5 +44,8 @@ namespace sl2dge {
 		// Selection
 		int current_choice = 0;
 		bool is_choice = false;
+
+		virtual void on_state_resume(Game* game) override;
+		virtual void on_state_pause(Game* game) override;
 	};
 }

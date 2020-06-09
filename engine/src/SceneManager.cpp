@@ -6,6 +6,8 @@
 
 namespace sl2dge {
 
+	// TODO : Make a doc reader that allows you to get Map data & event data in the engine
+
 	std::unique_ptr < std::map<std::string, std::string>> SceneManager::scenes_paths = std::make_unique<std::map<std::string, std::string>>();
 
 	void SceneManager::Init() {

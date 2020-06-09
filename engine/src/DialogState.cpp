@@ -132,10 +132,10 @@ namespace sl2dge {
 
 	}
 
-	void DialogState::on_state_resume() {
+	void DialogState::on_state_resume(Game* game) {
 	}
 
-	void DialogState::on_state_pause() {
+	void DialogState::on_state_pause(Game* game) {
 	}
 
 }

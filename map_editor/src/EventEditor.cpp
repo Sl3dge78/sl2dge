@@ -20,7 +20,6 @@ void EventEditor::start(Game* game) {
 		for (auto child : node.children()) {
 			auto b = EventNodeBox::create_node(child);
 			// Set the next nodes
-			
 			boxes->push_back(std::move(b));
 		}
 
@@ -48,6 +47,12 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 		if (SDL_GetModState() & KMOD_CTRL && e.key.keysym.scancode == SDL_SCANCODE_S) {
 			save();
 			
+		}
+		
+		switch (e.key.keysym.scancode) {
+		case SDL_SCANCODE_ESCAPE:
+			game->pop_state();
+			break;
 		}
 	}
 
@@ -206,19 +211,17 @@ void EventEditor::draw(Game* game) {
 		int mouse_x, mouse_y;
 		SDL_GetMouseState(&mouse_x, &mouse_y);
 		SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 255);
-		// TODO : Cleanup
 		SDL_Point orig = plugging_out_box != nullptr ? camera->world_to_screen_transform(SDL_Point{ plugging_out_box->out_plug(plug_out).x, plugging_out_box->out_plug(plug_out).y }) : SDL_Point{ mouse_x, mouse_y };
 		SDL_Point dst = plugging_in_box != nullptr ? camera->world_to_screen_transform(SDL_Point{ plugging_in_box->in_plug().x, plugging_in_box->in_plug().y }) : SDL_Point{ mouse_x, mouse_y };
 
 		SDL_RenderDrawLine(game->renderer(), orig.x, orig.y, dst.x, dst.y);
 	}
-	//SDL_RenderClear(game->renderer());
 }
 
-void EventEditor::on_state_resume() {
+void EventEditor::on_state_resume(Game* game) {
 }
 
-void EventEditor::on_state_pause() {
+void EventEditor::on_state_pause(Game* game) {
 }
 
 void EventEditor::save() {

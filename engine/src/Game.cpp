@@ -71,6 +71,12 @@ namespace sl2dge {
 					it->draw(this);
 				}
 				SDL_RenderPresent(renderer_);
+
+				if (pop_state_next_frame) {
+					pop_state_();
+					pop_state_next_frame = false;
+				}
+
 			}
 		}
 	}
@@ -86,18 +92,22 @@ namespace sl2dge {
 
 	void Game::push_state(std::unique_ptr<GameState> state) {
 		
-		states_.back()->on_state_pause();
+		states_.back()->on_state_pause(this);
 		states_.push_back(std::move(state));
 		states_.back()->start(this);
 	}
 
 	void Game::pop_state() {
+		pop_state_next_frame = true;
+	}
+
+	void Game::pop_state_() {
 		if (!states_.empty()) {
 			states_.pop_back();
 		}
 
 		if (!states_.empty()) {
-			states_.back()->on_state_resume();
+			states_.back()->on_state_resume(this);
 		}
 	}
 }

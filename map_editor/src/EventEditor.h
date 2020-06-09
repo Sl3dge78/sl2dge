@@ -21,8 +21,8 @@ public:
 	virtual void input(Game* game) override;
 	virtual void update(Game* game) override;
 	virtual void draw(Game* game) override;
-	virtual void on_state_resume() override;
-	virtual void on_state_pause() override;
+	virtual void on_state_resume(Game* game) override;
+	virtual void on_state_pause(Game* game) override;
 
 private:
 	std::unique_ptr<std::vector<std::unique_ptr<EventNodeBox>>> boxes;
@@ -89,6 +89,10 @@ private:
 					return true;
 				}
 			}
+			// No node found
+			node = events_node.append_child("Event_Chain");
+			return false;
+			
 		}
 	}
 

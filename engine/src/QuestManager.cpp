@@ -27,5 +27,5 @@ Quest* sl2dge::QuestManager::quest(const int id) {
 
 void sl2dge::QuestManager::change_quest_status(const int id, const int status) {
 	quest(id)->status = status;
-	// TODO : SAVE TO FILE
+	// TODO : save to file
 }

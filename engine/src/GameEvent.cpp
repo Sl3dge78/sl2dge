@@ -120,7 +120,7 @@ namespace sl2dge {
 
 	void RandomBranch::on_activate(Game* game, GameEventManager* gem) {
 		
-		srand(unsigned int(time(NULL))); // TODO : move that elsewhere
+		srand(unsigned int(time(NULL))); // TODO : make a rng
 
 		auto val = rand() % this->next_nodes_.size();
 		this->next = next_nodes_[val];

@@ -68,6 +68,10 @@ namespace sl2dge {
 		TileMap* current_map_ = nullptr;
 		Camera* main_camera_ = nullptr;
 		std::unique_ptr<QuestManager> quest_manager_ = nullptr;
+
+		void pop_state_();
+		bool pop_state_next_frame = false;
+
 	};
 }
 

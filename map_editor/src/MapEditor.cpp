@@ -1,5 +1,7 @@
 #include "MapEditor.h"
 
+#include "EventEditor.h"
+
 Editor::Editor(const std::string map_path) {
 
 	this->map_path = map_path;
@@ -24,6 +26,16 @@ void Editor::start(Game* game) {
 
 	map = std::make_unique<TileMap>(*game->renderer(), map_node);
 	game->set_current_map(map.get());
+
+	events = std::list<SDL_Point>();
+	auto events_node = doc.child("Events");
+	if (events_node) {
+		for (auto chain : events_node.children()) {
+			int x = chain.attribute("x_pos").as_int();
+			int y = chain.attribute("y_pos").as_int();
+			events.push_back(SDL_Point{ x,y });
+		}
+	}
 
 	atlas_ = map->atlas();
 }
@@ -93,14 +105,18 @@ void Editor::handle_events(Game* game, const SDL_Event& e) {
 			current_layer = 2;
 			break;
 
+		case SDL_SCANCODE_4:
+			current_layer = 3;
+			break;
+
 		case SDL_SCANCODE_F5:
 			SDL_Log("Saving ...");
 			map->save(map_path);
 			SDL_Log("Saved!");
 			break;
 		}
-	}
 
+	}
 }
 
 void Editor::input(Game* game) {
@@ -119,27 +135,41 @@ void Editor::input(Game* game) {
 	if (state[SDL_SCANCODE_A]) {
 		movement.x += -1;
 	}
-	
+
 	movement.normalize();
 	movement *= 700 / map_camera->zoom() * float(game->delta_time()) / 1000.0f;
 	map_camera->translate(movement);
 	int x = 0;
 	int y = 0;
 	auto mouse_state = SDL_GetMouseState(&x, &y);
-
 	if (x < atlas_position.x) {
+		auto pos = map->pixel_to_map_transform(map_camera->screen_to_world_transform(Point(x, y)));
 		if (mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-			auto pos = map->pixel_to_map_transform(map_camera->screen_to_world_transform(Point(x, y)));
-			map->set_tile(current_layer, pos, current_atlas_tile);
+			if (current_layer < 3) {
+				
+				map->set_tile(current_layer, pos, current_atlas_tile);
+			} else {
+				if (!has_event_at_position(pos.x, pos.y)) {
+					add_event_at_position(pos.x, pos.y);
+				} else {
+					game->push_state(std::make_unique<EventEditor>(map_path, SDL_Point { pos.x, pos.y }));
+				}
+			}
 		} else if (mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
-			auto pos = map->pixel_to_map_transform(map_camera->screen_to_world_transform(Point(x, y)));
-			map->set_tile(current_layer, pos, -1);
+			if (current_layer < 3) {
+				map->set_tile(current_layer, pos, -1);
+			} else {
+				if (has_event_at_position(pos.x, pos.y)) {
+					delete_event_at_position(pos.x, pos.y);
+				}
+			}
 		}
 	}
+
 }
 
 void Editor::update(Game* game) {
-	game->main_camera()->update(game);
+	map_camera->update(game);
 }
 
 void Editor::draw(Game* game) {
@@ -155,7 +185,7 @@ void Editor::draw(Game* game) {
 	SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 255);
 	SDL_RenderFillRect(game->renderer(), &border);
 
-	// Tiles
+	// Atlas
 	for (int y = 0; y < atlas_tile_h; y++) {
 		for (int x = 0; x < atlas_tile_w; x++) {
 			auto i = x + atlas_x_offset + ((y + atlas_y_offset) * atlas_->nb_tiles_atlas_width);
@@ -171,12 +201,68 @@ void Editor::draw(Game* game) {
 	}
 
 	//Current Layer
+	SDL_Rect current_layer_rect = { 0,0,75,16 };
+	SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 255);
+	SDL_RenderFillRect(game->renderer(), &current_layer_rect);
 	FC_Draw(game->font(), game->renderer(), 0, 0, "Layer: %d", current_layer);
 
+	if (current_layer == 3) { // Event layer
+		for (auto& e : events) {
+			SDL_Rect rect = map_camera->world_to_screen_transform(map->map_to_pixel_transform(Rect(e.x, e.y, 1, 1)));
+			SDL_RenderDrawRect(game->renderer(), &rect);
+		}
+	}
+
 }
 
-void Editor::on_state_resume() {
+void Editor::on_state_resume(Game* game) {
+
+	start(game);
 }
 
-void Editor::on_state_pause() {
+void Editor::on_state_pause(Game* game) {
+
+}
+
+bool Editor::has_event_at_position(const int x, const int y) {
+	for (auto& e : events) { // Delete event at position
+		if (e.x == x && e.y == y) {
+			return true;
+		}
+	}
+}
+
+void Editor::delete_event_at_position(const int x, const int y) {
+	for (auto it = events.begin(); it != events.end();++it) {
+		if (it->x == x && it->y == y) {
+			pugi::xml_document doc;
+			pugi::xml_parse_result result = doc.load_file(map_path.c_str());
+			if (!result) {
+				SDL_Log("Unable to read xml %s : %s", map_path.c_str(), result.description());
+				throw std::exception("Unable to load XML");
+			}
+			auto events_node = doc.child("Events");
+			if (events_node) {
+				
+				for (auto chain : events_node.children()) {
+					int x_ = chain.attribute("x_pos").as_int();
+					int y_ = chain.attribute("y_pos").as_int();
+					
+					if (x_ == x && y_ == y) {
+						events_node.remove_child(chain);
+						break;
+					}
+				}
+			}
+			doc.save_file(map_path.c_str());
+			events.erase(it);
+			break;
+		}
+	}
+}
+
+void Editor::add_event_at_position(const int x, const int y) {
+
+	events.push_back({ x, y });
+
 }
