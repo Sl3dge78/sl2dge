@@ -130,6 +130,26 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 				is_plugging = false;
 			}
 		}
+		else if (e.button.button == SDL_BUTTON_RIGHT) {
+			for (auto it = boxes->begin(); it != boxes->end(); ++it) {
+
+				// Clicking inside a box
+				if (SDL_PointInRect(&mouse_pos, (*it)->rect())) {
+					auto box = (*it).get();
+					if (box->has_prev) {
+						remove_connection_to(box->guid());
+					}
+					for (auto a : box->next) {
+						if (!a.isNil()) {
+							get_box_from_uuid(a)->has_prev = false;
+						}
+					}
+					
+					boxes->erase(it);
+					break;
+				}
+			}
+		}
 	}
 
 	if (e.type == SDL_MOUSEBUTTONUP) {

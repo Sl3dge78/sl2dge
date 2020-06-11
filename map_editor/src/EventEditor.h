@@ -48,6 +48,23 @@ private:
 		}
 		return nullptr;
 	}
+	
+	// Will search all boxes and remove the connection that connects to id
+	void remove_connection_to(Guid id) {
+		int found = 0;
+		for (auto& b : *boxes) {
+			for (int i = 0; i < b->next.size(); ++i) {
+				if (b->next[i] == id) {
+					b->next[i] = Guid();
+					found++;
+				}
+			}
+		}
+		if(found == 0)
+			SDL_Log("Couldn't find any box that connects to %s", id.str().c_str());
+		else
+			SDL_Log("Removed %d connections to %s", found, id.str().c_str());
+	}
 
 	void open_xml_doc(pugi::xml_document* doc, std::string& map_path) {
 		pugi::xml_parse_result result = doc->load_file(map_path_.c_str());
@@ -68,7 +85,6 @@ private:
 
 		SDL_Log("%s successfully loaded", map_path.c_str());
 	}
-
 
 	bool get_event_chain_node(pugi::xml_document& doc, std::string& path, pugi::xml_node& node) {
 		using namespace pugi;
