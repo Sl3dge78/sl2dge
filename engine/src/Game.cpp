@@ -5,11 +5,12 @@
 
 namespace sl2dge {
 
-	Game::Game(const std::string window_name, const int window_width, const int window_heigth) {
+	Game::Game(const std::string window_name, const Uint32 window_width, const Uint32 window_height) {
 		SDL_Init(SDL_INIT_VIDEO);
 		IMG_Init(IMG_INIT_PNG);
-		
-		this->window_ = SDL_CreateWindow(window_name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_width, window_heigth, SDL_WINDOW_SHOWN);
+		window_width_ = window_width;
+		window_height_ = window_height;
+		this->window_ = SDL_CreateWindow(window_name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_width, window_height, SDL_WINDOW_SHOWN);
 		this->renderer_ = SDL_CreateRenderer(this->window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 		this->font_ = FC_CreateFont();

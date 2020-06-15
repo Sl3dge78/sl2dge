@@ -23,13 +23,16 @@ namespace sl2dge {
 
 		// Creates a new game. Call loop to start the Game. 
 		// The shared_ptrs main_camera, player and map are there as utility to pass them through gamestates. Intialize and use them as needed.
-		Game(const std::string window_name = "", const int window_width = 800, const int window_heigth = 600);
+		Game(const std::string window_name = "", const Uint32 window_width = 800, const Uint32 window_heigth = 600);
 		~Game();
 
 		// Will start the game's main loop.
 		int loop();
 
 		SDL_Renderer* renderer() { return renderer_; }
+
+		Uint32 window_width() { return window_width_; }
+		Uint32 window_height() { return window_height_; }
 
 		int delta_time() { return delta_time_; }
 		void set_target_FPS(float val) { target_FPS_ = val; max_frame_time_ = 1.0f / target_FPS_; }
@@ -54,6 +57,9 @@ namespace sl2dge {
 		SDL_Window* window_;
 		SDL_Renderer* renderer_;
 		
+		Uint32 window_width_;
+		Uint32 window_height_;
+
 		FC_Font* font_;
 		const std::string font_path_ = "resources/fonts/unifont.ttf";
 		const int font_size_ = 16;

@@ -70,7 +70,7 @@ void Editor::handle_events(Game* game, const SDL_Event& e) {
 				current_atlas_tile = x + y * atlas_->nb_tiles_atlas_width;
 
 			SDL_Log("Tile selected %d", current_atlas_tile);
-		} else if (SDL_GetModState() & KMOD_ALT && current_layer <= 2) {
+		} else if (SDL_GetModState() & KMOD_ALT && current_layer <= 2) { // TILE PICKER
 			current_atlas_tile = map->get_tile(current_layer, map->pixel_to_map_transform(map_camera->screen_to_world_transform(Point(e.button.x, e.button.y))));
 		}
 	}
@@ -273,11 +273,19 @@ void Editor::draw_ui(Game* game) {
 		break;
 	}
 
-	FC_Draw(game->font(), game->renderer(), 0, 0, "Layer: %s", str.c_str());
+	FC_Draw(game->font(), game->renderer(), 0, 0, "layer: %s", str.c_str());
 
+	// Brush size
 	rect.y += 16;
 	SDL_RenderFillRect(game->renderer(), &rect);
 	FC_Draw(game->font(), game->renderer(), rect.x, rect.y, "brush size : %d", brush_size_);
+
+
+	// KEY HELP
+	SDL_Rect key_help_rect = { 0, game->window_height() - 16, game->window_width(), 16 };
+	SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 255);
+	SDL_RenderFillRect(game->renderer(), &key_help_rect);
+	FC_Draw(game->font(), game->renderer(), key_help_rect.x, key_help_rect.y, "WQSD : Move Map | 12345 : Change Layer | F5 : Save | Alt+Click : Pick Tile | NumPad4862 : Move Altas | NumPad+/- : Change Brush Size");
 
 }
 
