@@ -194,6 +194,17 @@ namespace sl2dge {
 			front_layer_[pos.x + pos.y * width_] = tile;
 	}
 
+	int TileMap::get_tile(const int layer, const Point& pos) {
+		if (layer == 0)
+			return back_layer_[pos.x + pos.y * width_];
+		if (layer == 1)
+			return middle_layer_[pos.x + pos.y * width_];
+		if (layer == 2)
+			return front_layer_[pos.x + pos.y * width_];
+		else
+			return -1;
+	}
+
 	void TileMap::save(const std::string& map_path) {
 
 		using namespace pugi;

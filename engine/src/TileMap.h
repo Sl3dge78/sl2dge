@@ -40,6 +40,7 @@ namespace sl2dge {
 
 		// Changes the value of a tile
 		void set_tile(const int layer, const Point& pos, const int tile);
+		int get_tile(const int layer, const Point& pos);
 		void save(const std::string& path);
 
 		int tile_size() const { return tile_size_; }

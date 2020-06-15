@@ -70,6 +70,8 @@ void Editor::handle_events(Game* game, const SDL_Event& e) {
 				current_atlas_tile = x + y * atlas_->nb_tiles_atlas_width;
 
 			SDL_Log("Tile selected %d", current_atlas_tile);
+		} else if (SDL_GetModState() & KMOD_ALT && current_layer <= 2) {
+			current_atlas_tile = map->get_tile(current_layer, map->pixel_to_map_transform(map_camera->screen_to_world_transform(Point(e.button.x, e.button.y))));
 		}
 	}
 
