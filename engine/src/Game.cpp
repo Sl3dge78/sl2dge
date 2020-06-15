@@ -23,6 +23,7 @@ namespace sl2dge {
 
 	Game::~Game() {
 		while (!states_.empty()) {
+			states_.back()->on_state_exit(this);
 			states_.pop_back();
 		}
 
@@ -84,6 +85,7 @@ namespace sl2dge {
 	// Destructor is called on previous state
 	void Game::change_state(std::unique_ptr<GameState> state) {
 		if (!states_.empty()) {
+			states_.back()->on_state_exit(this);
 			states_.pop_back();
 		}
 		states_.push_back(std::move(state));
@@ -103,6 +105,7 @@ namespace sl2dge {
 
 	void Game::pop_state_() {
 		if (!states_.empty()) {
+			states_.back()->on_state_exit(this);
 			states_.pop_back();
 		}
 

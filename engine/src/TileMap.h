@@ -21,7 +21,8 @@ namespace sl2dge {
 		enum DrawParams {
 			Back = 1 << 0,
 			Middle = 1 << 1,
-			Front = 1 << 2
+			Front = 1 << 2,
+			Collision = 1 << 3
 		};
 		void draw(Game* game, int params);
 
@@ -43,6 +44,8 @@ namespace sl2dge {
 
 		int tile_size() const { return tile_size_; }
 		Atlas* atlas() { return atlas_; }
+		Uint32 width() const { return width_; }
+		Uint32 height() const { return height_; }
 		
 	private:
 		Atlas* atlas_ = nullptr;

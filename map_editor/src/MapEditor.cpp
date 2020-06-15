@@ -75,6 +75,7 @@ void Editor::handle_events(Game* game, const SDL_Event& e) {
 
 	if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
 		switch (e.key.keysym.scancode) {
+			// Move atlas
 		case SDL_SCANCODE_KP_4:
 			atlas_x_offset--;
 			if (atlas_x_offset < 0)
@@ -95,24 +96,36 @@ void Editor::handle_events(Game* game, const SDL_Event& e) {
 			if (atlas_y_offset > atlas_->nb_tiles_atlas_height - atlas_tile_h)
 				atlas_y_offset = atlas_->nb_tiles_atlas_height - atlas_tile_h;
 			break;
+
+			// Change layer
 		case SDL_SCANCODE_1:
-			current_layer = 0;
+			current_layer = Layer::Back;
 			break;
 		case SDL_SCANCODE_2:
-			current_layer = 1;
+			current_layer = Layer::Middle;
 			break;
 		case SDL_SCANCODE_3:
-			current_layer = 2;
+			current_layer = Layer::Front;
 			break;
-
 		case SDL_SCANCODE_4:
-			current_layer = 3;
+			current_layer = Layer::Collision;
+			break;
+		case SDL_SCANCODE_5:
+			current_layer = Layer::Event;
 			break;
 
+			// Save
 		case SDL_SCANCODE_F5:
 			SDL_Log("Saving ...");
 			map->save(map_path);
 			SDL_Log("Saved!");
+			break;
+
+		case SDL_SCANCODE_KP_PLUS:
+			brush_size_++;
+			break;
+		case SDL_SCANCODE_KP_MINUS:
+			brush_size_ = brush_size_ == 1 ? 1 : brush_size_-1;
 			break;
 		}
 
@@ -146,26 +159,41 @@ void Editor::input(Game* game) {
 		auto pos = map->pixel_to_map_transform(map_camera->screen_to_world_transform(Point(x, y)));
 		if (mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) {
 			if (current_layer < 3) {
+				paint(SDL_BUTTON_LEFT, pos);
 				
-				map->set_tile(current_layer, pos, current_atlas_tile);
-			} else {
-				if (!has_event_at_position(pos.x, pos.y)) {
-					add_event_at_position(pos.x, pos.y);
-				} else {
-					game->push_state(std::make_unique<EventEditor>(map_path, SDL_Point { pos.x, pos.y }));
-				}
+			} else if (current_layer == Layer::Event) {
+				game->push_state(std::make_unique<EventEditor>(map_path, SDL_Point{ pos.x, pos.y }));
+			} else if (current_layer == Layer::Collision) {
+				map->set_collision_at_tile(pos, true);
 			}
 		} else if (mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
 			if (current_layer < 3) {
-				map->set_tile(current_layer, pos, -1);
-			} else {
+				paint(SDL_BUTTON_RIGHT, pos);
+			} else if(current_layer == Layer::Event) {
 				if (has_event_at_position(pos.x, pos.y)) {
 					delete_event_at_position(pos.x, pos.y);
 				}
+			} else if (current_layer == Layer::Collision) {
+				map->set_collision_at_tile(pos, false);
 			}
 		}
 	}
 
+}
+
+void Editor::paint(const Uint32 mouse_button, const Point pos) {
+	for (int x = pos.x - brush_size_ +1; x < pos.x + brush_size_; ++x) {
+		if (x < 0 || x > map->width())
+			continue;
+		for (int y = pos.y - brush_size_ + 1; y < pos.y + brush_size_; ++y) {
+			if (y < 0 || y > map->height())
+				continue;
+			if(mouse_button == SDL_BUTTON_LEFT)
+				map->set_tile(current_layer, Point(x, y), current_atlas_tile);
+			else if (mouse_button == SDL_BUTTON_RIGHT)
+				map->set_tile(current_layer, Point(x, y), -1);
+		}
+	}
 }
 
 void Editor::update(Game* game) {
@@ -176,6 +204,23 @@ void Editor::draw(Game* game) {
 
 	map->draw(game, TileMap::DrawParams::Back | TileMap::DrawParams::Middle | TileMap::DrawParams::Front);
 
+	if (current_layer == Layer::Collision) {
+		map->draw(game, TileMap::DrawParams::Collision);
+	}
+	if (current_layer == Layer :: Event) {
+		for (auto& e : events) {
+			SDL_Rect rect = map_camera->world_to_screen_transform(map->map_to_pixel_transform(Rect(e.x, e.y, 1, 1)));
+			SDL_RenderDrawRect(game->renderer(), &rect);
+		}
+	}
+
+	draw_atlas(game);
+	draw_ui(game);
+
+}
+
+void Editor::draw_atlas(Game* game) {
+	/* ATLAS */
 	// Fond
 	SDL_SetRenderDrawColor(game->renderer(), 75, 75, 75, 255);
 	SDL_RenderFillRect(game->renderer(), &atlas_position);
@@ -199,19 +244,38 @@ void Editor::draw(Game* game) {
 
 		}
 	}
+}
+
+void Editor::draw_ui(Game* game) {
 
 	//Current Layer
-	SDL_Rect current_layer_rect = { 0,0,75,16 };
+	SDL_Rect rect = { 0,0,160,16 };
 	SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 255);
-	SDL_RenderFillRect(game->renderer(), &current_layer_rect);
-	FC_Draw(game->font(), game->renderer(), 0, 0, "Layer: %d", current_layer);
-
-	if (current_layer == 3) { // Event layer
-		for (auto& e : events) {
-			SDL_Rect rect = map_camera->world_to_screen_transform(map->map_to_pixel_transform(Rect(e.x, e.y, 1, 1)));
-			SDL_RenderDrawRect(game->renderer(), &rect);
-		}
+	SDL_RenderFillRect(game->renderer(), &rect);
+	std::string str;
+	switch (current_layer) {
+	case Layer::Back:
+		str = "Back";
+		break;
+	case Layer::Middle:
+		str = "Middle";
+		break;
+	case Layer::Front:
+		str = "Front";
+		break;
+	case Layer::Event:
+		str = "Event";
+		break;
+	case Layer::Collision:
+		str = "Collision";
+		break;
 	}
+
+	FC_Draw(game->font(), game->renderer(), 0, 0, "Layer: %s", str.c_str());
+
+	rect.y += 16;
+	SDL_RenderFillRect(game->renderer(), &rect);
+	FC_Draw(game->font(), game->renderer(), rect.x, rect.y, "brush size : %d", brush_size_);
 
 }
 
@@ -233,7 +297,7 @@ bool Editor::has_event_at_position(const int x, const int y) {
 }
 
 void Editor::delete_event_at_position(const int x, const int y) {
-	for (auto it = events.begin(); it != events.end();++it) {
+	for (auto it = events.begin(); it != events.end(); ++it) {
 		if (it->x == x && it->y == y) {
 			pugi::xml_document doc;
 			pugi::xml_parse_result result = doc.load_file(map_path.c_str());
@@ -243,11 +307,11 @@ void Editor::delete_event_at_position(const int x, const int y) {
 			}
 			auto events_node = doc.child("Events");
 			if (events_node) {
-				
+
 				for (auto chain : events_node.children()) {
 					int x_ = chain.attribute("x_pos").as_int();
 					int y_ = chain.attribute("y_pos").as_int();
-					
+
 					if (x_ == x && y_ == y) {
 						events_node.remove_child(chain);
 						break;
@@ -262,7 +326,7 @@ void Editor::delete_event_at_position(const int x, const int y) {
 }
 
 void Editor::add_event_at_position(const int x, const int y) {
-
+	SDL_Log("Event added %d, %d", x, y);
 	events.push_back({ x, y });
 
 }

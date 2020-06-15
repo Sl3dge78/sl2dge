@@ -142,6 +142,12 @@ namespace sl2dge {
 							&game->main_camera()->world_to_screen_transform(Rect(x * tile_size_, y * tile_size_, tile_size_, tile_size_)));
 					}
 				}
+				if (draw_params & DrawParams::Collision) {
+					if (collision_layer_[x + y * width_] != 0) {
+						SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 255);
+						SDL_RenderDrawRect(game->renderer(), &game->main_camera()->world_to_screen_transform(SDL_Rect{ x * tile_size_, y * tile_size_, tile_size_, tile_size_ }));
+					}
+				}
 			}
 		}
 

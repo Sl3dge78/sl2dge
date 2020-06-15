@@ -53,6 +53,9 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 		case SDL_SCANCODE_ESCAPE:
 			game->pop_state();
 			break;
+		case SDL_SCANCODE_F5:
+			save();
+			break;
 		}
 	}
 
@@ -236,12 +239,24 @@ void EventEditor::draw(Game* game) {
 
 		SDL_RenderDrawLine(game->renderer(), orig.x, orig.y, dst.x, dst.y);
 	}
+
+
+	// INFO 
+
+	SDL_Rect info_rect = { 0,0,50,16 };
+	SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 255);
+	SDL_RenderFillRect(game->renderer(), &info_rect);
+	FC_Draw(game->font(), game->renderer(), 0, 0, "%d, %d", map_pos_.x, map_pos_.y);
 }
 
 void EventEditor::on_state_resume(Game* game) {
 }
 
 void EventEditor::on_state_pause(Game* game) {
+}
+
+void EventEditor::on_state_exit(Game* game) {
+	save();
 }
 
 void EventEditor::save() {

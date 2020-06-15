@@ -25,6 +25,7 @@ namespace sl2dge {
 
 		virtual void on_state_resume(Game* game) = 0;
 		virtual void on_state_pause(Game* game) = 0;
+		virtual void on_state_exit(Game* game) = 0;
 
 		virtual ~GameState() = default;
 		GameState() {};

@@ -28,7 +28,6 @@ void sl2dge::Scene::start(Game* game) {
 
 	game->set_main_camera(main_camera_.get());
 
-
 }
 
 void sl2dge::Scene::handle_events(Game* game, const SDL_Event& e) {
