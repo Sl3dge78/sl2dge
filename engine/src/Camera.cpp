@@ -39,29 +39,29 @@ namespace sl2dge {
 	}
 
 	Point Camera::world_to_screen_transform(const Point& point) const {
-		return Point((point.x - viewport_.x) * zoom_, (point.y - viewport_.y) * zoom_);
+		return Point(int(float(point.x - viewport_.x) * zoom_), int(float(point.y - viewport_.y) * zoom_));
 	}
 	SDL_Point Camera::world_to_screen_transform(const SDL_Point& point) const {
-		return SDL_Point{ (point.x - viewport_.x) * zoom_, (point.y - viewport_.y) * zoom_ };
+		return SDL_Point{ int(float(point.x - viewport_.x) * zoom_),int(float (point.y - viewport_.y) * zoom_ )};
 	}
 
 	Rect Camera::world_to_screen_transform(const Rect& rect) const {
-		return Rect((rect.x - viewport_.x) * zoom_, (rect.y - viewport_.y) * zoom_, rect.w * zoom_, rect.h * zoom_);
+		return Rect(int(float(rect.x - viewport_.x) * zoom_), int(float(rect.y - viewport_.y) * zoom_), int(float(rect.w) * zoom_), int(float(rect.h) * zoom_));
 	}
 
 	SDL_Rect Camera::world_to_screen_transform(const SDL_Rect& rect) const {
-		return SDL_Rect{ (rect.x - viewport_.x) * zoom_, (rect.y - viewport_.y) * zoom_, rect.w * zoom_, rect.h * zoom_ };
+		return SDL_Rect{ int(float(rect.x - viewport_.x) * zoom_), int(float(rect.y - viewport_.y) * zoom_), int(float(rect.w) * zoom_), int(float(rect.h) * zoom_ )};
 	}
 
 	Point Camera::screen_to_world_transform(const Point& point) const {
-		return Point((point.x/zoom_ + viewport_.x) , (point.y/zoom_ + viewport_.y) );
+		return Point(int(float(point.x/zoom_ + viewport_.x) ), int(float(point.y/zoom_ + viewport_.y)) );
 	}
 
 	SDL_Point Camera::screen_to_world_transform(const SDL_Point& point) const {
-		return SDL_Point{ (point.x / zoom_ + viewport_.x), (point.y / zoom_ + viewport_.y) };
+		return SDL_Point{ int(float(point.x / zoom_ + viewport_.x)), int(float(point.y / zoom_ + viewport_.y)) };
 	}
 
 	Rect Camera::screen_to_world_transform(const Rect& rect) const {
-		return Rect((rect.x + viewport_.x) / zoom_, (rect.y + viewport_.y) / zoom_, rect.w / zoom_, rect.h / zoom_);
+		return Rect(int(float(rect.x + viewport_.x) / zoom_), int(float(rect.y + viewport_.y) / zoom_), int(float(rect.w) / zoom_), int(float(rect.h) / zoom_));
 	}
 }

@@ -44,17 +44,22 @@ void Editor::handle_events(Game* game, const SDL_Event& e) {
 
 	if (e.type == SDL_MOUSEWHEEL) {
 		if (e.wheel.y < 0) {
-
-			auto new_zoom = map_camera->zoom() - 1;
-			new_zoom = new_zoom <= 0 ? 1 : new_zoom;
-			map_camera->set_zoom(new_zoom);
+			float zoom = map_camera->zoom();
+			if (zoom <= 1) {
+				zoom /= 2.0;
+			} else {
+				--zoom;
+			}
+			map_camera->set_zoom(zoom);
 
 		} else if (e.wheel.y > 0) {
-
-			auto new_zoom = map_camera->zoom() + 1;
-			new_zoom = new_zoom > 10 ? 10 : new_zoom;
-			map_camera->set_zoom(new_zoom);
-
+			float zoom = map_camera->zoom();
+			if (zoom < 1) {
+				zoom *= 2.0;
+			} else {
+				++zoom;
+			}
+			map_camera->set_zoom(zoom);
 		}
 	}
 
@@ -214,6 +219,7 @@ void Editor::draw(Game* game) {
 	if (current_layer == Layer :: Event) {
 		for (auto& e : events) {
 			SDL_Rect rect = map_camera->world_to_screen_transform(map->map_to_pixel_transform(Rect(e.x, e.y, 1, 1)));
+			SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 255);
 			SDL_RenderDrawRect(game->renderer(), &rect);
 		}
 	}
@@ -226,7 +232,7 @@ void Editor::draw(Game* game) {
 void Editor::draw_atlas(Game* game) {
 	/* ATLAS */
 	// Fond
-	SDL_SetRenderDrawColor(game->renderer(), 75, 75, 75, 255);
+	SDL_SetRenderDrawColor(game->renderer(), 255, 0, 255, 255);
 	SDL_RenderFillRect(game->renderer(), &atlas_position);
 
 	// Bordure

@@ -31,11 +31,18 @@ namespace sl2dge {
 
 		Rect viewport() const { return viewport_; }
 		Vector2 center() const { return position_; }
-
+		/*
 		const int zoom() const { return zoom_; }
 		void set_zoom(int zoom) {
 			this->zoom_ = zoom; 
 			this->viewport_ = { 0, 0, width_ / zoom, height_ / zoom };
+			//this->SetPosition(position);
+		}
+		*/
+		const float zoom() const { return zoom_; }
+		void set_zoom(const float zoom) {
+			this->zoom_ = zoom;
+			this->viewport_ = { 0, 0, int( float(width_ )/ zoom), int(float(height_) / zoom) };
 			//this->SetPosition(position);
 		}
 
@@ -51,7 +58,8 @@ namespace sl2dge {
 	private:
 		Rect viewport_; // What the camera sees.
 		Vector2 position_; // Position looking at.
-		int zoom_;
+		//int zoom_;
+		float zoom_;
 		IMoveable* target_;
 		int width_, height_;
 	};
