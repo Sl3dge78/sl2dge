@@ -170,8 +170,33 @@ static unsigned int fc_buffer_size = 1024;
 
 static Uint8 fc_has_render_target_support = 0;
 
+// The number of fonts that has been created but not freed
+static int NUM_EXISTING_FONTS = 0;
+
+// Globals for GetString functions
+static char* ASCII_STRING = NULL;
+static char* LATIN_1_STRING = NULL;
+static char* ASCII_LATIN_1_STRING = NULL;
+
 char* FC_GetStringASCII(void)
 {
+    if (ASCII_STRING == NULL) {
+        int i;
+        char c;
+        ASCII_STRING = (char*) malloc(512);
+        memset(ASCII_STRING, 0, 512);
+        i = 0;
+        c = 32;
+        while (1) {
+            ASCII_STRING[i] = c;
+            if (c == 126)
+                break;
+            ++i;
+            ++c;
+        }
+    }
+    return U8_strdup(ASCII_STRING);
+    /*
     static char* buffer = NULL;
     if(buffer == NULL)
     {
@@ -191,12 +216,41 @@ char* FC_GetStringASCII(void)
         }
     }
     char* ret = U8_strdup(buffer);
-    free(buffer);
+    //free(buffer);
     return ret;
+    */
 }
 
 char* FC_GetStringLatin1(void)
 {
+    if (LATIN_1_STRING == NULL) {
+        int i;
+        unsigned char c;
+        LATIN_1_STRING = (char*) malloc(512);
+        memset(LATIN_1_STRING, 0, 512);
+        i = 0;
+        c = 0xA0;
+        while (1) {
+            LATIN_1_STRING[i] = 0xC2;
+            LATIN_1_STRING[i + 1] = c;
+            if (c == 0xBF)
+                break;
+            i += 2;
+            ++c;
+        }
+        i += 2;
+        c = 0x80;
+        while (1) {
+            LATIN_1_STRING[i] = 0xC3;
+            LATIN_1_STRING[i + 1] = c;
+            if (c == 0xBF)
+                break;
+            i += 2;
+            ++c;
+        }
+    }
+    return U8_strdup(LATIN_1_STRING);
+    /*
     static char* buffer = NULL;
     if(buffer == NULL)
     {
@@ -228,15 +282,21 @@ char* FC_GetStringLatin1(void)
         }
     }
     return U8_strdup(buffer);
+    */
 }
 
 char* FC_GetStringASCII_Latin1(void)
 {
+    if (ASCII_LATIN_1_STRING == NULL)
+        ASCII_LATIN_1_STRING = new_concat(FC_GetStringASCII(), FC_GetStringLatin1());
+    return U8_strdup(ASCII_LATIN_1_STRING);
+    /*
     static char* buffer = NULL;
     if(buffer == NULL)
         buffer = new_concat(FC_GetStringASCII(), FC_GetStringLatin1());
-
+        
     return U8_strdup(buffer);
+    */
 }
 
 FC_Rect FC_MakeRect(float x, float y, float w, float h)
@@ -1168,7 +1228,7 @@ FC_Font* FC_CreateFont(void)
     memset(font, 0, sizeof(FC_Font));
 
     FC_Init(font);
-
+    ++NUM_EXISTING_FONTS;
     return font;
 }
 
@@ -1478,11 +1538,23 @@ void FC_FreeFont(FC_Font* font)
 
     free(font->loading_string);
 
-    free(fc_buffer);
-
     free(font);
 
-    TTF_Quit();
+    // If the last font has been freed; assume shutdown and free the global variables
+    if (--NUM_EXISTING_FONTS <= 0) {
+        free(ASCII_STRING);
+        ASCII_STRING = NULL;
+
+        free(LATIN_1_STRING);
+        LATIN_1_STRING = NULL;
+
+        free(ASCII_LATIN_1_STRING);
+        ASCII_LATIN_1_STRING = NULL;
+
+        free(fc_buffer);
+        fc_buffer = NULL;
+    }
+   
 }
 
 int FC_GetNumCacheLevels(FC_Font* font)

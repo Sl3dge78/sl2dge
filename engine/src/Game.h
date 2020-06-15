@@ -37,7 +37,9 @@ namespace sl2dge {
 		int delta_time() { return delta_time_; }
 		void set_target_FPS(float val) { target_FPS_ = val; max_frame_time_ = 1.0f / target_FPS_; }
 
-		FC_Font* font() { return font_; }
+		FC_Font* black_font() { return black_font_; }
+		FC_Font* font() { return black_font_; }
+		FC_Font* white_font() { return white_font_; }
 
 		GameState* current_state() const { return states_.back().get(); };
 		void change_state(std::unique_ptr<GameState> state);
@@ -60,7 +62,8 @@ namespace sl2dge {
 		Uint32 window_width_;
 		Uint32 window_height_;
 
-		FC_Font* font_;
+		FC_Font* black_font_;
+		FC_Font* white_font_;
 		const std::string font_path_ = "resources/fonts/unifont.ttf";
 		const int font_size_ = 16;
 

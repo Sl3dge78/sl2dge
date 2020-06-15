@@ -13,8 +13,10 @@ namespace sl2dge {
 		this->window_ = SDL_CreateWindow(window_name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_width, window_height, SDL_WINDOW_SHOWN);
 		this->renderer_ = SDL_CreateRenderer(this->window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-		this->font_ = FC_CreateFont();
-		FC_LoadFont(font_, renderer_, font_path_.c_str(), font_size_, SDL_Color{ 0, 0, 0, 255 }, TTF_STYLE_NORMAL);
+		this->black_font_ = FC_CreateFont();
+		FC_LoadFont(black_font_, renderer_, font_path_.c_str(), font_size_, SDL_Color{ 0, 0, 0, 255 }, TTF_STYLE_NORMAL);
+		this->white_font_ = FC_CreateFont();
+		FC_LoadFont(white_font_, renderer_, font_path_.c_str(), font_size_, SDL_Color{ 255, 255, 255, 255 }, TTF_STYLE_NORMAL);
 		
 		quest_manager_ = std::make_unique<QuestManager>();
 
@@ -30,7 +32,10 @@ namespace sl2dge {
 
 		//SceneManager::Exit();
 
-		FC_FreeFont(font_);
+		FC_FreeFont(black_font_);
+		FC_FreeFont(white_font_);
+
+		TTF_Quit();
 
 		SDL_DestroyRenderer(this->renderer_);
 		SDL_DestroyWindow(this->window_);

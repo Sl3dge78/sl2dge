@@ -203,6 +203,8 @@ void Editor::update(Game* game) {
 }
 
 void Editor::draw(Game* game) {
+	SDL_SetRenderDrawColor(game->renderer(), 25, 25, 25, 255);
+	SDL_RenderClear(game->renderer());
 
 	map->draw(game, TileMap::DrawParams::Back | TileMap::DrawParams::Middle | TileMap::DrawParams::Front);
 
@@ -250,42 +252,31 @@ void Editor::draw_atlas(Game* game) {
 
 void Editor::draw_ui(Game* game) {
 
+	SDL_SetRenderDrawColor(game->renderer(), 25, 25, 25, 255);
+
 	//Current Layer
 	SDL_Rect rect = { 0,0,160,16 };
-	SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 255);
+	
 	SDL_RenderFillRect(game->renderer(), &rect);
 	std::string str;
 	switch (current_layer) {
-	case Layer::Back:
-		str = "Back";
-		break;
-	case Layer::Middle:
-		str = "Middle";
-		break;
-	case Layer::Front:
-		str = "Front";
-		break;
-	case Layer::Event:
-		str = "Event";
-		break;
-	case Layer::Collision:
-		str = "Collision";
-		break;
+	case Layer::Back:		str = "Back";		break;
+	case Layer::Middle:		str = "Middle";		break;
+	case Layer::Front: 		str = "Front";		break;
+	case Layer::Event:		str = "Event";		break;
+	case Layer::Collision:	str = "Collision";	break;
 	}
+	FC_Draw(game->white_font(), game->renderer(), 0, 0, "layer: %s", str.c_str());
 
-	FC_Draw(game->font(), game->renderer(), 0, 0, "layer: %s", str.c_str());
-
-	// Brush size
+	// BRUSH SIZE
 	rect.y += 16;
 	SDL_RenderFillRect(game->renderer(), &rect);
-	FC_Draw(game->font(), game->renderer(), rect.x, rect.y, "brush size : %d", brush_size_);
-
+	FC_Draw(game->white_font(), game->renderer(), rect.x, rect.y, "brush size : %d", brush_size_);
 
 	// KEY HELP
 	SDL_Rect key_help_rect = { 0, game->window_height() - 16, game->window_width(), 16 };
-	SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 255);
 	SDL_RenderFillRect(game->renderer(), &key_help_rect);
-	FC_Draw(game->font(), game->renderer(), key_help_rect.x, key_help_rect.y, "WQSD : Move Map | 12345 : Change Layer | F5 : Save | Alt+Click : Pick Tile | NumPad4862 : Move Altas | NumPad+/- : Change Brush Size");
+	FC_Draw(game->white_font(), game->renderer(), key_help_rect.x, key_help_rect.y, "WQSD : Move Map | 12345 : Change Layer | F5 : Save | Alt+Click : Pick Tile | NumPad4862 : Move Altas | NumPad+/- : Change Brush Size");
 
 }
 
