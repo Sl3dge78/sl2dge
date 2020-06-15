@@ -211,7 +211,21 @@ void Editor::draw(Game* game) {
 	SDL_SetRenderDrawColor(game->renderer(), 25, 25, 25, 255);
 	SDL_RenderClear(game->renderer());
 
-	map->draw(game, TileMap::DrawParams::Back | TileMap::DrawParams::Middle | TileMap::DrawParams::Front);
+	map->draw(game, TileMap::DrawParams::Back);
+	if (current_layer == Layer::Middle) {
+		SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 100);
+		SDL_SetRenderDrawBlendMode(game->renderer(), SDL_BLENDMODE_BLEND);
+		SDL_RenderFillRect(game->renderer(), NULL);
+	}
+	map->draw(game, TileMap::DrawParams::Middle);
+	if (current_layer == Layer::Front) {
+		SDL_SetRenderDrawBlendMode(game->renderer(), SDL_BLENDMODE_BLEND);
+		SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 100);
+		SDL_RenderFillRect(game->renderer(), NULL);
+	}
+	map->draw(game, TileMap::DrawParams::Front);
+
+
 
 	if (current_layer == Layer::Collision) {
 		map->draw(game, TileMap::DrawParams::Collision);
@@ -278,6 +292,10 @@ void Editor::draw_ui(Game* game) {
 	rect.y += 16;
 	SDL_RenderFillRect(game->renderer(), &rect);
 	FC_Draw(game->white_font(), game->renderer(), rect.x, rect.y, "brush size : %d", brush_size_);
+
+	rect.y += 16;
+	SDL_RenderFillRect(game->renderer(), &rect);
+	FC_Draw(game->white_font(), game->renderer(), rect.x, rect.y, "zoom : %1.2fx", map_camera->zoom());
 
 	// KEY HELP
 	SDL_Rect key_help_rect = { 0, game->window_height() - 16, game->window_width(), 16 };
