@@ -154,20 +154,16 @@
   <ItemGroup>
     <ClCompile Include="src\Inventory.cpp" />
     <ClCompile Include="src\InventoryState.cpp" />
-    <ClCompile Include="src\Island.cpp" />
     <ClCompile Include="src\ItemList.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MainState.cpp" />
     <ClCompile Include="src\Player.cpp" />
-    <ClCompile Include="src\PostOffice.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Inventory.h" />
     <ClInclude Include="src\InventoryState.h" />
-    <ClInclude Include="src\Island.h" />
     <ClInclude Include="src\ItemList.h" />
     <ClInclude Include="src\MainState.h" />
-    <ClInclude Include="src\PostOffice.h" />
     <ClInclude Include="src\QuestIDs.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

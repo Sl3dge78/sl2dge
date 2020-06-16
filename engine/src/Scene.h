@@ -5,7 +5,7 @@
 #include <fstream>
 
 #include "Game.h"
-#include "pugixml.hpp"
+#include "xml/pugixml.hpp"
 #include "EventChain.h"
 
 namespace sl2dge {

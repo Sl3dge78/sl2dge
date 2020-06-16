@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GameEvent.h"
-#include "pugixml.hpp"
+#include "xml/pugixml.hpp"
 
 namespace sl2dge {
 

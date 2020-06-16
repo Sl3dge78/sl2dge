@@ -7,7 +7,7 @@
 #include "Point.h"
 #include "Camera.h"
 #include "Atlas.h"
-#include "pugixml.hpp"
+#include "xml/pugixml.hpp"
 
 namespace sl2dge {
 

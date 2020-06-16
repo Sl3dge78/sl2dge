@@ -11,7 +11,6 @@
 #include "TileMap.h"
 #include "QuestManager.h"
 #include "GameState.h"
-#include "EventManager.h"
 
 namespace sl2dge {
 

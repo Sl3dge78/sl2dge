@@ -1,7 +1,5 @@
 #include "Game.h"
 
-#include "SceneManager.h"
-
 namespace sl2dge {
 
 	Game::Game(const std::string window_name, const Uint32 window_width, const Uint32 window_height) {
@@ -18,9 +16,6 @@ namespace sl2dge {
 		FC_LoadFont(white_font_, renderer_, font_path_.c_str(), font_size_, SDL_Color{ 255, 255, 255, 255 }, TTF_STYLE_NORMAL);
 		
 		quest_manager_ = std::make_unique<QuestManager>();
-
-		//SceneManager::Init();
-
 	}
 
 	Game::~Game() {
@@ -28,8 +23,6 @@ namespace sl2dge {
 			states_.back()->on_state_exit(this);
 			states_.pop_back();
 		}
-
-		//SceneManager::Exit();
 
 		FC_FreeFont(black_font_);
 		FC_FreeFont(white_font_);

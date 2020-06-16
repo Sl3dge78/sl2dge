@@ -21,9 +21,6 @@
     <ClCompile Include="src\InventoryState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Island.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ItemList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -31,9 +28,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\MainState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PostOffice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Player.cpp">
@@ -47,16 +41,10 @@
     <ClInclude Include="src\InventoryState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Island.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ItemList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\MainState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\PostOffice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\QuestIDs.h">

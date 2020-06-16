@@ -1,29 +1,35 @@
 #pragma once
 
 #include "Game.h"
+
+#include "GameState.h"
+#include "SceneState.h"
+#include "DialogState.h"
+
+#include "Entity.h"
+
+#include "EventChain.h"
+#include "GameEvent.h"
+
+#include "HelperFunctions.h"
+#include "Point.h"
+#include "Rect.h"
+
+#include "TileMap.h"
 #include "Atlas.h"
+#include "Item.h"
+#include "Sprites.h"
+#include "Player.h"
+#include "Scene.h"
 #include "Camera.h"
 #include "Character.h"
 #include "Components.h"
-#include "DialogState.h"
-#include "Entity.h"
-#include "GameEvent.h"
-#include "EventChain.h"
-#include "GameState.h"
-#include "HelperFunctions.h"
-#include "Item.h"
-#include "Point.h"
+
 #include "Quest.h"
 #include "QuestManager.h"
-#include "Rect.h"
-#include "SceneManager.h"
+
 #include "SDL_FontCache.h"
-#include "Sprites.h"
-#include "TileMap.h"
 #include "guid.h"
-#include "pugixml.hpp"
-#include "Player.h"
-#include "SceneState.h"
-#include "Scene.h"
+#include "xml/pugixml.hpp"
 
 namespace sl2dge {};
