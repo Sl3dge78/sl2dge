@@ -20,3 +20,5 @@ Create a child class of GameState :
 - This is where you'll put your code.
 - Use your GameState to load maps, instantiate the player, ...
 - Add an EventManager and add GameEvents to it to create your game logic. 
+
+
