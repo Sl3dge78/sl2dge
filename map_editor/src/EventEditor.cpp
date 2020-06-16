@@ -1,11 +1,9 @@
 #include "EventEditor.h"
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
-
-EventEditor::EventEditor(Scene* scene, EventChain* event_chain) {
-
+EventEditor::EventEditor(Scene *scene, EventChain *event_chain) {
 	scene_ = scene;
 	event_chain_ = event_chain;
 
@@ -22,25 +20,24 @@ EventEditor::EventEditor(Scene* scene, EventChain* event_chain) {
 	pos.y += 16;
 }
 
-void EventEditor::start(Game* game) {
+void EventEditor::start(Game *game) {
 	camera = std::make_unique<Camera>(1280, 720);
 	game->set_main_camera(camera.get());
 	SDL_StopTextInput();
 
-	for (auto& event : *event_chain_->events()) {
+	for (auto &event : *event_chain_->events()) {
 		for (int i = 0; i < event->next_amt(); ++i) {
 			if (event->next(i).isNil())
 				continue;
 
 			auto next = event_chain_->get_event(event->next(i));
-			if(next != nullptr)
+			if (next != nullptr)
 				next->has_prev = true;
 		}
 	}
 }
 
-void EventEditor::handle_events(Game* game, const SDL_Event& e) {
-
+void EventEditor::handle_events(Game *game, const SDL_Event &e) {
 	if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
 		if (SDL_GetModState() & KMOD_CTRL && e.key.keysym.scancode == SDL_SCANCODE_N) {
 			event_chain_->add_event(new Dialog());
@@ -50,13 +47,12 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 		}
 
 		switch (e.key.keysym.scancode) {
-		case SDL_SCANCODE_ESCAPE:
-			game->pop_state();
-			break;
-		case SDL_SCANCODE_F5:
-			save();
-			break;
-
+			case SDL_SCANCODE_ESCAPE:
+				game->pop_state();
+				break;
+			case SDL_SCANCODE_F5:
+				save();
+				break;
 		}
 	}
 
@@ -65,8 +61,7 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 		if (e.button.button == SDL_BUTTON_LEFT) {
 			bool clicked_on_smth = false;
 
-			for (auto& b : *event_chain_->events()) {
-
+			for (auto &b : *event_chain_->events()) {
 				// Clicking inside a box
 				if (SDL_PointInRect(&mouse_pos, b->rect())) {
 					selected_box = b.get();
@@ -94,7 +89,7 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 					plugging_out_box = b.get();
 
 					if (!b->next(plug_out).isNil()) { // If something is already plugged where we clicked
-						// remove it						
+						// remove it
 						event_chain_->get_event(b->next(plug_out))->has_prev = false;
 						b->next(plug_out) = Guid();
 					}
@@ -105,7 +100,6 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 
 			// We clicked in the void, clear the current selection
 			if (!clicked_on_smth) {
-
 				plugging_in_box = nullptr;
 				plugging_out_box = nullptr;
 				selected_box = nullptr;
@@ -135,7 +129,6 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 			}
 		} else if (e.button.button == SDL_BUTTON_RIGHT) {
 			for (auto it = event_chain_->events()->begin(); it != event_chain_->events()->end(); ++it) {
-
 				// Clicking inside a box
 				if (SDL_PointInRect(&mouse_pos, (*it)->rect())) {
 					auto box = (*it).get();
@@ -161,7 +154,7 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 				}
 			}
 		} else if (e.button.button == SDL_BUTTON_MIDDLE) {
-			for (auto& b : *event_chain_->events()) {
+			for (auto &b : *event_chain_->events()) {
 				// Clicking inside a box
 				if (SDL_PointInRect(&mouse_pos, b->rect())) {
 					event_chain_->set_next(b->id());
@@ -182,26 +175,23 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 			selected_box->resize(e.motion.xrel, e.motion.yrel);
 		} else if (is_moving_) {
 			selected_box->translate(e.motion.xrel, e.motion.yrel);
-
 		}
 	}
 
-	for (auto& b : *event_chain_->events()) {
+	for (auto &b : *event_chain_->events()) {
 		b->handle_events(game, e);
 	}
 
 	interactable_->handle_events(game, e);
 	is_in_place_->handle_events(game, e);
 	activate_once_->handle_events(game, e);
-
 }
 
-void EventEditor::input(Game* game) {
-
+void EventEditor::input(Game *game) {
 	// cam movement
 	if (!SDL_IsTextInputActive()) {
 		const auto state = SDL_GetKeyboardState(NULL);
-		Vector2 movement = { 0,0 };
+		Vector2 movement = { 0, 0 };
 		if (state[SDL_SCANCODE_W]) {
 			movement.y += -1;
 		}
@@ -215,25 +205,21 @@ void EventEditor::input(Game* game) {
 			movement.x += -1;
 		}
 
-
 		movement.normalize();
 		movement *= 700 * float(game->delta_time()) / 1000.0f;
 		camera->translate(movement);
 	}
-
 }
 
-void EventEditor::update(Game* game) {
+void EventEditor::update(Game *game) {
 	camera->update(game);
-
 }
 
-void EventEditor::draw(Game* game) {
-
+void EventEditor::draw(Game *game) {
 	SDL_SetRenderDrawColor(game->renderer(), 25, 25, 25, 255);
 	SDL_RenderClear(game->renderer());
 
-	for (auto& b : *event_chain_->events()) {
+	for (auto &b : *event_chain_->events()) {
 		b->draw(game);
 		for (int i = 0; i < b->next_amt(); ++i) {
 			if (!b->next(i).isNil()) {
@@ -247,7 +233,6 @@ void EventEditor::draw(Game* game) {
 				SDL_RenderDrawLine(game->renderer(), b->out_plug(i).x - camera->viewport().x, b->out_plug(i).y - camera->viewport().y, x2 - camera->viewport().x, y2 - camera->viewport().y);
 			}
 		}
-
 	}
 
 	if (is_plugging) {
@@ -260,9 +245,8 @@ void EventEditor::draw(Game* game) {
 		SDL_RenderDrawLine(game->renderer(), orig.x, orig.y, dst.x, dst.y);
 	}
 
-
-	// INFO 
-	SDL_Rect info_rect = { 0,0,100,100 };
+	// INFO
+	SDL_Rect info_rect = { 0, 0, 100, 100 };
 	SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 255);
 	SDL_RenderFillRect(game->renderer(), &info_rect);
 	FC_Draw(game->font(), game->renderer(), 0, 0, "%d, %d", event_chain_->position().x, event_chain_->position().y);
@@ -272,23 +256,22 @@ void EventEditor::draw(Game* game) {
 	activate_once_->draw(game);
 }
 
-void EventEditor::on_state_resume(Game* game) {
+void EventEditor::on_state_resume(Game *game) {
 }
 
-void EventEditor::on_state_pause(Game* game) {
+void EventEditor::on_state_pause(Game *game) {
 }
 
-void EventEditor::on_state_exit(Game* game) {
+void EventEditor::on_state_exit(Game *game) {
 	save();
 }
 
 // Will search all boxes and remove the connection that connects to id
 void EventEditor::remove_all_connections_to(Guid id) {
-	
 	event_chain_->get_event(id)->has_prev = false;
 
 	int found = 0;
-	for (auto& b : *event_chain_->events()) {
+	for (auto &b : *event_chain_->events()) {
 		for (int i = 0; i < b->next_amt(); ++i) {
 			if (b->next(i) == id) {
 				b->set_next(Guid(), i);
@@ -298,7 +281,7 @@ void EventEditor::remove_all_connections_to(Guid id) {
 	}
 	if (found == 0)
 		SDL_Log("Couldn't find any box that connects to %s", id.str().c_str());
-	else 
+	else
 		SDL_Log("Removed %d connections to %s", found, id.str().c_str());
 }
 

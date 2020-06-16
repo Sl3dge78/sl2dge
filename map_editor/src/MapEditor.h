@@ -7,25 +7,23 @@
 using namespace sl2dge;
 
 class Editor : public GameState {
-
 public:
-
-	Editor(const std::string& map_path);
+	Editor(const std::string &map_path);
 	~Editor();
 
 	// Inherited via GameState
-	virtual void start(Game* game) override;
-	virtual void handle_events(Game* game, const SDL_Event& e) override;
-	virtual void input(Game* game) override;
+	virtual void start(Game *game) override;
+	virtual void handle_events(Game *game, const SDL_Event &e) override;
+	virtual void input(Game *game) override;
 	void paint(const Uint32 mouse_button, const Point pos);
-	virtual void update(Game* game) override;
-	virtual void draw(Game* game) override;
-	void draw_map(Game* game);
-	void draw_atlas(Game* game);
-	void draw_ui(Game* game);
-	virtual void on_state_resume(Game* game) override;
-	virtual void on_state_pause(Game* game) override;
-	virtual void on_state_exit(Game* game) override {};
+	virtual void update(Game *game) override;
+	virtual void draw(Game *game) override;
+	void draw_map(Game *game);
+	void draw_atlas(Game *game);
+	void draw_ui(Game *game);
+	virtual void on_state_resume(Game *game) override;
+	virtual void on_state_pause(Game *game) override;
+	virtual void on_state_exit(Game *game) override{};
 
 private:
 	enum Layer {
@@ -40,10 +38,10 @@ private:
 
 	std::unique_ptr<Scene> scene_ = nullptr;
 	std::unique_ptr<Camera> map_camera_ = nullptr;
-	TileMap* map_ = nullptr;
-	Atlas* atlas_ = nullptr;
+	TileMap *map_ = nullptr;
+	Atlas *atlas_ = nullptr;
 
-	const SDL_Rect atlas_position = { 992,0,288,720 };
+	const SDL_Rect atlas_position = { 992, 0, 288, 720 };
 	const int atlas_tile_w = 288 / 16;
 	const int atlas_tile_h = 720 / 16;
 	int atlas_x_offset = 0;

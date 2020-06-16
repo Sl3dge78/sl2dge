@@ -9,34 +9,30 @@
 using namespace sl2dge;
 
 class Inventory {
-
 private:
-
 	struct ItemData {
 		int id;
 		int qty;
 	};
 
-	std::array<ItemData, 5*8> contents = std::array<ItemData, 5 * 8>();
-	
+	std::array<ItemData, 5 * 8> contents = std::array<ItemData, 5 * 8>();
 
 public:
 	Inventory() {
-		for (auto& i : contents) {
+		for (auto &i : contents) {
 			i = ItemData{ -1, 0 };
 		}
 	}
-	~Inventory() {};
+	~Inventory(){};
 	int HasItem(int id) const;
 	// Entering a negative qty will remove that amount
 	void AddRemoveItem(int id, int qty = 1);
 	// Qty param optional, if not specified will remove all
 	void RemoveItem(int id, int qty = -1);
-	Item* GetItem(const int i);
+	Item *GetItem(const int i);
 
 	void SortInventory();
 	int Length() { return int(contents.size()); }
-	
 };
 /*
 class InventoryAddEvent : public GameEvent {

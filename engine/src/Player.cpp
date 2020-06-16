@@ -4,7 +4,6 @@
 
 #include "Sprites.h"
 
-
 using namespace sl2dge;
 /*
 Player::Player(Game* game) {
@@ -24,7 +23,7 @@ Player::Player(Game* game) {
 	collider_ = Rect(2, 1, 11, 15);
 	
 
-}
+} 
 
 Player::~Player() {
 

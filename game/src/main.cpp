@@ -2,8 +2,8 @@
 #include <crtdbg.h>
 #include <stdlib.h>
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <memory>
 
 #include <sl2dge.h>
@@ -12,9 +12,9 @@
 
 using namespace sl2dge;
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
 	//_crtBreakAlloc = 3724;
-	Game* app = new Game("", 320, 288);
+	Game *app = new Game("", 320, 288);
 
 	app->change_state(std::make_unique<MainState>());
 	app->loop();

@@ -1,7 +1,5 @@
 #pragma once
 
-namespace ECS
-{}
+namespace ECS {}
 
 #include "World.h"
-

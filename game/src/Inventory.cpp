@@ -4,10 +4,9 @@
 
 #include "Player.h"
 
-
 int Inventory::HasItem(int id) const {
 	// Check if inventory doesn't already have the item
-	for (auto& i : contents) {
+	for (auto &i : contents) {
 		if (i.id == id) {
 			return i.qty;
 		}
@@ -16,7 +15,7 @@ int Inventory::HasItem(int id) const {
 }
 
 void Inventory::AddRemoveItem(int id, int qty) {
-	for (auto& i : contents) {
+	for (auto &i : contents) {
 		if (i.id == id) {
 			i.qty += qty;
 			if (i.qty <= 0) {
@@ -34,7 +33,7 @@ void Inventory::AddRemoveItem(int id, int qty) {
 }
 
 void Inventory::RemoveItem(int id, int qty) {
-	for (auto& i : contents) {
+	for (auto &i : contents) {
 		if (i.id == id) {
 			i.qty -= qty;
 			if (i.qty <= 0) {
@@ -48,7 +47,7 @@ void Inventory::RemoveItem(int id, int qty) {
 	SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Trying to remove item %d, but none has been found in inventory!", id);
 }
 
-Item* Inventory::GetItem(const int i) {
+Item *Inventory::GetItem(const int i) {
 	auto id = contents[i].id;
 	if (id == -1)
 		return nullptr;
@@ -57,9 +56,7 @@ Item* Inventory::GetItem(const int i) {
 }
 
 void Inventory::SortInventory() {
-
-	std::sort(contents.begin(), contents.end(), [](const ItemData& a, const ItemData& b) { return a.id < b.id; });
-
+	std::sort(contents.begin(), contents.end(), [](const ItemData &a, const ItemData &b) { return a.id < b.id; });
 }
 /*
 void InventoryAddEvent::on_activate(Game* game, GameEventManager* gem) {

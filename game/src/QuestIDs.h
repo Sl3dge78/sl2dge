@@ -1,6 +1,5 @@
 #pragma once
 
-
 #define Q_STD_DELIVERY_ANY 10
 #define Q_STD_DELIVERY_CENTER 11
 #define Q_STD_DELIVERY_SOUTH 12

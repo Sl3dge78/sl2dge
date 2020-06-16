@@ -14,17 +14,17 @@ namespace sl2dge {
 		FC_LoadFont(black_font_, renderer_, font_path_.c_str(), font_size_, SDL_Color{ 0, 0, 0, 255 }, TTF_STYLE_NORMAL);
 		this->white_font_ = FC_CreateFont();
 		FC_LoadFont(white_font_, renderer_, font_path_.c_str(), font_size_, SDL_Color{ 255, 255, 255, 255 }, TTF_STYLE_NORMAL);
-		
+
 		quest_manager_ = std::make_unique<QuestManager>();
 	}
 
 	Game::~Game() {
 		while (!states_.empty()) {
-			states_.back()->on_state_exit(this);
-			states_.pop_back();
-		}
+            states_.back()->on_state_exit(this);
+            states_.pop_back();
+          }
 
-		FC_FreeFont(black_font_);
+                FC_FreeFont(black_font_);
 		FC_FreeFont(white_font_);
 
 		TTF_Quit();

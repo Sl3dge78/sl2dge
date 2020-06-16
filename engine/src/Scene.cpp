@@ -1,7 +1,6 @@
 #include "Scene.h"
 
-sl2dge::Scene::Scene(Game* game, const std::string& path) {
-
+sl2dge::Scene::Scene(Game *game, const std::string &path) {
 	this->path_ = path;
 
 	pugi::xml_document doc;
@@ -16,7 +15,7 @@ sl2dge::Scene::Scene(Game* game, const std::string& path) {
 	}
 }
 
-void sl2dge::Scene::open_xml_doc(pugi::xml_document* doc, const std::string& map_path) {
+void sl2dge::Scene::open_xml_doc(pugi::xml_document *doc, const std::string &map_path) {
 	pugi::xml_parse_result result = doc->load_file(map_path.c_str());
 	if (!result) {
 		SDL_Log("Unable to read xml %s : %s", map_path.c_str(), result.description());
@@ -37,7 +36,6 @@ void sl2dge::Scene::open_xml_doc(pugi::xml_document* doc, const std::string& map
 }
 
 void sl2dge::Scene::save() {
-
 	pugi::xml_document doc;
 	open_xml_doc(&doc, path_);
 
@@ -46,7 +44,7 @@ void sl2dge::Scene::save() {
 
 	auto events_node = doc.child("Events");
 
-	for (auto& chain_node : events_node.children("Event_Chain")) {
+	for (auto &chain_node : events_node.children("Event_Chain")) {
 		auto chain = get_chain_at(chain_node.attribute("x_pos").as_int(), chain_node.attribute("y_pos").as_int());
 		if (chain == nullptr) {
 			events_node.remove_child(chain_node); // Remove excess nodes
@@ -56,9 +54,9 @@ void sl2dge::Scene::save() {
 	}
 
 	// Save new ones
-	for (auto& chain : event_chains_) {
+	for (auto &chain : event_chains_) {
 		bool write = true;
-		for (auto& node : events_node.children("Event_Chain")) {
+		for (auto &node : events_node.children("Event_Chain")) {
 			Point pos = { node.attribute("x_pos").as_int(), node.attribute("y_pos").as_int() };
 			if (pos == chain->position()) {
 				write = false;

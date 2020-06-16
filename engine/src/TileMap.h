@@ -4,9 +4,9 @@
 
 #include "SDL/SDL.h"
 
-#include "Point.h"
-#include "Camera.h"
 #include "Atlas.h"
+#include "Camera.h"
+#include "Point.h"
 #include "xml/pugixml.hpp"
 
 namespace sl2dge {
