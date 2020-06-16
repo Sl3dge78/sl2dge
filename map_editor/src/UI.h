@@ -24,7 +24,7 @@ public:
 	void handle_events(Game* game, const SDL_Event& e) {
 		if (e.type == SDL_MOUSEBUTTONDOWN) {
 			if (e.button.button == SDL_BUTTON_LEFT) {
-				auto mouse_pos = game->main_camera()->screen_to_world_transform(SDL_Point{ e.button.x, e.button.y });
+				auto mouse_pos = SDL_Point{ e.button.x, e.button.y };
 				if (SDL_PointInRect(&mouse_pos, &box_)) { // Clicking in the toggle box
 					value_ = !value_;
 				}

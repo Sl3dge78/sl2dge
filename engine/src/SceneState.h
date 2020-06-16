@@ -2,6 +2,7 @@
 
 #include "Game.h"
 #include "GameState.h"
+#include "Scene.h"
 
 namespace sl2dge {
 
@@ -16,13 +17,12 @@ namespace sl2dge {
 		virtual void input(Game* game) override;
 		virtual void update(Game* game) override;
 		virtual void draw(Game* game) override;
-
-		TileMap* map() { return map_.get(); }
+		void on_interact(Game* game);
 
 	private :
 		std::string path_;
 		std::unique_ptr<Camera> main_camera_ = nullptr;
-		std::unique_ptr<TileMap> map_ = nullptr;
+		std::unique_ptr<Scene> scene_ = nullptr;
 		std::unique_ptr<Player> player_ = nullptr;
 	};
 

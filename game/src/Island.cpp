@@ -64,7 +64,7 @@ void Island::update(Game* game) {
 	player->update(game);
 	game->main_camera()->update(game);
 
-	event_manager->update(player.get());
+	
 }
 
 void Island::handle_events(Game* game, const SDL_Event& e) {
@@ -73,7 +73,7 @@ void Island::handle_events(Game* game, const SDL_Event& e) {
 	if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
 		switch (e.key.keysym.scancode) {
 		case SDL_SCANCODE_E:
-			event_manager->on_interact(player.get());
+//			event_manager->on_interact(player.get());
 			break;
 		}
 	}
@@ -92,5 +92,5 @@ void Island::on_state_pause(Game* game) {
 }
 
 Island::~Island() {
-	event_manager.reset();
+	//event_manager.reset();
 }

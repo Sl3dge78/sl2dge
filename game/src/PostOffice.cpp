@@ -70,7 +70,7 @@ void PostOffice::handle_events(Game* game, const SDL_Event& e) {
 	if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
 		switch (e.key.keysym.scancode) {
 		case SDL_SCANCODE_E:
-			event_manager->on_interact(player.get());
+			//event_manager->on_interact(player.get());
 			break;
 		}
 	}
@@ -87,7 +87,7 @@ void PostOffice::update(Game* game) {
 
 	player->update(game);
 	main_camera->update(game);
-	event_manager->update(player.get());
+	//event_manager->update(player.get());
 }
 
 void PostOffice::draw(Game* game) {

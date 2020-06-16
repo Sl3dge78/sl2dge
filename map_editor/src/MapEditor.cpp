@@ -2,8 +2,6 @@
 
 #include "EventEditor.h"
 
-//TODO : Fix bug where you can't draw in tiles in x = 0 or Y = 0
-
 Editor::Editor(const std::string& map_path) {
 
 	this->map_path = map_path;

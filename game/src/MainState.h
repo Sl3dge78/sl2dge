@@ -19,7 +19,7 @@ public:
 
 private:
 
-	std::unique_ptr<GameEventManager> event_manager = nullptr;
+	//std::unique_ptr<GameEventManager> event_manager = nullptr;
 	std::shared_ptr<Player> player = nullptr;
 	std::unique_ptr<Camera> main_camera = nullptr;
 	std::unique_ptr<TileMap> map = nullptr;

@@ -179,7 +179,7 @@ namespace sl2dge {
 	}
 
 	void TileMap::set_collision_at_tile(const Point& point, const bool val) {
-		if (point.x > 0 && point.x < width_ && point.y > 0 && point.y < height_) {
+		if (point.x >= 0 && point.x < width_ && point.y >= 0 && point.y < height_) {
 			collision_layer_[point.x + width_ * point.y] = val;
 		}
 	}

@@ -61,7 +61,7 @@ void Inventory::SortInventory() {
 	std::sort(contents.begin(), contents.end(), [](const ItemData& a, const ItemData& b) { return a.id < b.id; });
 
 }
-
+/*
 void InventoryAddEvent::on_activate(Game* game, GameEventManager* gem) {
 	inventory->AddRemoveItem(item_id, qty);
 	gem->next_event();
@@ -80,3 +80,4 @@ void ConditionalInventoryEvent::on_activate(Game* game, GameEventManager* gem) {
 }
 
 
+*/

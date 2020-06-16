@@ -38,7 +38,7 @@ public:
 	int Length() { return int(contents.size()); }
 	
 };
-
+/*
 class InventoryAddEvent : public GameEvent {
 public:
 	InventoryAddEvent(Guid id, Inventory* inventory, int item_id, int qty, Guid next) : GameEvent(id, next), inventory(inventory), item_id(item_id), qty(qty) {};
@@ -67,3 +67,4 @@ private:
 	Guid id_true;
 	Guid id_false;
 };
+*/

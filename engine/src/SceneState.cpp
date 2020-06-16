@@ -4,23 +4,11 @@
 
 void sl2dge::SceneState::start(Game* game) {
 	player_ = std::make_unique<Player>(game);
-	player_->teleport_to(Point(5, 5));
+	player_->teleport_to(Point(50, 50));
 
-	pugi::xml_document doc;
-	pugi::xml_parse_result result = doc.load_file(path_.c_str());
-	if (!result) {
-		SDL_Log("Unable to read xml %s : %s", path_.c_str(), result.description());
-		throw std::exception("Unable to load XML");
-	}
+	scene_ = std::make_unique<Scene>(game, path_);
 
-	SDL_Log("%s successfully loaded", path_.c_str());
-
-	auto events_node = doc.child("Events");
-
-
-	auto map_node = doc.child("Map");
-	map_ = std::make_unique<TileMap>(*game->renderer(), map_node);
-	game->set_current_map(map_.get());
+	game->set_current_map(scene_->map());
 
 	main_camera_ = std::make_unique<Camera>(320, 288);
 	main_camera_->start(game);
@@ -37,7 +25,7 @@ void sl2dge::SceneState::handle_events(Game* game, const SDL_Event& e) {
 		switch (e.key.keysym.scancode) {
 		case SDL_SCANCODE_E:
 			// TODO IMPLEMENT
-			//event_manager_->on_interact(player_.get());
+			on_interact(game);
 			break;
 		}
 	}
@@ -50,12 +38,43 @@ void sl2dge::SceneState::input(Game* game) {
 void sl2dge::SceneState::update(Game* game) {
 	player_->update(game);
 	main_camera_->update(game);
-	// TODO IMPLEMENT
-	//event_manager_->update(player_.get());
+	
+	// TODO : deactivate triggers if the player wals out of them
+	auto chain = scene_->get_chain_at(player_->tiled_position().x, player_->tiled_position().y);
+	if (chain != nullptr) {
+		if (!chain->interactable()) {
+			chain->activate(game);
+			return;
+		} 
+	}
 }
 
 void sl2dge::SceneState::draw(Game* game) {
-	map_->draw(game, TileMap::DrawParams::Back | TileMap::DrawParams::Middle);
+	scene_->map()->draw(game, TileMap::DrawParams::Back | TileMap::DrawParams::Middle);
 	player_->draw(game);
-	map_->draw(game, TileMap::DrawParams::Front);
+	scene_->map()->draw(game, TileMap::DrawParams::Front);
+}
+
+void sl2dge::SceneState::on_interact(Game* game) {
+	auto chain = scene_->get_chain_at(player_->tiled_position().x, player_->tiled_position().y);
+	if (chain != nullptr && chain->in_place() && chain->interactable()) {
+		chain->activate(game);
+		return;
+	}
+
+	auto target_position = player_->tiled_position();
+	switch (player_->facing_direction()) {
+	case Direction::Up:		target_position.y += -1; break;
+	case Direction::Down: 	target_position.y += 1;	 break;
+	case Direction::Left:	target_position.x += -1; break;
+	case Direction::Right:	target_position.x += 1;	 break;
+
+	}
+
+	chain = scene_->get_chain_at(target_position.x, target_position.y);
+	if (chain != nullptr && !chain->in_place() && chain->interactable()) {
+		chain->activate(game);
+		return;
+	}
+	return;
 }

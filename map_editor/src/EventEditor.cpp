@@ -9,7 +9,6 @@ EventEditor::EventEditor(Scene* scene, EventChain* event_chain) {
 	scene_ = scene;
 	event_chain_ = event_chain;
 
-	// TODO URGENT : Tester Scene, EventChain, EventNodeBox, MapEditor, EventEditor, save/load
 	SDL_Point pos = { 0, 16 };
 	interactable_ = std::make_unique<ToggleBox>("Inter", event_chain->interactable());
 	interactable_->set_position(pos);
