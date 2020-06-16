@@ -8,7 +8,7 @@
 
 namespace sl2dge {
 
-	Camera::Camera(const int width, const int height, const int zoom, const Vector2& position) {
+	Camera::Camera(const int width, const int height, const float zoom, const Vector2& position) {
 		this->width_ = width;
 		this->height_ = height;
 		this->position_ = position;

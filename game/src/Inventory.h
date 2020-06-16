@@ -17,7 +17,7 @@ private:
 		int qty;
 	};
 
-	std::array<ItemData, 5*8> contents;
+	std::array<ItemData, 5*8> contents = std::array<ItemData, 5 * 8>();
 	
 
 public:

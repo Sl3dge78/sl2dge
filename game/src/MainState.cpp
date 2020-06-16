@@ -15,7 +15,7 @@ void MainState::start(Game* game) {
 	game->quest_manager()->add_game_quest(new Quest(Q_STD_DELIVERY_ANY, "Standard delivery"));
 	
 	
-	game->push_state(std::make_unique<Scene>("resources/levels/maptest.map"));
+	game->push_state(std::make_unique<SceneState>("resources/levels/maptest.map"));
 }
 
 void MainState::handle_events(Game* game, const SDL_Event& e) {
@@ -31,10 +31,10 @@ void MainState::update(Game* game) {
 void MainState::draw(Game* game) {
 }
 
-void MainState::on_state_resume() {
+void MainState::on_state_resume(Game* game) {
 }
 
-void MainState::on_state_pause() {
+void MainState::on_state_pause(Game* game) {
 }
 
 MainState::~MainState() {

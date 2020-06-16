@@ -13,7 +13,7 @@ namespace sl2dge {
 
 	class Camera : public Entity {
 	public :
-		Camera(const int width, const int height, const int zoom = 1, const Vector2& position = { 0, 0 });
+		Camera(const int width, const int height, const float zoom = 1, const Vector2& position = { 0, 0 });
 		~Camera() {};
 
 		Point world_to_screen_transform(const Point& point) const;

@@ -6,19 +6,19 @@ class ToggleBox {
 
 public:
 	
-	ToggleBox(const std::string& name, const bool default_val) {
-		value_ = default_val;
+	ToggleBox(const std::string& name, bool controlled_val) {
+		value_ = controlled_val;
 		name_ = name;
 	}
 
 	void draw(Game* game) {
 		SDL_SetRenderDrawColor(game->renderer(), 0, 0, 0, 255);
 		if (!value_)
-			SDL_RenderDrawRect(game->renderer(), &game->main_camera()->world_to_screen_transform(box_));
+			SDL_RenderDrawRect(game->renderer(), &box_);
 		else
-			SDL_RenderFillRect(game->renderer(), &game->main_camera()->world_to_screen_transform(box_));
-		auto val = game->main_camera()->world_to_screen_transform(text_);
-		FC_Draw(game->font(), game->renderer(), val.x, val.y, name_.c_str());
+			SDL_RenderFillRect(game->renderer(), &box_);
+		
+		FC_Draw(game->font(), game->renderer(), float(text_.x), float(text_.y), name_.c_str());
 	}
 
 	void handle_events(Game* game, const SDL_Event& e) {
@@ -33,8 +33,8 @@ public:
 	}
 
 	void set_position(const SDL_Point& position) {
-		box_ = SDL_Rect{ position.x, position.y, 10, 10 };
-		text_ = SDL_Point{ position.x + 12, position.y - 6 };
+		box_ = SDL_Rect{ position.x, position.y + 3, 10, 10 };
+		text_ = SDL_Point{ position.x + 12, position.y };
 	}
 
 	bool const value() { return value_; }

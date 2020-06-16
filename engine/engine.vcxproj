@@ -160,7 +160,8 @@
     <ClCompile Include="src\Character.cpp" />
     <ClCompile Include="src\Components.cpp" />
     <ClCompile Include="src\DialogState.cpp" />
-    <ClCompile Include="src\EventManagers.cpp" />
+    <ClCompile Include="src\EventChain.cpp" />
+    <ClCompile Include="src\EventManager.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GameEvent.cpp" />
     <ClCompile Include="src\guid.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="src\pugixml.cpp" />
     <ClCompile Include="src\QuestManager.cpp" />
     <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\SceneState.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\SDL_FontCache.c" />
     <ClCompile Include="src\Sprites.cpp" />
@@ -181,7 +183,8 @@
     <ClInclude Include="src\Components.h" />
     <ClInclude Include="src\DialogState.h" />
     <ClInclude Include="src\Entity.h" />
-    <ClInclude Include="src\EventManagers.h" />
+    <ClInclude Include="src\EventChain.h" />
+    <ClInclude Include="src\EventManager.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\GameEvent.h" />
     <ClInclude Include="src\GameState.h" />
@@ -196,6 +199,7 @@
     <ClInclude Include="src\QuestManager.h" />
     <ClInclude Include="src\Rect.h" />
     <ClInclude Include="src\Scene.h" />
+    <ClInclude Include="src\SceneState.h" />
     <ClInclude Include="src\SceneManager.h" />
     <ClInclude Include="src\SDL_FontCache.h" />
     <ClInclude Include="src\sl2dge.h" />

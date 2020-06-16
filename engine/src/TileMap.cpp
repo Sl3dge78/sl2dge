@@ -14,7 +14,7 @@
 
 
 namespace sl2dge {
-	TileMap::TileMap(SDL_Renderer& renderer, pugi::xml_node& const map_node) {
+	TileMap::TileMap(SDL_Renderer& renderer, const pugi::xml_node& map_node) {
 		
 		if (!map_node) {
 			// Throw error
@@ -31,28 +31,28 @@ namespace sl2dge {
 		int tmp;
 
 		std::stringstream text = std::stringstream(map_node.child("Layer_1").text().as_string());
-		this->back_layer_ = new int[width_ * height_]{};
+		this->back_layer_ = new int[int(width_ * height_)]{};
 		for (int i = 0; i < width_ * height_; ++i) {
 			text >> tmp;
 			this->back_layer_[i] = tmp;
 		}
 
 		 text = std::stringstream(map_node.child("Layer_2").text().as_string());
-		this->middle_layer_ = new int[width_ * height_]{};
+		this->middle_layer_ = new int[int(width_ * height_)]{};
 		for (int i = 0; i < width_ * height_; ++i) {
 			text >> tmp;
 			this->middle_layer_[i] = tmp;
 		}
 
 		text = std::stringstream(map_node.child("Layer_3").text().as_string());
-		this->front_layer_ = new int[width_ * height_]{};
+		this->front_layer_ = new int[int(width_ * height_)]{};
 		for (int i = 0; i < width_ * height_; ++i) {
 			text >> tmp;
 			this->front_layer_[i] = tmp;
 		}
 
 		 text = std::stringstream(map_node.child("Collision").text().as_string());
-		this->collision_layer_ = new bool[width_ * height_]{};
+		this->collision_layer_ = new bool[int(width_ * height_)]{};
 		for (int i = 0; i < width_ * height_; ++i) {
 			text >> this->collision_layer_[i];
 		}
@@ -120,7 +120,6 @@ namespace sl2dge {
 		//Draw each tile from first tile to max rect
 		for (int y = bounds.y; y < bounds.h; ++y) {
 			for (int x = bounds.x; x < bounds.w; ++x) {
-
 				if (draw_params & DrawParams::Back) {
 					if (back_layer_[x + y * width_] != -1) {
 						Rect* src = atlas_->get_tile_rect(back_layer_[x + y * width_]);
@@ -144,7 +143,7 @@ namespace sl2dge {
 				}
 				if (draw_params & DrawParams::Collision) {
 					if (collision_layer_[x + y * width_] != 0) {
-						SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 255);
+						SDL_SetRenderDrawColor(game->renderer(), 255, 150, 150, 255);
 						SDL_RenderDrawRect(game->renderer(), &game->main_camera()->world_to_screen_transform(SDL_Rect{ x * tile_size_, y * tile_size_, tile_size_, tile_size_ }));
 					}
 				}
@@ -205,75 +204,49 @@ namespace sl2dge {
 			return -1;
 	}
 
-	void TileMap::save(const std::string& map_path) {
+	void TileMap::save(pugi::xml_node& node) {
 
-		using namespace pugi;
-		xml_document doc;
-		xml_parse_result result = doc.load_file(map_path.c_str());
-		if (!result) {
-			SDL_Log("Unable to read xml %s : %s", map_path.c_str(), result.description());
-			if (result.status == pugi::xml_parse_status::status_bad_attribute) {
-				std::ifstream file;
-				file.open(map_path);
-				file.seekg(result.offset);
-
-				std::string s;
-				s.resize(20);
-				file.read(&s[0], 20);
-				SDL_Log("Error at %s", s.c_str());
-			}
-			doc = xml_document();
-		}
-
-		SDL_Log("%s successfully loaded", map_path.c_str());
-
-		auto map_node = doc.child("Map");
-		if (!map_node) {
-			map_node = doc.append_child("Map");
-		}
+		
 		// Cleanup
-		map_node.remove_attributes();
-		map_node.remove_children();
+		node.remove_attributes();
+		node.remove_children();
 
-		map_node.append_attribute("tile_map").set_value(atlas_->path.c_str());
-		map_node.append_attribute("tile_size").set_value(tile_size_);
+		node.append_attribute("tile_map").set_value(atlas_->path.c_str());
+		node.append_attribute("tile_size").set_value(tile_size_);
 		
 		
-		map_node.append_attribute("width").set_value(width_);
-		map_node.append_attribute("height").set_value(height_);
-
-		int tmp;
-
+		node.append_attribute("width").set_value(width_);
+		node.append_attribute("height").set_value(height_);
 
 		std::stringstream text = std::stringstream();
 		for (int i = 0; i < width_ * height_; ++i) {
 			text << this->back_layer_[i] << " ";
 		}
-		auto layer_1 = map_node.append_child("Layer_1");
+		auto layer_1 = node.append_child("Layer_1");
 		layer_1.text() = text.str().c_str();
 
 		text = std::stringstream();
 		for (int i = 0; i < width_ * height_; ++i) {
 			text <<	this->middle_layer_[i]<< " ";
 		}
-		auto layer_2 = map_node.append_child("Layer_2");
+		auto layer_2 = node.append_child("Layer_2");
 		layer_2.text() = text.str().c_str();
 		
 		text = std::stringstream();
 		for (int i = 0; i < width_ * height_; ++i) {
 			text << this->front_layer_[i]<<" ";
 		}
-		auto layer_3 = map_node.append_child("Layer_3");
+		auto layer_3 = node.append_child("Layer_3");
 		layer_3.text() = text.str().c_str();
 		
 		text = std::stringstream();
 		for (int i = 0; i < width_ * height_; ++i) {
 			text << this->collision_layer_[i] << " ";
 		}
-		auto collision = map_node.append_child("Collision");
+		auto collision = node.append_child("Collision");
 		collision.text() = text.str().c_str();
 
-		doc.save_file(map_path.c_str());
+		//doc.save_file(map_path.c_str());
 
 		/*
 		using namespace std;

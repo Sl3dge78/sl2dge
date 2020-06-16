@@ -21,8 +21,8 @@ public :
 	virtual void input(Game* game) override;
 	virtual void update(Game* game) override;
 	virtual void draw(Game* game) override;
-	virtual void on_state_resume() override;
-	virtual void on_state_pause() override;
+	virtual void on_state_resume(Game* game) override {};
+	virtual void on_state_pause(Game* game) override {};
 
 
 private:

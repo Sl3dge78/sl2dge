@@ -3,9 +3,9 @@
 #include <vector>
 #include <memory>
 
-#include "Game.h"
-
 namespace sl2dge {
+
+	class Game;
 
 	class GameState {
 	public:
@@ -23,9 +23,9 @@ namespace sl2dge {
 		// Called for each state in the stack
 		virtual void draw(Game* game) = 0;
 
-		virtual void on_state_resume(Game* game) = 0;
-		virtual void on_state_pause(Game* game) = 0;
-		virtual void on_state_exit(Game* game) = 0;
+		virtual void on_state_resume(Game* game) {};
+		virtual void on_state_pause(Game* game) {};
+		virtual void on_state_exit(Game* game) {};
 
 		virtual ~GameState() = default;
 		GameState() {};

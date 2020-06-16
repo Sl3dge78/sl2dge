@@ -1,30 +1,55 @@
 #pragma once
 
-#include "GameState.h"
+#include <string>
+#include <memory>
+#include <fstream>
+
+#include "Game.h"
+#include "pugixml.hpp"
+#include "EventChain.h"
 
 namespace sl2dge {
 
-	class Scene : public GameState {
-	public :
-		Scene(const std::string& path) : path_(path) {};
-		~Scene() = default;
+	class Scene {
 
-		// Inherited via GameState
-		virtual void start(Game* game) override;
-		virtual void handle_events(Game* game, const SDL_Event& e) override;
-		virtual void input(Game* game) override;
-		virtual void update(Game* game) override;
-		virtual void draw(Game* game) override;
-		virtual void on_state_resume(Game* game) override;
-		virtual void on_state_pause(Game* game) override;
+	public:
+		Scene(Game* game, const std::string& path);
+		void open_xml_doc(pugi::xml_document* doc, const std::string& map_path);
+		~Scene() {};
 
-	private :
+		void save();
+		EventChain* get_chain_at(const int x, const int y) {
+			for (auto& chain : event_chains_) {
+				if (chain->position().x == x && chain->position().y == y)
+					return chain.get();
+			}
+			return nullptr;
+		}
+
+		EventChain* create_chain_at(const int x, const int y) {
+			auto chain = std::make_unique<EventChain>(x, y);
+			auto ret = chain.get();
+			event_chains_.push_back(std::move(chain));
+			return ret;
+		}
+
+		void delete_chain_at(const int x, const int y) {
+			for (auto it = event_chains_.begin(); it != event_chains_.end(); ++it) {
+				if ((*it)->position().x == x && (*it)->position().y == y) {
+					event_chains_.erase(it);
+					break;
+				}
+			}
+		}
+
+		std::vector<std::unique_ptr<EventChain>>* get_all_chains() { return &event_chains_;  }
+
+		TileMap* map() { return map_.get(); }
+
+	private:
+
 		std::string path_;
-		std::unique_ptr<GameEventManager> event_manager_ = nullptr;
-		std::unique_ptr<Camera> main_camera_ = nullptr;
+		std::vector<std::unique_ptr<EventChain>> event_chains_;
 		std::unique_ptr<TileMap> map_ = nullptr;
-		std::unique_ptr<Player> player_ = nullptr;
 	};
-
-
 }

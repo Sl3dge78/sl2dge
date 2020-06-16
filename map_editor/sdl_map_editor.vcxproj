@@ -159,7 +159,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\EventNodeBox.cpp" />
     <ClCompile Include="src\MapEditor.cpp" />
     <ClCompile Include="src\EventEditor.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -175,7 +174,6 @@
   <ItemGroup>
     <ClInclude Include="src\MapEditor.h" />
     <ClInclude Include="src\EventEditor.h" />
-    <ClInclude Include="src\EventNodeBox.h" />
     <ClInclude Include="src\UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -15,7 +15,7 @@ namespace sl2dge {
 
 	class TileMap {
 	public:
-		TileMap(SDL_Renderer& renderer, pugi::xml_node& const map_node);
+		TileMap(SDL_Renderer& renderer, const pugi::xml_node& map_node);
 		~TileMap();
 
 		enum DrawParams {
@@ -41,12 +41,12 @@ namespace sl2dge {
 		// Changes the value of a tile
 		void set_tile(const int layer, const Point& pos, const int tile);
 		int get_tile(const int layer, const Point& pos);
-		void save(const std::string& path);
+		void save(pugi::xml_node& node);
 
 		int tile_size() const { return tile_size_; }
 		Atlas* atlas() { return atlas_; }
-		Uint32 width() const { return width_; }
-		Uint32 height() const { return height_; }
+		unsigned int width() const { return width_; }
+		unsigned int height() const { return height_; }
 		
 	private:
 		Atlas* atlas_ = nullptr;

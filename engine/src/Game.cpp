@@ -1,6 +1,5 @@
 #include "Game.h"
 
-#include "GameState.h"
 #include "SceneManager.h"
 
 namespace sl2dge {

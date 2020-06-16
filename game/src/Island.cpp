@@ -85,10 +85,10 @@ void Island::draw(Game* game) {
 	game->current_map()->draw(game, TileMap::DrawParams::Front);
 }
 
-void Island::on_state_resume() {
+void Island::on_state_resume(Game* game) {
 }
 
-void Island::on_state_pause() {
+void Island::on_state_pause(Game* game) {
 }
 
 Island::~Island() {

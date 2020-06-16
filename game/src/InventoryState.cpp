@@ -83,12 +83,6 @@ void InventoryState::draw(Game* game) {
 
 }
 
-void InventoryState::on_state_resume() {
-}
-
-void InventoryState::on_state_pause() {
-}
-
 void InventoryState::UpdateCursorPosition(Game* game) {
 
 	SDL_DestroyTexture(item_name);

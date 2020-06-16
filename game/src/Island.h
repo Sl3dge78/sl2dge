@@ -14,8 +14,8 @@ public:
 	virtual void update(Game* game) override;
 	virtual void handle_events(Game* game, const SDL_Event& e) override;
 	virtual void draw(Game* game) override;
-	virtual void on_state_resume() override;
-	virtual void on_state_pause() override;
+	virtual void on_state_resume(Game* game) override;
+	virtual void on_state_pause(Game* game) override;
 	virtual ~Island();
 
 private:

@@ -1,15 +1,14 @@
 #pragma once
 
+#include "Game.h"
 #include "Atlas.h"
 #include "Camera.h"
 #include "Character.h"
 #include "Components.h"
 #include "DialogState.h"
 #include "Entity.h"
-#include "EventManagers.h"
-#include "EventManagers.h"
-#include "Game.h"
 #include "GameEvent.h"
+#include "EventChain.h"
 #include "GameState.h"
 #include "HelperFunctions.h"
 #include "Item.h"
@@ -24,6 +23,7 @@
 #include "guid.h"
 #include "pugixml.hpp"
 #include "Player.h"
+#include "SceneState.h"
 #include "Scene.h"
 
 namespace sl2dge {};

@@ -9,6 +9,14 @@ namespace sl2dge {
 
 	void DialogState::start(Game* game) {
 
+		auto s = IMG_Load(box_path.c_str());
+		dialog_box_ = SDL_CreateTextureFromSurface(game->renderer(), s);
+		SDL_FreeSurface(s);
+
+		s = IMG_Load(selection_icon_path.c_str());
+		selection_texture_ = SDL_CreateTextureFromSurface(game->renderer(), s);
+		SDL_FreeSurface(s);
+
 		current_choice = 0;
 
 		if (is_choice) {
@@ -17,7 +25,7 @@ namespace sl2dge {
 			int max_w = 64;
 			int max_h = 8;
 
-			for (int i = 0; i < current_choice_dialog->choice_amnt(); ++i) {
+			for (int i = 0; i < current_choice_dialog->next_amt(); ++i) {
 				int w = FC_GetWidth(game->font(), current_choice_dialog->choice_text(i)->c_str());
 				int h = FC_GetHeight(game->font(), current_choice_dialog->choice_text(i)->c_str());
 				w += 32;
@@ -41,8 +49,8 @@ namespace sl2dge {
 			case SDL_SCANCODE_S:
 				if (is_choice) {
 					current_choice++;
-					if (current_choice > int(current_choice_dialog->choice_amnt()) - 2)
-						current_choice = int(current_choice_dialog->choice_amnt()) - 2;
+					if (current_choice > int(current_choice_dialog->next_amt()) - 2)
+						current_choice = int(current_choice_dialog->next_amt()) - 2;
 
 					if (current_choice < 0)
 						current_choice = 0;
@@ -58,7 +66,7 @@ namespace sl2dge {
 				}
 				break;
 			case SDL_SCANCODE_E:
-				event_manager->next_event();
+				event_chain->next_event(game);
 				break;
 			}
 		}
@@ -71,18 +79,18 @@ namespace sl2dge {
 	}
 
 	void DialogState::draw(Game* game) {
-		draw_dialog_box(*game->renderer(), *event_manager->dialog_box(), 2, single_rect);
+		draw_dialog_box(*game->renderer(), *dialog_box_, 2, single_rect);
 		if (is_choice) {
-			draw_dialog_box(*game->renderer(), *event_manager->dialog_box(), 2, choice_rect);
-			RenderCopy(*game->renderer(), *event_manager->selection_texture(), NULL, &Rect(choice_rect.x - 20, choice_rect.y + 6 + current_choice * 32, 32, 32));
+			draw_dialog_box(*game->renderer(), *dialog_box_, 2, choice_rect);
+			RenderCopy(*game->renderer(), *selection_texture_, NULL, &Rect(choice_rect.x - 20, choice_rect.y + 6 + current_choice * 32, 32, 32));
 		}
 
 		// Bottom
-		FC_DrawBox(game->font(), game->renderer(), single_rect + Rect(8, 8, -8, -8), current_dialog->text()->c_str());
+		FC_DrawBox(game->font(), game->renderer(), single_rect + Rect(8, 8, -8, -8), current_dialog->text.c_str());
 
 		// Choices
 		if (is_choice) {
-			for (int i = 0; i < current_choice_dialog->choice_amnt(); ++i) {
+			for (int i = 0; i < current_choice_dialog->next_amt(); ++i) {
 				FC_DrawAlign(game->font(), game->renderer(), float(choice_anchor.x - 8), float(8 + choice_rect.y + ((16 + 8) * (i))), FC_ALIGN_RIGHT, current_choice_dialog->choice_text(i)->c_str());
 			}
 		}

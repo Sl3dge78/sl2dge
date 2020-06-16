@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "GameState.h"
+#include "sl2dge.h"
 
 using namespace sl2dge;
 
@@ -10,7 +10,7 @@ class Editor : public GameState {
 
 public:
 
-	Editor(const std::string map_path);
+	Editor(const std::string& map_path);
 	~Editor();
 
 	// Inherited via GameState
@@ -20,6 +20,7 @@ public:
 	void paint(const Uint32 mouse_button, const Point pos);
 	virtual void update(Game* game) override;
 	virtual void draw(Game* game) override;
+	void draw_map(Game* game);
 	void draw_atlas(Game* game);
 	void draw_ui(Game* game);
 	virtual void on_state_resume(Game* game) override;
@@ -31,15 +32,16 @@ private:
 		Back = 0,
 		Middle = 1,
 		Front = 2,
-		Event,
-		Collision
+		Event = 3,
+		Collision = 4
 	};
 
-	std::unique_ptr<TileMap> map = nullptr;
-	std::unique_ptr<Camera> map_camera = nullptr;
 	std::string map_path;
 
-	int brush_size_ = 1;
+	std::unique_ptr<Scene> scene_ = nullptr;
+	std::unique_ptr<Camera> map_camera_ = nullptr;
+	TileMap* map_ = nullptr;
+	Atlas* atlas_ = nullptr;
 
 	const SDL_Rect atlas_position = { 992,0,288,720 };
 	const int atlas_tile_w = 288 / 16;
@@ -48,14 +50,6 @@ private:
 	int atlas_y_offset = 0;
 
 	int current_atlas_tile = 0;
-
 	Layer current_layer = Layer::Back;
-
-	
-	std::list<SDL_Point> events = std::list<SDL_Point>();
-	bool has_event_at_position(const int x, const int y);
-	void delete_event_at_position(const int x, const int y);
-	void add_event_at_position(const int x, const int y);
-
-	Atlas* atlas_ = nullptr;
+	int brush_size_ = 1;
 };

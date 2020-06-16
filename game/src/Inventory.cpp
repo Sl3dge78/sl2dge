@@ -72,9 +72,9 @@ void InventoryAddEvent::on_activate(Game* game, GameEventManager* gem) {
 void ConditionalInventoryEvent::on_activate(Game* game, GameEventManager* gem) {
 
 	if (inventory->HasItem(item_id) >= item_qty)
-		next = id_true;
+		next_ = id_true;
 	else
-		next = id_false;
+		next_ = id_false;
 	gem->next_event();
 
 }

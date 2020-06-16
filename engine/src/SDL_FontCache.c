@@ -1826,7 +1826,7 @@ static FC_Rect FC_RenderLeft(FC_Font* font, FC_Target* dest, float x, float y, F
 
 static void set_color_for_all_caches(FC_Font* font, SDL_Color color)
 {
-    // TODO: How can I predict which glyph caches are to be used?
+    // How can I predict which glyph caches are to be used?
     FC_Image* img;
     int i;
     int num_levels = FC_GetNumCacheLevels(font);
@@ -2859,7 +2859,7 @@ Uint8 FC_InRect(float x, float y, FC_Rect input_rect)
     return (input_rect.x <= x && x <= input_rect.x + input_rect.w && input_rect.y <= y && y <= input_rect.y + input_rect.h);
 }
 
-// TODO: Make it work with alignment
+// Make it work with alignment
 Uint16 FC_GetPositionFromOffset(FC_Font* font, float x, float y, int column_width, FC_AlignEnum align, const char* formatted_text, ...)
 {
     FC_StringList *ls, *iter;
@@ -3003,7 +3003,7 @@ void FC_SetDefaultColor(FC_Font* font, SDL_Color color)
 
 void FC_SetLineHeight(FC_Font* font, Uint16 height) {
     if (font == NULL)
-        return 0;
+        return;
     font->line_height = height;
 
 }

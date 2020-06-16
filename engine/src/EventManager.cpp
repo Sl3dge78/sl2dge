@@ -1,24 +1,15 @@
-#include "EventManagers.h"
+#include "EventManager.h"
 
 #include "Game.h"
 #include "DialogState.h"
 
-
+/*
 namespace sl2dge {
 
-#pragma region GAMEEVENT MANAGER
-
-	GameEventManager::GameEventManager(Game* game, pugi::xml_node& const events_node) {
+	GameEventManager::GameEventManager(Game* game, const pugi::xml_node& events_node) {
 		
 		this->game = game;
 		
-		auto s = IMG_Load(box_path.c_str());
-		dialog_box_ = SDL_CreateTextureFromSurface(game->renderer(), s);
-		SDL_FreeSurface(s);
-
-		s = IMG_Load(selection_icon_path.c_str());
-		selection_texture_ = SDL_CreateTextureFromSurface(game->renderer(), s);
-		SDL_FreeSurface(s);
 
 		if (events_node.child("Event_Chain")) {
 			//We found events, iterate through them and add them to the list !
@@ -43,20 +34,6 @@ namespace sl2dge {
 		triggers.clear();
 		event_list.clear();
 
-		SDL_DestroyTexture(dialog_box_);
-		SDL_DestroyTexture(selection_texture_);
-	}
-
-	void GameEventManager::add_game_event(GameEvent* e) {
-		event_list.push_back(std::unique_ptr<GameEvent>(e));
-	}
-
-	GameEvent* GameEventManager::find_game_event(const Guid id) {
-		for (auto&& x : event_list) {
-			if (x->GetID() == id)
-				return x.get();
-		}
-		return nullptr;
 	}
 
 	bool GameEventManager::trigger_event(const Guid id) {
@@ -83,10 +60,6 @@ namespace sl2dge {
 			return false;
 		}
 		return trigger_event(next);
-	}
-
-	void GameEventManager::add_trigger(Trigger* trigger) {
-		triggers.push_back(std::unique_ptr<Trigger>(trigger));
 	}
 
 	void GameEventManager::update(Player* player) {
@@ -127,6 +100,10 @@ namespace sl2dge {
 			}
 		}
 	}
+	void GameEventManager::save(pugi::xml_node& node) {
+
+	}
+
 	void GameEventManager::activate_trigger(Trigger* trigger) {
 		Guid next = trigger->on_trigger_activate();
 		if (next.isNil())
@@ -136,3 +113,4 @@ namespace sl2dge {
 		return;
 	}
 }
+*/

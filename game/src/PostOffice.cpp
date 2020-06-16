@@ -97,8 +97,8 @@ void PostOffice::draw(Game* game) {
 	map->draw(game, TileMap::DrawParams::Front);
 }
 
-void PostOffice::on_state_resume() {
+void PostOffice::on_state_resume(Game* game) {
 }
 
-void PostOffice::on_state_pause() {
+void PostOffice::on_state_pause(Game* game) {
 }

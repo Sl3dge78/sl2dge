@@ -8,10 +8,10 @@
 #include <SDL/SDL_image.h>
 #include "SDL_FontCache.h"
 
-#include "EventManagers.h"
 #include "TileMap.h"
 #include "QuestManager.h"
 #include "GameState.h"
+#include "EventManager.h"
 
 namespace sl2dge {
 
@@ -31,8 +31,8 @@ namespace sl2dge {
 
 		SDL_Renderer* renderer() { return renderer_; }
 
-		Uint32 window_width() { return window_width_; }
-		Uint32 window_height() { return window_height_; }
+		unsigned int window_width() { return window_width_; }
+		unsigned int window_height() { return window_height_; }
 
 		int delta_time() { return delta_time_; }
 		void set_target_FPS(float val) { target_FPS_ = val; max_frame_time_ = 1.0f / target_FPS_; }

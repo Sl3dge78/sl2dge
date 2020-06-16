@@ -4,37 +4,39 @@
 #include <fstream>
 
 
+EventEditor::EventEditor(Scene* scene, EventChain* event_chain) {
+
+	scene_ = scene;
+	event_chain_ = event_chain;
+
+	// TODO URGENT : Tester Scene, EventChain, EventNodeBox, MapEditor, EventEditor, save/load
+	SDL_Point pos = { 0, 16 };
+	interactable_ = std::make_unique<ToggleBox>("Inter", event_chain->interactable());
+	interactable_->set_position(pos);
+	pos.y += 16;
+	is_in_place_ = std::make_unique<ToggleBox>("In Place", event_chain->in_place());
+	is_in_place_->set_position(pos);
+	pos.y += 16;
+
+	activate_once_ = std::make_unique<ToggleBox>("Once", event_chain->once());
+	activate_once_->set_position(pos);
+	pos.y += 16;
+}
+
 void EventEditor::start(Game* game) {
 	camera = std::make_unique<Camera>(1280, 720);
 	game->set_main_camera(camera.get());
 	SDL_StopTextInput();
-	boxes = std::make_unique<std::vector<std::unique_ptr<EventNodeBox>>>();
-	
-	pugi::xml_document doc;
-	open_xml_doc(&doc, map_path_);
 
-	pugi::xml_node node;
-	if (get_event_chain_node(doc, map_path_, node)) { // There is stuff!
-		SDL_Log("Loading existing event data...");
+	for (auto& event : *event_chain_->events()) {
+		for (int i = 0; i < event->next_amt(); ++i) {
+			if (event->next(i).isNil())
+				continue;
 
-		for (auto child : node.children()) {
-			auto b = EventNodeBox::create_node(child);
-			// Set the next nodes
-			boxes->push_back(std::move(b));
+			auto next = event_chain_->get_event(event->next(i));
+			if(next != nullptr)
+				next->has_prev = true;
 		}
-
-		// Create the link between the boxes
-		for (auto& box : *boxes) {
-			for (auto id : box->next) {
-				auto p = get_box_from_uuid(id);
-				if(p != nullptr)
-					p->has_prev = true;
-			}
-		}
-
-		SDL_Log("Event data loaded!");
-	} else { // No data, start from scratch
-		boxes->push_back(std::make_unique<TriggerBox>());
 	}
 }
 
@@ -42,13 +44,12 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 
 	if (e.type == SDL_KEYDOWN && e.key.repeat == 0) {
 		if (SDL_GetModState() & KMOD_CTRL && e.key.keysym.scancode == SDL_SCANCODE_N) {
-			boxes->push_back(std::make_unique<DialogNodeBox>());
+			event_chain_->add_event(new Dialog());
 		}
 		if (SDL_GetModState() & KMOD_CTRL && e.key.keysym.scancode == SDL_SCANCODE_S) {
 			save();
-			
 		}
-		
+
 		switch (e.key.keysym.scancode) {
 		case SDL_SCANCODE_ESCAPE:
 			game->pop_state();
@@ -56,6 +57,7 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 		case SDL_SCANCODE_F5:
 			save();
 			break;
+
 		}
 	}
 
@@ -64,7 +66,7 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 		if (e.button.button == SDL_BUTTON_LEFT) {
 			bool clicked_on_smth = false;
 
-			for (auto& b : *boxes) {
+			for (auto& b : *event_chain_->events()) {
 
 				// Clicking inside a box
 				if (SDL_PointInRect(&mouse_pos, b->rect())) {
@@ -92,10 +94,10 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 					plug_out = plug;
 					plugging_out_box = b.get();
 
-					if (!b->next[plug_out].isNil()) { // If something is already plugged where we clicked
+					if (!b->next(plug_out).isNil()) { // If something is already plugged where we clicked
 						// remove it						
-						get_box_from_uuid(b->next[plug_out])->has_prev = false;
-						b->next[plug_out] = Guid();
+						event_chain_->get_event(b->next(plug_out))->has_prev = false;
+						b->next(plug_out) = Guid();
 					}
 					clicked_on_smth = true;
 					break;
@@ -117,11 +119,11 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 
 				// OUT
 				// Remove the previous plug if it exists
-				if (!plugging_out_box->next[plug_out].isNil()) {
-					get_box_from_uuid(plugging_out_box->next[plug_out])->has_prev = false;
+				if (!plugging_out_box->next(plug_out).isNil()) {
+					event_chain_->get_event(plugging_out_box->next(plug_out))->has_prev = false;
 				}
 				// Plug it!
-				plugging_out_box->next[plug_out] = plugging_in_box->guid();
+				plugging_out_box->set_next(plugging_in_box->id(), plug_out);
 
 				// IN
 				plugging_in_box->has_prev = true;
@@ -132,24 +134,39 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 				plug_out = -1;
 				is_plugging = false;
 			}
-		}
-		else if (e.button.button == SDL_BUTTON_RIGHT) {
-			for (auto it = boxes->begin(); it != boxes->end(); ++it) {
+		} else if (e.button.button == SDL_BUTTON_RIGHT) {
+			for (auto it = event_chain_->events()->begin(); it != event_chain_->events()->end(); ++it) {
 
 				// Clicking inside a box
 				if (SDL_PointInRect(&mouse_pos, (*it)->rect())) {
 					auto box = (*it).get();
 					if (box->has_prev) {
-						remove_connection_to(box->guid());
+						remove_all_connections_to(box->id());
 					}
-					for (auto a : box->next) {
+
+					for (int i = 0; i < box->next_amt(); i++) {
+						auto a = box->next(i);
 						if (!a.isNil()) {
-							get_box_from_uuid(a)->has_prev = false;
+							event_chain_->get_event(a)->has_prev = false;
 						}
 					}
-					
-					boxes->erase(it);
+
+					event_chain_->events()->erase(it);
 					break;
+				}
+
+				// Clicking on in plug
+				if ((*it)->has_in() && SDL_PointInRect(&mouse_pos, &(*it)->in_plug())) {
+					remove_all_connections_to((*it)->id());
+					break;
+				}
+			}
+		} else if (e.button.button == SDL_BUTTON_MIDDLE) {
+			for (auto& b : *event_chain_->events()) {
+				// Clicking inside a box
+				if (SDL_PointInRect(&mouse_pos, b->rect())) {
+					event_chain_->set_next(b->id());
+					SDL_Log("Entry point set %s", event_chain_->next().str().c_str());
 				}
 			}
 		}
@@ -170,9 +187,13 @@ void EventEditor::handle_events(Game* game, const SDL_Event& e) {
 		}
 	}
 
-	for (auto& b : *boxes) {
+	for (auto& b : *event_chain_->events()) {
 		b->handle_events(game, e);
 	}
+
+	interactable_->handle_events(game, e);
+	is_in_place_->handle_events(game, e);
+	activate_once_->handle_events(game, e);
 
 }
 
@@ -212,13 +233,13 @@ void EventEditor::draw(Game* game) {
 
 	SDL_SetRenderDrawColor(game->renderer(), 25, 25, 25, 255);
 	SDL_RenderClear(game->renderer());
-	
-	for (auto& b : *boxes) {
+
+	for (auto& b : *event_chain_->events()) {
 		b->draw(game);
-		for (int i = 0; i < b->next.size(); ++i) {
-			if (!b->next[i].isNil()) {
+		for (int i = 0; i < b->next_amt(); ++i) {
+			if (!b->next(i).isNil()) {
 				int x2 = 0, y2 = 0;
-				auto next = get_box_from_uuid(b->next[i]);
+				auto next = event_chain_->get_event(b->next(i));
 				if (next != nullptr) {
 					x2 = next->in_plug().x;
 					y2 = next->in_plug().y;
@@ -242,11 +263,14 @@ void EventEditor::draw(Game* game) {
 
 
 	// INFO 
-
-	SDL_Rect info_rect = { 0,0,50,16 };
+	SDL_Rect info_rect = { 0,0,100,100 };
 	SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 255);
 	SDL_RenderFillRect(game->renderer(), &info_rect);
-	FC_Draw(game->font(), game->renderer(), 0, 0, "%d, %d", map_pos_.x, map_pos_.y);
+	FC_Draw(game->font(), game->renderer(), 0, 0, "%d, %d", event_chain_->position().x, event_chain_->position().y);
+
+	interactable_->draw(game);
+	is_in_place_->draw(game);
+	activate_once_->draw(game);
 }
 
 void EventEditor::on_state_resume(Game* game) {
@@ -259,26 +283,30 @@ void EventEditor::on_state_exit(Game* game) {
 	save();
 }
 
-void EventEditor::save() {
-	pugi::xml_document doc;
-	open_xml_doc(&doc, map_path_);
+// Will search all boxes and remove the connection that connects to id
+void EventEditor::remove_all_connections_to(Guid id) {
+	
+	event_chain_->get_event(id)->has_prev = false;
 
-	pugi::xml_node event_chain;
-	get_event_chain_node(doc, map_path_, event_chain);
-
-	// Remove everything and write from scratch
-	event_chain.remove_attributes();
-	event_chain.remove_children();
-
-	event_chain.append_attribute("x_pos").set_value(map_pos_.x);
-	event_chain.append_attribute("y_pos").set_value(map_pos_.y);
-
-	for (auto& b : *boxes) {
-		auto event_node = event_chain.append_child("Event");
-		b->get_xml_data(event_node);
+	int found = 0;
+	for (auto& b : *event_chain_->events()) {
+		for (int i = 0; i < b->next_amt(); ++i) {
+			if (b->next(i) == id) {
+				b->set_next(Guid(), i);
+				found++;
+			}
+		}
 	}
+	if (found == 0)
+		SDL_Log("Couldn't find any box that connects to %s", id.str().c_str());
+	else 
+		SDL_Log("Removed %d connections to %s", found, id.str().c_str());
+}
 
-	doc.save_file(map_path_.c_str());
-	SDL_Log("Saved!");
+void EventEditor::save() {
+	event_chain_->set_interactable(interactable_->value());
+	event_chain_->set_in_place(is_in_place_->value());
+	event_chain_->set_once(activate_once_->value());
 
+	scene_->save();
 }

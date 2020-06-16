@@ -24,15 +24,9 @@
     <ClCompile Include="src\MapEditor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\EventNodeBox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\EventEditor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\EventNodeBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\MapEditor.h">

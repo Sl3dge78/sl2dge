@@ -5,15 +5,14 @@
 #include <fstream>
 
 #include "sl2dge.h"
-
-#include "EventNodeBox.h"
+#include "UI.h"
 
 using namespace sl2dge;
 
 class EventEditor : public GameState {
 public:
 
-	EventEditor(const std::string& map_path, const SDL_Point& map_pos) : map_path_(map_path), map_pos_(map_pos) {}
+	EventEditor(Scene* scene, EventChain* event_chain);
 
 	// Inherited via GameState
 	virtual void start(Game* game) override;
@@ -26,92 +25,24 @@ public:
 	virtual void on_state_exit(Game* game) override;
 
 private:
-	std::unique_ptr<std::vector<std::unique_ptr<EventNodeBox>>> boxes;
-	//TriggerBox* trigger_ = nullptr;
 	std::unique_ptr<Camera> camera;
+	Scene* scene_;
+	EventChain* event_chain_;
+	
+	std::unique_ptr<ToggleBox> interactable_ = nullptr;
+	std::unique_ptr<ToggleBox> is_in_place_ = nullptr; //  you need to stand on the item to trigger the event
+	std::unique_ptr<ToggleBox> activate_once_ = nullptr; // If true, won't activate ever again
 
-	SDL_Point map_pos_;
-	std::string map_path_;
 
 	bool is_plugging = false;
-	EventNodeBox* plugging_out_box = nullptr;
+	GameEvent* plugging_out_box = nullptr;
 	int plug_out = -1;
-	EventNodeBox* plugging_in_box = nullptr;
+	GameEvent* plugging_in_box = nullptr;
 
-	EventNodeBox* selected_box = nullptr;
+	GameEvent* selected_box = nullptr;
 	bool is_resizing_ = false;
 	bool is_moving_ = false;
 
-	EventNodeBox* get_box_from_uuid(const Guid& i) {
-		for (auto& n : *boxes) {
-			if (n->guid() == i)
-				return n.get();
-		}
-		return nullptr;
-	}
-	
-	// Will search all boxes and remove the connection that connects to id
-	void remove_connection_to(Guid id) {
-		int found = 0;
-		for (auto& b : *boxes) {
-			for (int i = 0; i < b->next.size(); ++i) {
-				if (b->next[i] == id) {
-					b->next[i] = Guid();
-					found++;
-				}
-			}
-		}
-		if(found == 0)
-			SDL_Log("Couldn't find any box that connects to %s", id.str().c_str());
-		else
-			SDL_Log("Removed %d connections to %s", found, id.str().c_str());
-	}
-
-	void open_xml_doc(pugi::xml_document* doc, std::string& map_path) {
-		pugi::xml_parse_result result = doc->load_file(map_path_.c_str());
-		if (!result) {
-			SDL_Log("Unable to read xml %s : %s", map_path_.c_str(), result.description());
-			if (result.status == pugi::xml_parse_status::status_bad_attribute) {
-				std::ifstream file;
-				file.open(map_path_);
-				file.seekg(result.offset);
-
-				std::string s;
-				s.resize(20);
-				file.read(&s[0], 20);
-				SDL_Log("Error at [...%s]", s.c_str());
-			}
-			doc = new pugi::xml_document();
-		}
-
-		SDL_Log("%s successfully loaded", map_path.c_str());
-	}
-
-	bool get_event_chain_node(pugi::xml_document& doc, std::string& path, pugi::xml_node& node) {
-		using namespace pugi;
-
-		auto events_node = doc.child("Events");
-		if (!events_node) {
-			events_node = doc.append_child("Events");
-		}
-
-		bool found = false;
-		if (!events_node.child("Event_Chain")) { // No event, in the current doc, create it and goo
-			node = events_node.append_child("Event_Chain");
-			return false;
-		} else { // If there are already events in the document iterate through them to find the right one.
-			for (auto event : events_node.children("Event_Chain")) {
-				if (event.attribute("x_pos").as_int() == map_pos_.x && event.attribute("y_pos").as_int() == map_pos_.y) {
-					node = event;
-					return true;
-				}
-			}
-			// No node found
-			node = events_node.append_child("Event_Chain");
-			return false;
-			
-		}
-	}
-
+	void remove_all_connections_to(Guid id);  // Will search all boxes and remove the connection that connects to id
 	void save();
 };
