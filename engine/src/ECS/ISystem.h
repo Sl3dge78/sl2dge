@@ -1,10 +1,15 @@
 #pragma once
 
-#include "Entity.h"
 #include <forward_list>
+#include <memory>
 #include <vector>
 
-namespace ECS {
+#include "../SDL_FontCache.h"
+#include <SDL/SDL.h>
+
+#include "Entity.h"
+
+namespace sl2dge::ECS {
 
 enum FilterType { FILTER_AND,
 	FILTER_OR };
@@ -13,15 +18,15 @@ class ISystem {
 	friend class World;
 
 private:
-	void AddComponentFilter(const int id);
+	void add_component_filter(const int id);
 
 public:
 	virtual ~ISystem() = default;
-	const void GetActiveEntities(std::vector<Entity *> *list);
-	void AddEntity(Entity *e);
+	const void get_active_entities(std::vector<Entity *> *list);
+	void add_entity(Entity *e);
 	template <class T>
-	void AddComponentFilter();
-	void SetFilterType(FilterType type) { filter_type_ = type; };
+	void add_component_filter();
+	void set_filter_type(FilterType type) { filter_type_ = type; };
 
 protected:
 	ISystem() = default;
@@ -31,13 +36,13 @@ protected:
 	std::vector<int> filter_;
 	FilterType filter_type_ = FILTER_AND;
 
-	virtual void OnEntityAdded(Entity *entity){};
-	virtual void OnEntityListChanged(){};
+	virtual void on_entity_added(Entity *entity){};
+	virtual void on_entity_list_changed(){};
 };
 
 template <class T>
-void ISystem::AddComponentFilter() {
-	AddComponentFilter(ComponentID::Get<T>());
+void ISystem::add_component_filter() {
+	add_component_filter(ComponentID::Get<T>());
 }
 
 // == CHILDS ==
@@ -49,7 +54,7 @@ protected:
 
 public:
 	virtual ~UpdateSystem() = default;
-	virtual void Update() = 0;
+	virtual void update() = 0;
 };
 
 /// Draw gets called every frame after all logic
@@ -58,13 +63,13 @@ class DrawSystem {
 
 protected:
 	DrawSystem() = default;
-	ALLEGRO_FONT *font_;
-	ALLEGRO_BITMAP *bitmap_;
+	FC_Font *font_;
+	SDL_Renderer *renderer_;
 	int pos_z = 0;
 
 public:
 	virtual ~DrawSystem() = default;
-	virtual void Draw() = 0;
+	virtual void draw() = 0;
 };
 
 /// Input gets called when an event gets registered
@@ -74,7 +79,7 @@ protected:
 
 public:
 	virtual ~InputSystem() = default;
-	virtual void Input(ALLEGRO_EVENT *const ev) = 0;
+	virtual void input(SDL_Event const &e) = 0;
 };
 
 //TODO : Add a reactive system that calls update/draw only when needed
@@ -88,7 +93,7 @@ protected:
 
 public:
 	virtual ~InitSystem() = default;
-	virtual void Init() = 0;
+	virtual void init() = 0;
 };
 
 /// A system that requires a reference to the world to work.
@@ -103,4 +108,4 @@ public:
 	virtual ~WorldSetSystem() = default;
 };
 
-} // namespace ECS
+} // namespace sl2dge::ECS

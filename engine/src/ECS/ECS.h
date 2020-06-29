@@ -1,5 +1,5 @@
 #pragma once
 
-namespace ECS {}
+namespace sl2dge::ECS {}
 
 #include "World.h"

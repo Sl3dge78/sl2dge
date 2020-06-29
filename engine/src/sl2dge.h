@@ -28,6 +28,8 @@
 #include "Quest.h"
 #include "QuestManager.h"
 
+#include "ECS/ECS.h"
+
 #include "SDL_FontCache.h"
 #include "guid.h"
 #include "xml/pugixml.hpp"

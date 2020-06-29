@@ -24,7 +24,7 @@ private:
 	std::string path_;
 	std::unique_ptr<Camera> main_camera_ = nullptr;
 	std::unique_ptr<Scene> scene_ = nullptr;
-	std::unique_ptr<Player> player_ = nullptr;
+	//std::unique_ptr<Player> player_ = nullptr;
 };
 
 } // namespace sl2dge

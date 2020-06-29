@@ -1,5 +1,5 @@
 #include "Component.h"
 
-namespace ECS {
-    int ComponentID::count = 0;
+namespace sl2dge::ECS {
+int ComponentID::count = 0;
 }
