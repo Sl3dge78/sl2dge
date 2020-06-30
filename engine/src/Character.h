@@ -2,12 +2,12 @@
 #include "SDL/SDL.h"
 
 #include "Components.h"
-#include "Entity.h"
+#include "ECS/Entity.h"
 #include "Game.h"
 #include "Sprites.h"
 
 namespace sl2dge {
-
+/*
 class Character : public Entity, public IMoveable {
 public:
 	Character(Game *game, std::string path);
@@ -47,4 +47,5 @@ Character::Character(Game *game, const std::string path) {
 void Character::draw(Game *game) {
 	sprite_->draw(*game->renderer(), *game->main_camera(), position_);
 }
+*/
 } // namespace sl2dge

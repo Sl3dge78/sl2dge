@@ -3,8 +3,19 @@
 #include <memory>
 
 void sl2dge::SceneState::start(Game *game) {
-	//player_ = std::make_unique<Player>(game);
-	//player_->teleport_to(Point(50, 50));
+	auto map = world_.create_entity();
+
+	//map->add_component<TileMap>(game->renderer(), "resources/levels/maptest.map");
+
+	auto cam = world_.create_entity();
+	cam->add_component<Camera>(320, 288);
+
+	auto map_back = world_.create_system<TileMapSystem>(TileMapSystem::DrawParams::Back | TileMapSystem::DrawParams::Middle);
+	map_back->camera_ = cam;
+
+	/*
+	player_ = std::make_unique<Player>(game);
+	player_->teleport_to(Point(50, 50));
 
 	scene_ = std::make_unique<Scene>(game, path_);
 
@@ -15,6 +26,7 @@ void sl2dge::SceneState::start(Game *game) {
 	//main_camera_->set_target(player_.get());
 
 	game->set_main_camera(main_camera_.get());
+	*/
 }
 
 void sl2dge::SceneState::handle_events(Game *game, const SDL_Event &e) {
@@ -35,7 +47,8 @@ void sl2dge::SceneState::input(Game *game) {
 }
 
 void sl2dge::SceneState::update(Game *game) {
-	//player_->update(game);
+	/*
+	player_->update(game);
 	main_camera_->update(game);
 
 	// TODO : deactivate triggers if the player wals out of them
@@ -51,9 +64,11 @@ void sl2dge::SceneState::update(Game *game) {
 }
 
 void sl2dge::SceneState::draw(Game *game) {
+	/*
 	scene_->map()->draw(game, TileMap::DrawParams::Back | TileMap::DrawParams::Middle);
 	//player_->draw(game);
 	scene_->map()->draw(game, TileMap::DrawParams::Front);
+	*/
 }
 
 void sl2dge::SceneState::on_interact(Game *game) {

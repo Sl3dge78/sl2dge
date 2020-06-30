@@ -9,7 +9,8 @@
 
 using namespace sl2dge;
 
-class Player : public Entity, public IMoveable {
+class Player /*:public Entity , public IMoveable*/ {
+	/*
 public:
 	Player(Game *game);
 	~Player();
@@ -27,4 +28,5 @@ private:
 	// Inherited via Entity
 	virtual void on_state_resume() override;
 	virtual void on_state_pause() override;
+	*/
 };

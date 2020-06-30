@@ -43,11 +43,11 @@ public:
 
 	std::vector<std::unique_ptr<EventChain>> *get_all_chains() { return &event_chains_; }
 
-	TileMap *map() { return map_.get(); }
+	//TileMap *map() { return map_.get(); }
 
 private:
 	std::string path_;
 	std::vector<std::unique_ptr<EventChain>> event_chains_;
-	std::unique_ptr<TileMap> map_ = nullptr;
+	//std::unique_ptr<TileMap> map_ = nullptr;
 };
 } // namespace sl2dge

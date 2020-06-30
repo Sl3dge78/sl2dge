@@ -8,8 +8,8 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
-#include "Camera.h"
 #include "Rect.h"
+#include "scene/Camera.h"
 
 namespace sl2dge {
 

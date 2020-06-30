@@ -42,6 +42,8 @@ void GameEvent::get_xml_data(pugi::xml_node &node) {
 }
 
 void GameEvent::draw(Game *game) {
+	// TODO
+	/*
 	auto pos = game->main_camera()->world_to_screen_transform(rect_);
 
 	// BOX
@@ -73,9 +75,11 @@ void GameEvent::draw(Game *game) {
 			SDL_RenderFillRect(game->renderer(), &game->main_camera()->world_to_screen_transform(out_plug(i)));
 		}
 	}
+	*/
 }
 
 void GameEvent::handle_events(Game *game, const SDL_Event &e) {
+	/*
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
 		auto mouse_pos = game->main_camera()->screen_to_world_transform(SDL_Point{ e.button.x, e.button.y });
 		if (e.button.button == SDL_BUTTON_RIGHT) {
@@ -85,6 +89,7 @@ void GameEvent::handle_events(Game *game, const SDL_Event &e) {
 			}
 		}
 	}
+	*/
 }
 
 SDL_Rect GameEvent::in_plug() {
@@ -135,6 +140,7 @@ void Dialog::on_end(Game *game) {
 }
 
 void Dialog::draw(Game *game) {
+	/*
 	GameEvent::draw(game);
 
 	// Draw text box
@@ -146,9 +152,11 @@ void Dialog::draw(Game *game) {
 	SDL_RenderDrawRect(game->renderer(), &pos);
 
 	FC_DrawBox(game->font(), game->renderer(), pos, text.c_str());
+	*/
 }
 
 void Dialog::handle_events(Game *game, const SDL_Event &e) {
+	/*
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
 		if (e.button.button == SDL_BUTTON_LEFT) {
 			auto mouse_pos = game->main_camera()->screen_to_world_transform(SDL_Point{ e.button.x, e.button.y });
@@ -177,6 +185,7 @@ void Dialog::handle_events(Game *game, const SDL_Event &e) {
 			}
 		}
 	}
+	*/
 }
 
 // CHOICE

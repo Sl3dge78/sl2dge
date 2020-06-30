@@ -77,7 +77,7 @@ void DialogState::draw(Game *game) {
 	draw_dialog_box(*game->renderer(), *dialog_box_, 2, single_rect);
 	if (is_choice) {
 		draw_dialog_box(*game->renderer(), *dialog_box_, 2, choice_rect);
-		RenderCopy(*game->renderer(), *selection_texture_, NULL, &Rect(choice_rect.x - 20, choice_rect.y + 6 + current_choice * 32, 32, 32));
+		//RenderCopy(*game->renderer(), *selection_texture_, NULL, &Rect(choice_rect.x - 20, choice_rect.y + 6 + current_choice * 32, 32, 32));
 	}
 
 	// Bottom
@@ -98,38 +98,29 @@ void DialogState::draw_dialog_box(SDL_Renderer &renderer, SDL_Texture &dialog_bo
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Dialog box of size <32px not implemented");
 		return;
 	}
-
+	// TODO
 	//Upper Left Corner
-	RenderCopy(renderer, dialog_box, &Rect(0, 0, 16, 16),
-			&Rect(rect.x, rect.y, tile_size, tile_size));
+	//RenderCopy(renderer, dialog_box, &Rect(0, 0, 16, 16),&Rect(rect.x, rect.y, tile_size, tile_size));
 	//Upper Line
-	RenderCopy(renderer, dialog_box, &Rect(16, 0, 16, 16),
-			&Rect(rect.x + tile_size, rect.y, rect.w - 2 * tile_size, tile_size));
+	//RenderCopy(renderer, dialog_box, &Rect(16, 0, 16, 16),&Rect(rect.x + tile_size, rect.y, rect.w - 2 * tile_size, tile_size));
 	//Upper Right Corner
-	RenderCopy(renderer, dialog_box, &Rect(32, 0, 16, 16),
-			&Rect(rect.x + rect.w - tile_size, rect.y, tile_size, tile_size));
+	//RenderCopy(renderer, dialog_box, &Rect(32, 0, 16, 16),&Rect(rect.x + rect.w - tile_size, rect.y, tile_size, tile_size));
 
 	if (rect.h > 2 * tile_size) {
 		// Middle Left
-		RenderCopy(renderer, dialog_box, &Rect(0, 16, 16, 16),
-				&Rect(rect.x, rect.y + tile_size, tile_size, rect.h - tile_size * 2));
+		//RenderCopy(renderer, dialog_box, &Rect(0, 16, 16, 16),&Rect(rect.x, rect.y + tile_size, tile_size, rect.h - tile_size * 2));
 		// Middle Center
-		RenderCopy(renderer, dialog_box, &Rect(16, 16, 16, 16),
-				&Rect(rect.x + tile_size, rect.y + tile_size, rect.w - tile_size * 2, rect.h - tile_size * 2));
+		//RenderCopy(renderer, dialog_box, &Rect(16, 16, 16, 16),&Rect(rect.x + tile_size, rect.y + tile_size, rect.w - tile_size * 2, rect.h - tile_size * 2));
 		// Middle Right
-		RenderCopy(renderer, dialog_box, &Rect(32, 16, 16, 16),
-				&Rect(rect.x + rect.w - tile_size, rect.y + tile_size, tile_size, rect.h - tile_size * 2));
+		//RenderCopy(renderer, dialog_box, &Rect(32, 16, 16, 16),&Rect(rect.x + rect.w - tile_size, rect.y + tile_size, tile_size, rect.h - tile_size * 2));
 	}
 
 	//Lower Left Corner
-	RenderCopy(renderer, dialog_box, &Rect(0, 32, 16, 16),
-			&Rect(rect.x, rect.y + rect.h - tile_size, tile_size, tile_size));
+	//RenderCopy(renderer, dialog_box, &Rect(0, 32, 16, 16), &Rect(rect.x, rect.y + rect.h - tile_size, tile_size, tile_size));
 	//Lower Line
-	RenderCopy(renderer, dialog_box, &Rect(16, 32, 16, 16),
-			&Rect(rect.x + tile_size, rect.y + rect.h - tile_size, rect.w - 2 * tile_size, tile_size));
+	//RenderCopy(renderer, dialog_box, &Rect(16, 32, 16, 16),&Rect(rect.x + tile_size, rect.y + rect.h - tile_size, rect.w - 2 * tile_size, tile_size));
 	//Lower Right Corner
-	RenderCopy(renderer, dialog_box, &Rect(32, 32, 16, 16),
-			&Rect(rect.x + rect.w - tile_size, rect.y + rect.h - tile_size, tile_size, tile_size));
+	//RenderCopy(renderer, dialog_box, &Rect(32, 32, 16, 16),&Rect(rect.x + rect.w - tile_size, rect.y + rect.h - tile_size, tile_size, tile_size));
 }
 
 void DialogState::on_state_resume(Game *game) {

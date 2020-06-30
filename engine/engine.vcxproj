@@ -96,7 +96,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Work\Prog\cpp\sl2dge\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Work\Prog\cpp\sl2dge\engine\src;D:\Work\Prog\cpp\sl2dge\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -110,7 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Work\Prog\cpp\sl2dge\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Work\Prog\cpp\sl2dge\engine\src;D:\Work\Prog\cpp\sl2dge\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -126,7 +126,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Work\Prog\cpp\sl2dge\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Work\Prog\cpp\sl2dge\engine\src;D:\Work\Prog\cpp\sl2dge\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -144,7 +144,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Work\Prog\cpp\sl2dge\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Work\Prog\cpp\sl2dge\engine\src;D:\Work\Prog\cpp\sl2dge\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -155,8 +155,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Atlas.cpp" />
-    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\scene\Atlas.cpp" />
+    <ClCompile Include="src\scene\Camera.cpp" />
     <ClCompile Include="src\Components.cpp" />
     <ClCompile Include="src\DialogState.cpp" />
     <ClCompile Include="src\ECS\Component.cpp" />
@@ -175,11 +175,11 @@
     <ClCompile Include="src\SceneState.cpp" />
     <ClCompile Include="src\SDL_FontCache.c" />
     <ClCompile Include="src\Sprites.cpp" />
-    <ClCompile Include="src\TileMap.cpp" />
+    <ClCompile Include="src\scene\TileMap.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Atlas.h" />
-    <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\scene\Atlas.h" />
+    <ClInclude Include="src\scene\Camera.h" />
     <ClInclude Include="src\Character.h" />
     <ClInclude Include="src\Components.h" />
     <ClInclude Include="src\DialogState.h" />
@@ -188,7 +188,6 @@
     <ClInclude Include="src\ECS\Entity.h" />
     <ClInclude Include="src\ECS\ISystem.h" />
     <ClInclude Include="src\ECS\World.h" />
-    <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\EventChain.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\GameEvent.h" />
@@ -208,7 +207,7 @@
     <ClInclude Include="src\SDL_FontCache.h" />
     <ClInclude Include="src\sl2dge.h" />
     <ClInclude Include="src\Sprites.h" />
-    <ClInclude Include="src\TileMap.h" />
+    <ClInclude Include="src\scene\TileMap.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,6 @@
 #include "HelperFunctions.h"
 
-#include "Camera.h"
+#include "scene/Camera.h"
 
 void sl2dge::RenderCopy(SDL_Renderer &renderer, SDL_Texture &texture, const Rect *src, const Rect *dst) {
 	SDL_ClearError();
@@ -27,8 +27,8 @@ void sl2dge::RenderCopyWorld(SDL_Renderer &renderer, SDL_Texture &texture, const
 		SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "No destination specified for World Rendering");
 		return;
 	}
-	if (!camera.viewport().ContainsPartially(*dst))
-		return;
+	//if (!camera.viewport().ContainsPartially(*dst))
+	//	return;
 
 	Rect screen_dest = camera.world_to_screen_transform(*dst);
 	RenderCopy(renderer, texture, src, &screen_dest);

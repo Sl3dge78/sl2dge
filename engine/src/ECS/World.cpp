@@ -86,15 +86,15 @@ void World::delete_all_systems() {
 	draw_systems_.clear();
 }
 
-void World::init() {
+void World::start() {
 	for (InitSystem *system : init_systems_) {
-		system->init();
+		system->start();
 	}
 }
 
-void World::input(SDL_Event const &e) {
+void World::handle_events(SDL_Event const &e) {
 	for (InputSystem *system : input_systems_) {
-		system->input(e);
+		system->handle_events(e);
 	}
 }
 

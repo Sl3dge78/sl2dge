@@ -78,6 +78,7 @@ public:
 	bool IsZero() { return (x == 0 && y == 0); }
 };
 
+// TODO MOVE THAT
 class Vector2 {
 public:
 	Vector2() {

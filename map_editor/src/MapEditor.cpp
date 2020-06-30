@@ -240,7 +240,7 @@ void Editor::draw_atlas(Game *game) {
 		for (int x = 0; x < atlas_tile_w; x++) {
 			auto i = x + atlas_x_offset + ((y + atlas_y_offset) * atlas_->nb_tiles_atlas_width);
 			if (i < atlas_->nb_tiles_atlas_width * atlas_->nb_tiles_atlas_height) {
-				SDL_Rect src = *atlas_->get_tile_rect(i);
+				SDL_Rect src = *atlas_->get_tile(i);
 				SDL_Rect rect = { atlas_position.x + (x * 16), atlas_position.y + (y * 16), 16, 16 };
 				SDL_RenderCopy(game->renderer(), atlas_->texture(), &src, &rect);
 				if (i == current_atlas_tile)

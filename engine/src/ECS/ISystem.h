@@ -4,10 +4,10 @@
 #include <memory>
 #include <vector>
 
-#include "../SDL_FontCache.h"
 #include <SDL/SDL.h>
 
-#include "Entity.h"
+#include "ECS/Entity.h"
+#include "SDL_FontCache.h"
 
 namespace sl2dge::ECS {
 
@@ -63,13 +63,16 @@ class DrawSystem {
 
 protected:
 	DrawSystem() = default;
-	FC_Font *font_;
-	SDL_Renderer *renderer_;
+	FC_Font *font_ = nullptr;
+	SDL_Renderer *renderer_ = nullptr;
+
 	int pos_z = 0;
 
 public:
 	virtual ~DrawSystem() = default;
 	virtual void draw() = 0;
+
+	Entity *camera_ = nullptr;
 };
 
 /// Input gets called when an event gets registered
@@ -79,7 +82,7 @@ protected:
 
 public:
 	virtual ~InputSystem() = default;
-	virtual void input(SDL_Event const &e) = 0;
+	virtual void handle_events(SDL_Event const &e) = 0;
 };
 
 //TODO : Add a reactive system that calls update/draw only when needed
@@ -93,7 +96,7 @@ protected:
 
 public:
 	virtual ~InitSystem() = default;
-	virtual void init() = 0;
+	virtual void start() = 0;
 };
 
 /// A system that requires a reference to the world to work.

@@ -7,7 +7,7 @@ sl2dge::Scene::Scene(Game *game, const std::string &path) {
 	open_xml_doc(&doc, path_);
 
 	auto map_node = doc.child("Map");
-	map_ = std::make_unique<TileMap>(*game->renderer(), map_node);
+	//map_ = std::make_unique<TileMap>(*game->renderer(), map_node);
 
 	auto events_node = doc.child("Events");
 	for (auto chain : events_node.children("Event_Chain")) {
@@ -40,7 +40,7 @@ void sl2dge::Scene::save() {
 	open_xml_doc(&doc, path_);
 
 	auto map_node = doc.child("Map");
-	map_->save(map_node);
+	//map_->save(map_node);
 
 	auto events_node = doc.child("Events");
 

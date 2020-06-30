@@ -1,5 +1,5 @@
 #pragma once
-
+/*
 #include <memory>
 
 #include "HelperFunctions.h"
@@ -30,3 +30,4 @@ protected:
 };
 
 } // namespace sl2dge
+*/

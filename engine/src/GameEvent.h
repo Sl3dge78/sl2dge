@@ -7,8 +7,8 @@
 #include <vector>
 
 #include "SDL/SDL.h"
+#include "xml/pugixml.hpp"
 
-#include "Components.h"
 #include "GameState.h"
 #include "Point.h"
 #include "guid.h"

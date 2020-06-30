@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "GameState.h"
 #include "Scene.h"
+#include "scene/TileMap.h"
 
 namespace sl2dge {
 
@@ -22,8 +23,8 @@ public:
 
 private:
 	std::string path_;
-	std::unique_ptr<Camera> main_camera_ = nullptr;
-	std::unique_ptr<Scene> scene_ = nullptr;
+	//std::unique_ptr<Camera> main_camera_ = nullptr;
+	//std::unique_ptr<Scene> scene_ = nullptr;
 	//std::unique_ptr<Player> player_ = nullptr;
 };
 

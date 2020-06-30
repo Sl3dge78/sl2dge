@@ -4,8 +4,8 @@
 
 #include <SDL/SDL.h>
 
-#include "Camera.h"
 #include "Rect.h"
+#include "scene/Camera.h"
 
 // Simple Light 2D Game Engine
 

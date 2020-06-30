@@ -6,8 +6,6 @@
 #include "GameState.h"
 #include "SceneState.h"
 
-#include "Entity.h"
-
 #include "EventChain.h"
 #include "GameEvent.h"
 
@@ -15,15 +13,15 @@
 #include "Point.h"
 #include "Rect.h"
 
-#include "Atlas.h"
-#include "Camera.h"
 #include "Character.h"
 #include "Components.h"
 #include "Item.h"
 #include "Player.h"
 #include "Scene.h"
 #include "Sprites.h"
-#include "TileMap.h"
+#include "scene/Atlas.h"
+#include "scene/Camera.h"
+#include "scene/TileMap.h"
 
 #include "Quest.h"
 #include "QuestManager.h"

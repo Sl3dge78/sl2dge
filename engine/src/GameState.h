@@ -3,6 +3,8 @@
 #include <memory>
 #include <vector>
 
+#include "ECS/World.h"
+
 namespace sl2dge {
 
 class Game;
@@ -29,5 +31,8 @@ public:
 
 	virtual ~GameState() = default;
 	GameState(){};
+
+protected:
+	ECS::World world_;
 };
 } // namespace sl2dge

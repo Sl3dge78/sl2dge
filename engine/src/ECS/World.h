@@ -25,8 +25,8 @@ public:
 	T *create_system(Args &&... args);
 	void delete_all_systems();
 
-	void init();
-	void input(SDL_Event const &e);
+	void start();
+	void handle_events(SDL_Event const &e);
 	void update();
 	void draw();
 
@@ -39,7 +39,7 @@ private:
 	SDL_Renderer *renderer_;
 	FC_Font *main_font_;
 
-	std::vector<Entity *> entity_list_;
+	std::vector<Entity *> entity_list_; // TODO : Switch to unique ptr
 
 	//Systems
 	ISystem *add_system(ISystem *sys);

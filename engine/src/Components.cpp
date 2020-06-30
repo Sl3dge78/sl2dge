@@ -1,7 +1,7 @@
 #include "Components.h"
 
 #include <memory>
-
+/*
 namespace sl2dge {
 Vector2 IMoveable::pixel_position() const {
 	return position_;
@@ -57,3 +57,4 @@ void IMoveable::teleport_to(const Point &position, const int tile_size_) {
 	this->position_.y = float(position.y * tile_size_);
 }
 } // namespace sl2dge
+*/

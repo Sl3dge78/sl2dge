@@ -10,7 +10,6 @@
 
 #include "GameState.h"
 #include "QuestManager.h"
-#include "TileMap.h"
 
 namespace sl2dge {
 
@@ -50,12 +49,6 @@ public:
 	void push_state(std::unique_ptr<GameState> state);
 	void pop_state();
 
-	TileMap *current_map() { return current_map_; }
-	void set_current_map(TileMap *map) { current_map_ = map; }
-
-	Camera *main_camera() { return main_camera_; }
-	void set_main_camera(Camera *camera) { main_camera_ = camera; }
-
 	QuestManager *quest_manager() { return quest_manager_.get(); }
 
 private:
@@ -77,8 +70,6 @@ private:
 
 	std::vector<std::unique_ptr<GameState>> states_;
 
-	TileMap *current_map_ = nullptr;
-	Camera *main_camera_ = nullptr;
 	std::unique_ptr<QuestManager> quest_manager_ = nullptr;
 
 	void pop_state_();

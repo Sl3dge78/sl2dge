@@ -1,7 +1,7 @@
 #include <sl2dge.h>
 
 using namespace sl2dge;
-
+/*
 Player::Player(Game *game) {
 	sprite_ = std::make_unique<AnimatedSprite>(*game->renderer(), "resources/images/char.png", 16, 16, 4, 3);
 	sprite_->animator()->add_animation("idle_down", 5, { 1 });
@@ -97,3 +97,4 @@ void Player::on_state_resume() {
 
 void Player::on_state_pause() {
 }
+*/
