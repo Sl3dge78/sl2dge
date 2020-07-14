@@ -1,6 +1,6 @@
 #include "World.h"
 
-namespace sl2dge::ECS {
+namespace sl2dge {
 
 World::~World() {
 	delete_all_systems();
@@ -28,7 +28,7 @@ void World::delete_all_entities() {
 	entity_list_.clear();
 }
 
-void World::delete_entity(ECS::Entity *e) {
+void World::delete_entity(Entity *e) {
 	for (auto it = entity_list_.begin(); it < entity_list_.end(); ++it) {
 		if (*it == e) {
 			for (auto child : e->get_children()) {
@@ -143,4 +143,4 @@ void World::update_systems_entities() {
 	}
 }
 
-} // namespace sl2dge::ECS
+} // namespace sl2dge

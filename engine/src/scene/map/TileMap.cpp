@@ -6,8 +6,8 @@
 
 #include <SDL/SDL.h>
 
-#include "scene/Atlas.h"
 #include "scene/Camera.h"
+#include "scene/map/Atlas.h"
 
 namespace sl2dge {
 
@@ -159,11 +159,11 @@ void TileMapSystem::draw() {
 	for (auto e : entities_) {
 		auto map = e->get_component<TileMap>();
 
-		SDL_Point first_tile = { cam->viewport().x / map->tile_size(), cam->viewport().y / map->tile_size() };
+		SDL_Point first_tile = { cam->viewport_.x / map->tile_size(), cam->viewport_.y / map->tile_size() };
 
 		SDL_Point last_tile = {
-			first_tile.x + (cam->viewport().w / map->tile_size()) + 1,
-			first_tile.y + (cam->viewport().h / map->tile_size()) + 1
+			first_tile.x + (cam->viewport_.w / map->tile_size()) + 1,
+			first_tile.y + (cam->viewport_.h / map->tile_size()) + 1
 		};
 
 		if (first_tile.x < 0)

@@ -1,6 +1,6 @@
 #include "ISystem.h"
 
-namespace sl2dge::ECS {
+namespace sl2dge {
 
 void ISystem::add_entity(Entity *e) {
 	entities_.push_front(e);
@@ -20,4 +20,4 @@ void ISystem::add_component_filter(const int id) {
 	filter_.push_back(id);
 }
 
-} // namespace sl2dge::ECS
+} // namespace sl2dge

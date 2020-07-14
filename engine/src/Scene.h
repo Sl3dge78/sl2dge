@@ -4,14 +4,15 @@
 #include <memory>
 #include <string>
 
-#include "EventChain.h"
 #include "Game.h"
+#include "scene/event/EventChain.h"
 #include "xml/pugixml.hpp"
 
 namespace sl2dge {
-
+/*
 class Scene {
 public:
+	
 	Scene(Game *game, const std::string &path);
 	void open_xml_doc(pugi::xml_document *doc, const std::string &map_path);
 	~Scene(){};
@@ -50,4 +51,5 @@ private:
 	std::vector<std::unique_ptr<EventChain>> event_chains_;
 	//std::unique_ptr<TileMap> map_ = nullptr;
 };
+*/
 } // namespace sl2dge

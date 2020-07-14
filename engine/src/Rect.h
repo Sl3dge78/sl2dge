@@ -1,5 +1,6 @@
 #pragma once
 #include "Point.h"
+#include "math/Vector.h"
 #include <SDL\SDL.h>
 
 namespace sl2dge {
@@ -47,7 +48,7 @@ public:
 		this->y += rhs.y;
 	}
 
-	Rect &operator+=(const Vector2 &rhs) {
+	Rect &operator+=(const Vector2i &rhs) {
 		this->x += int(rhs.x);
 		this->y += int(rhs.y);
 	}
@@ -62,7 +63,7 @@ public:
 		return lhs;
 	}
 
-	friend Rect operator+(Rect lhs, const Vector2 &rhs) {
+	friend Rect operator+(Rect lhs, const Vector2i &rhs) {
 		lhs += rhs;
 		return lhs;
 	}

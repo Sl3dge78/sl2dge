@@ -155,7 +155,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\scene\Atlas.cpp" />
+    <ClCompile Include="src\math\Vector.cpp" />
+    <ClCompile Include="src\scene\map\Atlas.cpp" />
     <ClCompile Include="src\scene\Camera.cpp" />
     <ClCompile Include="src\Components.cpp" />
     <ClCompile Include="src\DialogState.cpp" />
@@ -163,9 +164,9 @@
     <ClCompile Include="src\ECS\Entity.cpp" />
     <ClCompile Include="src\ECS\ISystem.cpp" />
     <ClCompile Include="src\ECS\World.cpp" />
-    <ClCompile Include="src\EventChain.cpp" />
+    <ClCompile Include="src\scene\event\EventChain.cpp" />
     <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\GameEvent.cpp" />
+    <ClCompile Include="src\scene\event\GameEvent.cpp" />
     <ClCompile Include="src\guid.cpp" />
     <ClCompile Include="src\HelperFunctions.cpp" />
     <ClCompile Include="src\Player.cpp" />
@@ -175,10 +176,11 @@
     <ClCompile Include="src\SceneState.cpp" />
     <ClCompile Include="src\SDL_FontCache.c" />
     <ClCompile Include="src\Sprites.cpp" />
-    <ClCompile Include="src\scene\TileMap.cpp" />
+    <ClCompile Include="src\scene\map\TileMap.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\scene\Atlas.h" />
+    <ClInclude Include="src\math\Vector.h" />
+    <ClInclude Include="src\scene\map\Atlas.h" />
     <ClInclude Include="src\scene\Camera.h" />
     <ClInclude Include="src\Character.h" />
     <ClInclude Include="src\Components.h" />
@@ -188,15 +190,16 @@
     <ClInclude Include="src\ECS\Entity.h" />
     <ClInclude Include="src\ECS\ISystem.h" />
     <ClInclude Include="src\ECS\World.h" />
-    <ClInclude Include="src\EventChain.h" />
+    <ClInclude Include="src\scene\event\EventChain.h" />
     <ClInclude Include="src\Game.h" />
-    <ClInclude Include="src\GameEvent.h" />
+    <ClInclude Include="src\scene\event\GameEvent.h" />
     <ClInclude Include="src\GameState.h" />
     <ClInclude Include="src\guid.h" />
     <ClInclude Include="src\HelperFunctions.h" />
     <ClInclude Include="src\Item.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\Point.h" />
+    <ClInclude Include="src\scene\Transform.h" />
     <ClInclude Include="src\xml\pugiconfig.hpp" />
     <ClInclude Include="src\xml\pugixml.hpp" />
     <ClInclude Include="src\Quest.h" />
@@ -207,7 +210,7 @@
     <ClInclude Include="src\SDL_FontCache.h" />
     <ClInclude Include="src\sl2dge.h" />
     <ClInclude Include="src\Sprites.h" />
-    <ClInclude Include="src\scene\TileMap.h" />
+    <ClInclude Include="src\scene\map\TileMap.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

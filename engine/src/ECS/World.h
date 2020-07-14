@@ -8,7 +8,7 @@
 #include "Entity.h"
 #include "ISystem.h"
 
-namespace sl2dge::ECS {
+namespace sl2dge {
 
 class World {
 public:
@@ -18,7 +18,7 @@ public:
 	//Entities
 	Entity *create_entity();
 	void delete_all_entities();
-	void delete_entity(ECS::Entity *e);
+	void delete_entity(Entity *e);
 
 	//Systems
 	template <class T, class... Args>
@@ -58,4 +58,4 @@ T *World::create_system(Args &&... args) {
 	return static_cast<T *>(add_system(new T(std::forward<Args>(args)...)));
 }
 
-} // namespace sl2dge::ECS
+} // namespace sl2dge

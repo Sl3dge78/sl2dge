@@ -9,7 +9,7 @@
 #include "ECS/Entity.h"
 #include "SDL_FontCache.h"
 
-namespace sl2dge::ECS {
+namespace sl2dge {
 
 enum FilterType { FILTER_AND,
 	FILTER_OR };
@@ -111,4 +111,4 @@ public:
 	virtual ~WorldSetSystem() = default;
 };
 
-} // namespace sl2dge::ECS
+} // namespace sl2dge

@@ -3,24 +3,14 @@
 #include <SDL\SDL.h>
 
 #include "Point.h"
+#include "scene/Transform.h"
 
 namespace sl2dge {
 
-Camera::Camera(const int width, const int height, const float zoom, const Vector2 &position) {
+Camera::Camera(const int width, const int height, const float zoom) {
 	this->width_ = width;
 	this->height_ = height;
-	this->set_zoom(zoom);
-	set_position(position);
-}
-
-void Camera::set_position(const Vector2 &pos) {
-	position_ = pos;
-	viewport_.x = int(pos.x) - (viewport_.w / 2) + 8;
-	viewport_.y = int(pos.y) - (viewport_.h / 2) + 8;
-}
-
-void Camera::translate(const Vector2 &translation) {
-	set_position(position_ + translation);
+	this->zoom_ = zoom;
 }
 
 SDL_Point Camera::world_to_screen_transform(const SDL_Point &point) const {
@@ -34,5 +24,16 @@ SDL_Rect Camera::world_to_screen_transform(const SDL_Rect &rect) const {
 SDL_Point Camera::screen_to_world_transform(const SDL_Point &point) const {
 	return SDL_Point{ int(float(point.x / zoom_ + viewport_.x)), int(float(point.y / zoom_ + viewport_.y)) };
 }
+
+void CameraSystem::update() {
+	for (auto &e : entities_) {
+		auto cam = e->get_component<Camera>();
+		auto transform = e->get_component<Transform>();
+		cam->viewport_.w = int(float(cam->width_) / cam->zoom_);
+		cam->viewport_.h = int(float(cam->height_) / cam->zoom_);
+		cam->viewport_.x = int(transform->position.x) - (cam->viewport_.w / 2) + 8;
+		cam->viewport_.y = int(transform->position.y) - (cam->viewport_.h / 2) + 8;
+	};
+} // namespace sl2dge
 
 } // namespace sl2dge

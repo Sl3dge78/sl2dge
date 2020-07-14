@@ -2,12 +2,16 @@
 
 #include "Game.h"
 
+#include "scene/Camera.h"
+#include "scene/Transform.h"
+#include "scene/event/EventChain.h"
+#include "scene/event/GameEvent.h"
+#include "scene/map/Atlas.h"
+#include "scene/map/TileMap.h"
+
 #include "DialogState.h"
 #include "GameState.h"
 #include "SceneState.h"
-
-#include "EventChain.h"
-#include "GameEvent.h"
 
 #include "HelperFunctions.h"
 #include "Point.h"
@@ -19,9 +23,6 @@
 #include "Player.h"
 #include "Scene.h"
 #include "Sprites.h"
-#include "scene/Atlas.h"
-#include "scene/Camera.h"
-#include "scene/TileMap.h"
 
 #include "Quest.h"
 #include "QuestManager.h"

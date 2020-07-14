@@ -79,50 +79,5 @@ public:
 };
 
 // TODO MOVE THAT
-class Vector2 {
-public:
-	Vector2() {
-		x = 0;
-		y = 0;
-	}
-	Vector2(const float x, const float y) :
-			x(x), y(y){};
-	float x;
-	float y;
 
-	operator Point() const { return Point(int(x), int(y)); }
-
-	Vector2 &operator+=(const Point &rhs) {
-		this->x += rhs.x;
-		this->y += rhs.y;
-		return *this;
-	}
-
-	friend Vector2 operator+(Vector2 lhs, const Point &rhs) {
-		lhs += rhs;
-		return lhs;
-	}
-
-	Vector2 &operator*=(const float &rhs) {
-		this->x *= rhs;
-		this->y *= rhs;
-		return *this;
-	}
-	friend Vector2 operator*(Vector2 lhs, const float &rhs) {
-		lhs *= rhs;
-		return lhs;
-	}
-
-	void normalize() {
-		auto l = length();
-		if (l == 0 || l == 1)
-			return;
-		x = x / l;
-		y = y / l;
-	}
-
-	float length() {
-		return float(sqrt(x * x + y * y));
-	}
-};
 } // namespace sl2dge

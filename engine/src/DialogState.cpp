@@ -61,7 +61,7 @@ void DialogState::handle_events(Game *game, const SDL_Event &e) {
 				}
 				break;
 			case SDL_SCANCODE_E:
-				event_chain->next_event(game);
+				//event_chain->next_event(game);
 				break;
 		}
 	}

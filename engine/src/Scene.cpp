@@ -1,5 +1,5 @@
 #include "Scene.h"
-
+/*
 sl2dge::Scene::Scene(Game *game, const std::string &path) {
 	this->path_ = path;
 
@@ -49,7 +49,7 @@ void sl2dge::Scene::save() {
 		if (chain == nullptr) {
 			events_node.remove_child(chain_node); // Remove excess nodes
 		} else {
-			chain->get_xml_data(chain_node); // Overwrite
+			chain->save(chain_node); // Overwrite
 		}
 	}
 
@@ -66,10 +66,11 @@ void sl2dge::Scene::save() {
 
 		if (write) {
 			auto node = events_node.append_child("Event_Chain");
-			chain->get_xml_data(node);
+			chain->save(node);
 		}
 	}
 
 	doc.save_file(path_.c_str());
 	SDL_Log("Saved %s!", path_.c_str());
 }
+*/

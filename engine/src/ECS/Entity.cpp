@@ -8,7 +8,7 @@
 
 #include "Entity.h"
 
-namespace sl2dge::ECS {
+namespace sl2dge {
 
 Entity::~Entity() {
 	this->Entity::remove_all_components();
@@ -64,7 +64,7 @@ void Entity::remove_all_children() {
 	childs_.clear();
 }
 
-void Entity::remove_children(ECS::Entity *child) {
+void Entity::remove_children(Entity *child) {
 	for (auto it = childs_.begin(); it != childs_.end(); ++it) {
 		if (*it == child) {
 			(*it)->parent_ = nullptr;
@@ -73,4 +73,4 @@ void Entity::remove_children(ECS::Entity *child) {
 		}
 	}
 }
-} // namespace sl2dge::ECS
+} // namespace sl2dge

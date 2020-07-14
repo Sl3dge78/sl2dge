@@ -8,7 +8,7 @@
 
 #include "Component.h"
 
-namespace sl2dge::ECS {
+namespace sl2dge {
 class World;
 
 class Entity {
@@ -37,13 +37,13 @@ public:
 	void set_is_active(bool val);
 
 	//Children management
-	ECS::Entity *get_parent() const { return parent_; };
-	std::vector<ECS::Entity *> get_children() const { return childs_; };
-	void add_children(ECS::Entity *child) {
+	Entity *get_parent() const { return parent_; };
+	std::vector<Entity *> get_children() const { return childs_; };
+	void add_children(Entity *child) {
 		childs_.push_back(child);
 		child->parent_ = this;
 	};
-	void remove_children(ECS::Entity *child);
+	void remove_children(Entity *child);
 	void remove_all_children();
 	int order_ = 0;
 
@@ -54,8 +54,8 @@ protected:
 	void remove_component(const int id);
 	bool is_active_ = true;
 
-	ECS::Entity *parent_ = nullptr;
-	std::vector<ECS::Entity *> childs_;
+	Entity *parent_ = nullptr;
+	std::vector<Entity *> childs_;
 };
 
 //The following functions are user side functions for adding, getting and removing specific components
@@ -80,4 +80,4 @@ void Entity::remove_component() {
 	remove_component(ComponentID::Get<T>());
 }
 
-} // namespace sl2dge::ECS
+} // namespace sl2dge

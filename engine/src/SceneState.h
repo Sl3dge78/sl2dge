@@ -3,7 +3,7 @@
 #include "Game.h"
 #include "GameState.h"
 #include "Scene.h"
-#include "scene/TileMap.h"
+#include "scene/map/TileMap.h"
 
 namespace sl2dge {
 

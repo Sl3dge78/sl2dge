@@ -33,6 +33,6 @@ public:
 	GameState(){};
 
 protected:
-	ECS::World world_;
+	World world_;
 };
 } // namespace sl2dge

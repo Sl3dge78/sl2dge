@@ -17,4 +17,5 @@ public:
 	virtual ~MainState();
 
 private:
+	Entity *camera;
 };

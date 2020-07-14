@@ -5,15 +5,15 @@
 #include <SDL/SDL.h>
 
 #include "ECS/ECS.h"
-#include "scene/Atlas.h"
 #include "scene/Camera.h"
+#include "scene/map/Atlas.h"
 #include "xml/pugixml.hpp"
 
 namespace sl2dge {
 
 class Game;
 
-class TileMap : public ECS::Component {
+class TileMap : public Component {
 public:
 	TileMap(SDL_Renderer &renderer, const pugi::xml_node &map_node);
 	TileMap(SDL_Renderer &renderer, const std::string &path);
@@ -62,7 +62,7 @@ private:
 	int width_ = 0, height_ = 0;
 };
 
-class TileMapSystem : public ECS::ISystem, public ECS::DrawSystem, public ECS::WorldSetSystem {
+class TileMapSystem : public ISystem, public DrawSystem, public WorldSetSystem {
 public:
 	TileMapSystem(int params) {
 		this->draw_params_ = params;

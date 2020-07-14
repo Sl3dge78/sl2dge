@@ -7,7 +7,7 @@
 
 #include "xml/pugixml.hpp"
 
-namespace sl2dge::ECS {
+namespace sl2dge {
 class Entity;
 
 class Component {
@@ -52,4 +52,4 @@ public:
 private:
 	static int count;
 };
-} // namespace sl2dge::ECS
+} // namespace sl2dge

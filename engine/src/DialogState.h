@@ -2,12 +2,12 @@
 
 #include "SDL/SDL_ttf.h"
 
-#include "EventChain.h"
 #include "Game.h"
-#include "GameEvent.h"
 #include "GameState.h"
 #include "Point.h"
 #include "Rect.h"
+#include "scene/event/EventChain.h"
+#include "scene/event/GameEvent.h"
 
 namespace sl2dge {
 
