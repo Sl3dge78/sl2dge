@@ -38,6 +38,10 @@ public:
 		return lhs;
 	}
 
+	friend bool operator==(const Vector2f &lhs, const Vector2f &rhs) {
+		return (lhs.x == rhs.x && lhs.y == rhs.y);
+	}
+
 	void normalize();
 
 	float length();
@@ -74,6 +78,8 @@ public:
 		lhs *= rhs;
 		return lhs;
 	}
-
+	friend bool operator==(const Vector2i &lhs, const Vector2i &rhs) {
+		return (lhs.x == rhs.x && lhs.y == rhs.y);
+	}
 	float length();
 };

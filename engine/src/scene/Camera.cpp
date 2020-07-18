@@ -24,7 +24,7 @@ SDL_Point Camera::screen_to_world_transform(const SDL_Point &point) const {
 	return SDL_Point{ int(float(point.x / zoom_ + viewport_.x)), int(float(point.y / zoom_ + viewport_.y)) };
 }
 
-void CameraSystem::update(const int delta_time) {
+void CameraSystem::update(Game *game) {
 	for (auto &e : entities_) {
 		auto cam = e->get_component<Camera>();
 		auto transform = e->get_component<Transform>();

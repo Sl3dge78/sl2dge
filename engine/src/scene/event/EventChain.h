@@ -2,6 +2,7 @@
 
 #include "ECS/ECS.h"
 #include "addons/pugixml.hpp"
+#include "scene/Transform.h"
 #include "scene/event/GameEvent.h"
 
 namespace sl2dge {
@@ -9,8 +10,7 @@ namespace sl2dge {
 class EventChain : public Component {
 public:
 	EventChain(const pugi::xml_node &node);
-	EventChain(const int x, const int y) :
-			position({ x, y }){};
+	EventChain(){};
 	~EventChain(){};
 
 	void add_event(GameEvent *e);
@@ -25,7 +25,6 @@ public:
 	bool in_place = true; //  you need to stand on the item to trigger the event
 	bool activate_once = false; // If true, won't activate ever again
 
-	Point position;
 	bool entered = false;
 	bool activated = false;
 
@@ -42,15 +41,14 @@ private:
 
 class EventSystem : public ISystem, public UpdateSystem, public InputSystem {
 public:
-	EventSystem(Entity *player) :
-			player_(player) {}
-	void update(const int delta_time) override;
-	void handle_events(SDL_Event const &e) override;
+	EventSystem(Entity *player);
+	void update(Game *game) override;
+	void handle_events(Game *game, SDL_Event const &e) override;
 
 private:
 	Entity *player_;
 
-	EventChain *get_chain_at(const int x, const int y);
-	void activate_chain(EventChain &chain);
+	EventChain *get_chain_at(const Vector2i &pos);
+	void activate_chain(Game *game, EventChain *chain);
 };
 } // namespace sl2dge

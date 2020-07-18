@@ -37,6 +37,10 @@ protected:
 
 		SDL_Log("%s successfully loaded", map_path.c_str());
 	}
+	Entity *entity() { return entity_; }
+
+private:
+	Entity *entity_;
 };
 inline Component::~Component() = default;
 

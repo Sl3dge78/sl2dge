@@ -26,6 +26,7 @@ void Entity::remove_all_components() {
 }
 
 Component *Entity::add_component(const int id, Component *comp) {
+	comp->entity_ = this;
 	components_[id] = comp;
 	return comp;
 }

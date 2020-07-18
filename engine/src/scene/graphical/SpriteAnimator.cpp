@@ -8,6 +8,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
+#include "Game.h"
 #include "scene/graphical/Sprite.h"
 
 namespace sl2dge {
@@ -57,11 +58,11 @@ SpriteAnimatorSystem::SpriteAnimatorSystem() {
 	this->set_filter_type(FilterType::FILTER_AND);
 }
 
-void SpriteAnimatorSystem::update(const int delta_time) {
+void SpriteAnimatorSystem::update(Game *game) {
 	for (auto e : entities_) {
 		auto animator = e->get_component<SpriteAnimator>();
 		if (animator->is_animation_playing()) {
-			animator->frame_counter += delta_time;
+			animator->frame_counter += game->delta_time();
 
 			if (animator->frame_counter >= 1000 / animator->current_animation()->frame_rate) {
 				animator->frame_counter = 0;

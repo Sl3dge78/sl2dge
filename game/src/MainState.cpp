@@ -38,6 +38,12 @@ void MainState::start(Game *game) {
 	animator->play_animation("down");
 	world_.create_system<SpriteAnimatorSystem>();
 
+	auto chain_e = world_.create_entity(Vector2f(0, 0));
+	auto chain = chain_e->add_component<EventChain>();
+	chain->interactable = true;
+
+	world_.create_system<EventSystem>(camera);
+
 	auto map = world_.create_entity();
 	map->add_component<TileMap>(*game->renderer(), "resources/levels/maptest.map");
 	auto map_back = world_.create_system<TileMapSystem>(TileMapSystem::DrawParams::Back | TileMapSystem::DrawParams::Middle, 0);
@@ -47,6 +53,7 @@ void MainState::start(Game *game) {
 }
 
 void MainState::handle_events(Game *game, const SDL_Event &e) {
+	world_.handle_events(game, e);
 }
 
 void MainState::input(Game *game) {
@@ -69,10 +76,14 @@ void MainState::input(Game *game) {
 	movement *= 160 * float(game->delta_time()) / 1000.0f;
 
 	camera->get_component<Transform>()->position += movement;
+	if (camera->get_component<Transform>()->position.x < 0)
+		camera->get_component<Transform>()->position.x = 0;
+	if (camera->get_component<Transform>()->position.y < 0)
+		camera->get_component<Transform>()->position.y = 0;
 }
 
 void MainState::update(Game *game) {
-	world_.update(game->delta_time());
+	world_.update(game);
 }
 
 void MainState::draw(Game *game) {

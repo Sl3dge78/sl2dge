@@ -12,6 +12,8 @@
 
 namespace sl2dge {
 
+class Game;
+
 class World {
 public:
 	World() = default;
@@ -29,8 +31,8 @@ public:
 	void delete_all_systems();
 
 	void start();
-	void handle_events(SDL_Event const &e);
-	void update(const int delta_time);
+	void handle_events(Game *game, SDL_Event const &e);
+	void update(Game *game);
 	void draw();
 
 	void update_systems_entities();

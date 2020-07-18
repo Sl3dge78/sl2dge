@@ -47,14 +47,14 @@ void ISystem::add_component_filter() {
 
 // == CHILDS ==
 
-/// Update gets called every frame
+class Game;
 class UpdateSystem {
 protected:
 	UpdateSystem() = default;
 
 public:
 	virtual ~UpdateSystem() = default;
-	virtual void update(const int delta_time) = 0;
+	virtual void update(Game *game) = 0;
 };
 
 class Camera;
@@ -83,7 +83,7 @@ protected:
 
 public:
 	virtual ~InputSystem() = default;
-	virtual void handle_events(SDL_Event const &e) = 0;
+	virtual void handle_events(Game *game, SDL_Event const &e) = 0;
 };
 
 //TODO : Add a reactive system that calls update/draw only when needed

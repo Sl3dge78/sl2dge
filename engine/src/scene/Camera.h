@@ -7,6 +7,8 @@
 
 namespace sl2dge {
 
+class Game;
+
 class Camera : public Component {
 public:
 	SDL_Rect viewport_; // What the camera sees updated by the system
@@ -26,7 +28,7 @@ public:
 	CameraSystem() {
 		this->add_component_filter<Camera>();
 	}
-	virtual void update(const int delta_time) override;
+	virtual void update(Game *game) override;
 };
 
 } // namespace sl2dge

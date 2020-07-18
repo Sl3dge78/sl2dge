@@ -105,15 +105,15 @@ void World::start() {
 	}
 }
 
-void World::handle_events(SDL_Event const &e) {
+void World::handle_events(Game *game, SDL_Event const &e) {
 	for (InputSystem *system : input_systems_) {
-		system->handle_events(e);
+		system->handle_events(game, e);
 	}
 }
 
-void World::update(const int delta_time) {
+void World::update(Game *game) {
 	for (UpdateSystem *system : update_systems_) {
-		system->update(delta_time);
+		system->update(game);
 	}
 }
 

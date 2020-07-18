@@ -19,6 +19,7 @@ public:
 	}
 
 	Vector2f position;
+	Vector2i tiled_position() { return Vector2i(int(position.x) / 16, int(position.y) / 16); }
 };
 
 } // namespace sl2dge

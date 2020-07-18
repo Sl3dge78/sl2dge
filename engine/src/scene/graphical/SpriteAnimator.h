@@ -57,6 +57,6 @@ private:
 class SpriteAnimatorSystem : public ISystem, public UpdateSystem {
 public:
 	SpriteAnimatorSystem();
-	virtual void update(const int delta_time) override;
+	virtual void update(Game *game) override;
 };
 } // namespace sl2dge
