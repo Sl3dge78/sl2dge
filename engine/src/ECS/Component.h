@@ -16,6 +16,7 @@ class Component {
 public:
 	Component() = default;
 	virtual ~Component() = 0;
+	Entity *entity() { return entity_; }
 
 protected:
 	static void open_xml_doc(pugi::xml_document *doc, const std::string &map_path) {
@@ -37,7 +38,6 @@ protected:
 
 		SDL_Log("%s successfully loaded", map_path.c_str());
 	}
-	Entity *entity() { return entity_; }
 
 private:
 	Entity *entity_;

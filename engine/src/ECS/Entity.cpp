@@ -1,21 +1,9 @@
-//
-//  Entity.cpp
-//  AntiquityTrader
-//
-//  Created by Guillaume Collin on 17/12/2018.
-//  Copyright © 2018 Sledge. All rights reserved.
-//
-
 #include "Entity.h"
 
 namespace sl2dge {
 
 Entity::~Entity() {
 	this->Entity::remove_all_components();
-	for (auto e : childs_) {
-		e->parent_ = nullptr;
-	}
-	childs_.clear();
 }
 
 void Entity::remove_all_components() {
@@ -54,24 +42,9 @@ void Entity::remove_component(const int id) {
 
 void Entity::set_is_active(bool val) {
 	is_active_ = val;
-	for (auto &e : childs_)
-		e->set_is_active(val);
-}
-
-void Entity::remove_all_children() {
-	for (auto &e : childs_) {
-		e->parent_ = nullptr;
-	}
-	childs_.clear();
-}
-
-void Entity::remove_children(Entity *child) {
-	for (auto it = childs_.begin(); it != childs_.end(); ++it) {
-		if (*it == child) {
-			(*it)->parent_ = nullptr;
-			childs_.erase(it);
-			return;
-		}
+	for (auto &e : this->transform()->get_children()) {
+		e->entity()->set_is_active(val);
 	}
 }
+
 } // namespace sl2dge

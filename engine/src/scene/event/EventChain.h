@@ -27,16 +27,15 @@ public:
 
 	bool entered = false;
 	bool activated = false;
+	bool queue_next_event = false;
 
+	GameEvent *current_event = nullptr;
+
+	void next_event(Game *game);
 	void save(pugi::xml_node &node);
-
-	bool next_event(Game *game);
-	bool trigger_event(Game *game, const Guid &id);
 
 private:
 	std::vector<std::unique_ptr<GameEvent>> events_;
-
-	GameEvent *current_event = nullptr;
 };
 
 class EventSystem : public ISystem, public UpdateSystem, public InputSystem {

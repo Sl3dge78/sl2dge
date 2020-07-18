@@ -7,6 +7,8 @@
 #include <vector>
 
 #include "Component.h"
+#include "math/Vector.h"
+#include "scene/Transform.h"
 
 namespace sl2dge {
 class World;
@@ -18,7 +20,9 @@ private:
 	std::map<int, Component *> components_;
 
 public:
-	Entity() = default;
+	Entity(const Vector2f &position = Vector2f(0, 0)) {
+		transform_ = this->add_component<Transform>(position);
+	}
 	~Entity();
 
 	template <class T, class... Args>
@@ -36,16 +40,9 @@ public:
 	bool get_is_active() const { return is_active_; };
 	void set_is_active(bool val);
 
-	//TODO : Move to transform
-	Entity *get_parent() const { return parent_; };
-	std::vector<Entity *> get_children() const { return childs_; };
-	void add_children(Entity *child) {
-		childs_.push_back(child);
-		child->parent_ = this;
+	Transform *transform() {
+		return transform_;
 	};
-	void remove_children(Entity *child);
-	void remove_all_children();
-	int order_ = 0;
 
 protected:
 	Component *add_component(const int id, Component *comp);
@@ -54,8 +51,7 @@ protected:
 	void remove_component(const int id);
 	bool is_active_ = true;
 
-	Entity *parent_ = nullptr;
-	std::vector<Entity *> childs_;
+	Transform *transform_ = nullptr;
 };
 
 //The following functions are user side functions for adding, getting and removing specific components

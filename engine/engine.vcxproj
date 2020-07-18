@@ -177,6 +177,7 @@
     <ClCompile Include="src\addons\SDL_FontCache.c" />
     <ClCompile Include="src\scene\graphical\Sprite.cpp" />
     <ClCompile Include="src\scene\map\TileMap.cpp" />
+    <ClCompile Include="src\scene\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\math\Vector.h" />

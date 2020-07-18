@@ -39,10 +39,10 @@ SpriteSystem::SpriteSystem() {
 
 void SpriteSystem::draw() {
 	for (auto e : entities_) {
-		auto tsrfm = e->get_component<Transform>();
+		auto tsrfm = e->transform();
 		auto sprite = e->get_component<Sprite>();
 
-		SDL_Rect screen_dest = camera_->world_to_screen_transform({ int(tsrfm->position.x), int(tsrfm->position.y), sprite->src.w, sprite->src.h });
+		SDL_Rect screen_dest = camera_->world_to_screen_transform({ int(tsrfm->position().x), int(tsrfm->position().y), sprite->src.w, sprite->src.h });
 		SDL_RenderCopy(renderer_, sprite->texture, &(sprite->src), &screen_dest);
 	}
 }

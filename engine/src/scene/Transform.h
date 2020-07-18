@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "ECS/Component.h"
 #include "math/Vector.h"
 
@@ -12,14 +14,30 @@ enum class Direction { Up,
 
 class Transform : public Component {
 public:
-	Transform() { position = Vector2f(0, 0); }
-	Transform(const Vector2f &position) { this->position = position; }
-	Transform(const float x, const float y) {
-		position = Vector2f(x, y);
-	}
+	Transform();
+	Transform(const Vector2f &position);
+	Transform(const float x, const float y);
 
-	Vector2f position;
-	Vector2i tiled_position() { return Vector2i(int(position.x) / 16, int(position.y) / 16); }
+	~Transform();
+
+	Vector2i tiled_position();
+	Vector2f position() const;
+	void translate(const Vector2f &translation);
+	void set_position(const Vector2f &pos);
+	void set_position(const int x, const int y);
+
+	/* Parent / child */
+	int order_ = 0;
+
+	Transform *parent = nullptr;
+	std::vector<Transform *> get_children() const;
+	void add_children(Transform *child);
+	void remove_children(Transform *child);
+	void remove_all_children();
+
+private:
+	Vector2f local_position_;
+	std::vector<Transform *> childs_;
 };
 
 } // namespace sl2dge

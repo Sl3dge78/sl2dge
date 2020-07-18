@@ -2,8 +2,7 @@
 
 namespace sl2dge {
 EventChain::EventChain(const pugi::xml_node &chain_node) {
-	entity()->get_component<Transform>()->position.x = chain_node.attribute("x_pos").as_int() * 16;
-	entity()->get_component<Transform>()->position.y = chain_node.attribute("y_pos").as_int() * 16;
+	entity()->get_component<Transform>()->set_position(Vector2f(chain_node.attribute("x_pos").as_int() * 16, chain_node.attribute("y_pos").as_int() * 16));
 	interactable = chain_node.attribute("interactable").as_bool();
 	in_place = chain_node.attribute("in_place").as_bool();
 	activate_once = chain_node.attribute("once").as_bool();
@@ -29,46 +28,18 @@ GameEvent *EventChain::get_event(const Guid id) {
 	return nullptr;
 }
 
-bool EventChain::next_event(Game *game) {
+void EventChain::next_event(Game *game) {
 	if (current_event != nullptr) {
 		current_event->on_end(game);
-		auto next = current_event->next();
-		current_event = nullptr;
+		next = current_event->next();
 	}
 
-	if (next.isNil()) {
-		return false;
-	}
+	current_event = nullptr;
 
-	return trigger_event(game, next);
-}
-
-bool EventChain::trigger_event(Game *game, const Guid &id) {
-	if (current_event != nullptr)
-		SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Triggering Event id %d but there already is an event playing (id %d)", id, current_event->id());
-
-	for (auto &&x : events_) {
-		if (x->id() == id) {
-			current_event = x.get();
-			current_event->on_activate(game, this);
-			return true;
-		}
-	}
-	SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Event %d not found!", id);
-	return false;
-}
-
-void EventSystem::activate_chain(Game *game, EventChain *chain) {
-	if (!chain->entered && !chain->activated) {
-		SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Event %d triggered", chain->next);
-		if (!chain->interactable) {
-			chain->entered = true;
-		}
-
-		if (chain->activate_once) {
-			chain->activated = true;
-		}
-		chain->next_event(game);
+	if (!next.isNil()) {
+		current_event = get_event(next);
+		current_event->on_activate(game, this);
+		SDL_Log("Event %s triggered", next);
 	}
 }
 
@@ -97,9 +68,19 @@ EventSystem::EventSystem(Entity *player) :
 
 void EventSystem::update(Game *game) {
 	// TODO : Call this only when the player has moved
-	auto chain = get_chain_at(player_->get_component<Transform>()->tiled_position());
-	if (chain != nullptr && chain->in_place && !chain->interactable) {
-		activate_chain(game, chain);
+	for (auto e : entities_) {
+		auto chain = e->get_component<EventChain>();
+
+		if (chain->queue_next_event) {
+			chain->next_event(game);
+			chain->queue_next_event = false;
+		}
+
+		if (e->get_component<Transform>()->tiled_position() == player_->get_component<Transform>()->tiled_position()) {
+			if (chain->in_place && !chain->interactable) {
+				activate_chain(game, chain);
+			}
+		}
 	}
 }
 
@@ -146,6 +127,19 @@ EventChain *EventSystem::get_chain_at(const Vector2i &pos) {
 			return chain;
 	}
 	return nullptr;
+}
+
+void EventSystem::activate_chain(Game *game, EventChain *chain) {
+	if (!chain->entered && !chain->activated) {
+		if (!chain->interactable) {
+			chain->entered = true;
+		}
+
+		if (chain->activate_once) {
+			chain->activated = true;
+		}
+		chain->queue_next_event = true;
+	}
 }
 
 } // namespace sl2dge

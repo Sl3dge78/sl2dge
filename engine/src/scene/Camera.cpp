@@ -30,8 +30,8 @@ void CameraSystem::update(Game *game) {
 		auto transform = e->get_component<Transform>();
 		cam->viewport_.w = int(float(cam->width_) / cam->zoom_);
 		cam->viewport_.h = int(float(cam->height_) / cam->zoom_);
-		cam->viewport_.x = int(transform->position.x) - (cam->viewport_.w / 2) + 8;
-		cam->viewport_.y = int(transform->position.y) - (cam->viewport_.h / 2) + 8;
+		cam->viewport_.x = int(transform->position().x) - (cam->viewport_.w / 2) + 8;
+		cam->viewport_.y = int(transform->position().y) - (cam->viewport_.h / 2) + 8;
 	};
 }
 

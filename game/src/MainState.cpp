@@ -38,6 +38,8 @@ void MainState::start(Game *game) {
 	animator->play_animation("down");
 	world_.create_system<SpriteAnimatorSystem>();
 
+	camera->transform()->add_children(sprite->transform());
+
 	auto chain_e = world_.create_entity(Vector2f(0, 0));
 	auto chain = chain_e->add_component<EventChain>();
 	chain->interactable = true;
@@ -75,11 +77,12 @@ void MainState::input(Game *game) {
 	movement.normalize();
 	movement *= 160 * float(game->delta_time()) / 1000.0f;
 
-	camera->get_component<Transform>()->position += movement;
-	if (camera->get_component<Transform>()->position.x < 0)
-		camera->get_component<Transform>()->position.x = 0;
-	if (camera->get_component<Transform>()->position.y < 0)
-		camera->get_component<Transform>()->position.y = 0;
+	auto camtrfrm = camera->transform();
+	camtrfrm->translate(movement);
+	if (camtrfrm->position().x < 0)
+		camtrfrm->set_position(0, camtrfrm->position().y);
+	if (camtrfrm->position().y < 0)
+		camtrfrm->set_position(camtrfrm->position().x, 0);
 }
 
 void MainState::update(Game *game) {

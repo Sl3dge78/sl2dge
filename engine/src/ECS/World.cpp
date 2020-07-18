@@ -21,10 +21,8 @@ Entity *World::create_entity() {
 }
 
 Entity *World::create_entity(const Vector2f &position) {
-	Entity *e = new Entity();
+	Entity *e = new Entity(position);
 	entity_list_.push_back(e);
-	e->add_component<Transform>(position);
-
 	is_systems_entities_list_dirty_ = true;
 
 	return e;
@@ -43,8 +41,8 @@ void World::delete_all_entities() {
 void World::delete_entity(Entity *e) {
 	for (auto it = entity_list_.begin(); it < entity_list_.end(); ++it) {
 		if (*it == e) {
-			for (auto child : e->get_children()) {
-				this->delete_entity(child);
+			for (auto child : e->transform()->get_children()) {
+				this->delete_entity(child->entity());
 			}
 			delete e;
 			entity_list_.erase(it);
