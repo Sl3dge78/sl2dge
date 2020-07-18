@@ -12,7 +12,7 @@ inline Vector2f::operator Vector2i() const {
 	return Vector2i(int(x), int(y));
 }
 
-inline void Vector2f::normalize() {
+void Vector2f::normalize() {
 	auto l = length();
 	if (l == 0 || l == 1)
 		return;

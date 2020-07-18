@@ -5,7 +5,7 @@
 #include <SDL/SDL.h>
 
 #include "Components.h"
-#include "Sprites.h"
+#include "scene/graphical/Sprites.h"
 
 using namespace sl2dge;
 

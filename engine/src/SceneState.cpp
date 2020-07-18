@@ -10,8 +10,7 @@ void sl2dge::SceneState::start(Game *game) {
 	auto cam = world_.create_entity();
 	cam->add_component<Camera>(320, 288);
 
-	auto map_back = world_.create_system<TileMapSystem>(TileMapSystem::DrawParams::Back | TileMapSystem::DrawParams::Middle);
-	map_back->camera_ = cam;
+	auto map_back = world_.create_system<TileMapSystem>(TileMapSystem::DrawParams::Back | TileMapSystem::DrawParams::Middle, 0);
 
 	/*
 	player_ = std::make_unique<Player>(game);

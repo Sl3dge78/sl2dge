@@ -44,7 +44,7 @@ class EventSystem : public ISystem, public UpdateSystem, public InputSystem {
 public:
 	EventSystem(Entity *player) :
 			player_(player) {}
-	void update() override;
+	void update(const int delta_time) override;
 	void handle_events(SDL_Event const &e) override;
 
 private:

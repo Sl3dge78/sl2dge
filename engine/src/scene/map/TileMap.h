@@ -64,8 +64,9 @@ private:
 
 class TileMapSystem : public ISystem, public DrawSystem, public WorldSetSystem {
 public:
-	TileMapSystem(int params) {
+	TileMapSystem(int params, int order = 0) {
 		this->draw_params_ = params;
+		this->pos_z = order;
 		add_component_filter<TileMap>();
 	}
 

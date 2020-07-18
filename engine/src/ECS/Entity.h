@@ -36,7 +36,7 @@ public:
 	bool get_is_active() const { return is_active_; };
 	void set_is_active(bool val);
 
-	//Children management
+	//TODO : Move to transform
 	Entity *get_parent() const { return parent_; };
 	std::vector<Entity *> get_children() const { return childs_; };
 	void add_children(Entity *child) {

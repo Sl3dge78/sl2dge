@@ -1,4 +1,5 @@
 #include "World.h"
+#include <scene\Transform.h>
 
 namespace sl2dge {
 
@@ -12,6 +13,17 @@ World::~World() {
 Entity *World::create_entity() {
 	Entity *e = new Entity();
 	entity_list_.push_back(e);
+	e->add_component<Transform>();
+
+	is_systems_entities_list_dirty_ = true;
+
+	return e;
+}
+
+Entity *World::create_entity(const Vector2f &position) {
+	Entity *e = new Entity();
+	entity_list_.push_back(e);
+	e->add_component<Transform>(position);
 
 	is_systems_entities_list_dirty_ = true;
 
@@ -61,9 +73,10 @@ ISystem *World::add_system(ISystem *sys) {
 		draw_systems_.push_front(dynamic_cast<DrawSystem *>(sys));
 		dynamic_cast<DrawSystem *>(sys)->renderer_ = this->renderer_;
 		dynamic_cast<DrawSystem *>(sys)->font_ = this->main_font_;
+		dynamic_cast<DrawSystem *>(sys)->camera_ = this->camera_->get_component<Camera>();
 
 		draw_systems_.sort([](const DrawSystem *sys1, const DrawSystem *sys2) {
-			return sys1->pos_z > sys2->pos_z;
+			return sys1->pos_z < sys2->pos_z;
 		});
 	}
 
@@ -98,9 +111,9 @@ void World::handle_events(SDL_Event const &e) {
 	}
 }
 
-void World::update() {
+void World::update(const int delta_time) {
 	for (UpdateSystem *system : update_systems_) {
-		system->update();
+		system->update(delta_time);
 	}
 }
 

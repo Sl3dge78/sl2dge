@@ -74,7 +74,7 @@ void EventChain::save(pugi::xml_node &chain_node) {
 	}
 }
 
-void EventSystem::update() {
+void EventSystem::update(const int delta_time) {
 	for (auto e : entities_) {
 		auto chain = e->get_component<EventChain>();
 

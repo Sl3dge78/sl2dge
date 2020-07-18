@@ -63,8 +63,9 @@ void InventoryState::draw(Game *game) {
 	SDL_RenderCopy(game->renderer(), this->background, NULL, NULL);
 	for (int i = 0; i < inventory->Length(); i++) {
 		// Render each item
-		if (inventory->GetItem(i) != nullptr)
-			inventory->GetItem(i)->sprite()->draw_absolute(*game->renderer(), Rect(offset_x + ((i % width) * 32), offset_y + ((i / width) * 32), 32, 32));
+		if (inventory->GetItem(i) != nullptr) {
+			//inventory->GetItem(i)->sprite()->draw_absolute(*game->renderer(), Rect(offset_x + ((i % width) * 32), offset_y + ((i / width) * 32), 32, 32));
+		}
 	}
 	SDL_RenderCopy(game->renderer(), this->selection, NULL, &cursor_pos);
 

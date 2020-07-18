@@ -27,7 +27,7 @@ public:
 	CameraSystem() {
 		this->add_component_filter<Camera>();
 	}
-	virtual void update() override;
+	virtual void update(const int delta_time) override;
 };
 
 } // namespace sl2dge

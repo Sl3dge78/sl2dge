@@ -7,11 +7,13 @@ namespace sl2dge {
 
 class Transform : public Component {
 public:
-	Vector2f position;
-
+	Transform() { position = Vector2f(0, 0); }
+	Transform(const Vector2f &position) { this->position = position; }
 	Transform(const float x, const float y) {
 		position = Vector2f(x, y);
 	}
+
+	Vector2f position;
 };
 
 } // namespace sl2dge

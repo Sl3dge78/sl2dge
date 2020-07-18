@@ -54,8 +54,10 @@ protected:
 
 public:
 	virtual ~UpdateSystem() = default;
-	virtual void update() = 0;
+	virtual void update(const int delta_time) = 0;
 };
+
+class Camera;
 
 /// Draw gets called every frame after all logic
 class DrawSystem {
@@ -65,14 +67,13 @@ protected:
 	DrawSystem() = default;
 	FC_Font *font_ = nullptr;
 	SDL_Renderer *renderer_ = nullptr;
+	Camera *camera_ = nullptr;
 
 	int pos_z = 0;
 
 public:
 	virtual ~DrawSystem() = default;
 	virtual void draw() = 0;
-
-	Entity *camera_ = nullptr;
 };
 
 /// Input gets called when an event gets registered

@@ -149,21 +149,14 @@ int TileMap::get_tile(const int layer, const SDL_Point &pos) {
 }
 
 void TileMapSystem::draw() {
-	if (camera_ == nullptr) {
-		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "No camera assigned to TileMapDrawer");
-		return;
-	}
-
-	auto cam = camera_->get_component<Camera>();
-
 	for (auto e : entities_) {
 		auto map = e->get_component<TileMap>();
 
-		SDL_Point first_tile = { cam->viewport_.x / map->tile_size(), cam->viewport_.y / map->tile_size() };
+		SDL_Point first_tile = { camera_->viewport_.x / map->tile_size(), camera_->viewport_.y / map->tile_size() };
 
 		SDL_Point last_tile = {
-			first_tile.x + (cam->viewport_.w / map->tile_size()) + 1,
-			first_tile.y + (cam->viewport_.h / map->tile_size()) + 1
+			first_tile.x + (camera_->viewport_.w / map->tile_size()) + 1,
+			first_tile.y + (camera_->viewport_.h / map->tile_size()) + 1
 		};
 
 		if (first_tile.x < 0)
@@ -184,7 +177,7 @@ void TileMapSystem::draw() {
 				if (draw_params_ & DrawParams::Back) {
 					auto tile = map->get_tile(0, { x, y });
 					if (tile != -1) {
-						SDL_Rect dst = cam->world_to_screen_transform({ x * map->tile_size(), y * map->tile_size(), map->tile_size(), map->tile_size() });
+						SDL_Rect dst = camera_->world_to_screen_transform({ x * map->tile_size(), y * map->tile_size(), map->tile_size(), map->tile_size() });
 						auto tex = map->atlas()->texture();
 						auto tilerec = map->atlas()->get_tile(tile);
 						SDL_RenderCopy(renderer_, map->atlas()->texture(), map->atlas()->get_tile(tile), &dst);
@@ -193,14 +186,14 @@ void TileMapSystem::draw() {
 				if (draw_params_ & DrawParams::Middle) {
 					auto tile = map->get_tile(1, { x, y });
 					if (tile != -1) {
-						SDL_Rect dst = cam->world_to_screen_transform({ x * map->tile_size(), y * map->tile_size(), map->tile_size(), map->tile_size() });
+						SDL_Rect dst = camera_->world_to_screen_transform({ x * map->tile_size(), y * map->tile_size(), map->tile_size(), map->tile_size() });
 						SDL_RenderCopy(renderer_, map->atlas()->texture(), map->atlas()->get_tile(tile), &dst);
 					}
 				}
 				if (draw_params_ & DrawParams::Front) {
 					auto tile = map->get_tile(2, { x, y });
 					if (tile != -1) {
-						SDL_Rect dst = cam->world_to_screen_transform({ x * map->tile_size(), y * map->tile_size(), map->tile_size(), map->tile_size() });
+						SDL_Rect dst = camera_->world_to_screen_transform({ x * map->tile_size(), y * map->tile_size(), map->tile_size(), map->tile_size() });
 						SDL_RenderCopy(renderer_, map->atlas()->texture(), map->atlas()->get_tile(tile), &dst);
 					}
 				}
