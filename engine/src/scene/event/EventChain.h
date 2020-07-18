@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ECS/ECS.h"
+#include "addons/pugixml.hpp"
 #include "scene/event/GameEvent.h"
-#include "xml/pugixml.hpp"
 
 namespace sl2dge {
 

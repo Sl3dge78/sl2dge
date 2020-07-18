@@ -6,12 +6,12 @@
 #include <utility>
 #include <vector>
 
-#include "SDL/SDL.h"
-#include "xml/pugixml.hpp"
+#include <SDL/SDL.h>
 
 #include "GameState.h"
-#include "Point.h"
-#include "guid.h"
+#include "addons/guid.h"
+#include "addons/pugixml.hpp"
+#include "math/Point.h"
 
 namespace sl2dge {
 

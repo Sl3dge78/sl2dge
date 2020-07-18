@@ -24,16 +24,7 @@
     <ClCompile Include="src\Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\HelperFunctions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\QuestManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SDL_FontCache.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\guid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Player.cpp">
@@ -55,9 +46,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\Component.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\xml\pugixml.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\scene\Camera.cpp">
@@ -84,6 +72,15 @@
     <ClCompile Include="src\scene\graphical\SpriteAnimator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\addons\guid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\addons\SDL_FontCache.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\addons\pugixml.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Character.h">
@@ -101,13 +98,7 @@
     <ClInclude Include="src\GameState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\HelperFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Item.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Point.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Quest.h">
@@ -116,16 +107,7 @@
     <ClInclude Include="src\QuestManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Rect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SDL_FontCache.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\sl2dge.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\guid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Player.h">
@@ -150,9 +132,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ECS\ISystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\xml\pugixml.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\scene\Camera.h">
@@ -180,6 +159,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\scene\graphical\SpriteAnimator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\Point.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\Rect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\addons\guid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\addons\SDL_FontCache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\addons\pugixml.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

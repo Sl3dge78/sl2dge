@@ -21,22 +21,22 @@ void Editor::start(Game *game) {
 void Editor::handle_events(Game *game, const SDL_Event &e) {
 	if (e.type == SDL_MOUSEWHEEL) {
 		if (e.wheel.y < 0) {
-			float zoom = map_camera_->zoom();
+			float zoom = map_camera_->zoom_;
 			if (zoom <= 1) {
 				zoom /= 2.0;
 			} else {
 				--zoom;
 			}
-			map_camera_->set_zoom(zoom);
+			map_camera_->zoom_ = zoom;
 
 		} else if (e.wheel.y > 0) {
-			float zoom = map_camera_->zoom();
+			float zoom = map_camera_->zoom_;
 			if (zoom < 1) {
 				zoom *= 2.0;
 			} else {
 				++zoom;
 			}
-			map_camera_->set_zoom(zoom);
+			map_camera_->zoom_ = zoom;
 		}
 	}
 
@@ -121,7 +121,7 @@ void Editor::handle_events(Game *game, const SDL_Event &e) {
 void Editor::input(Game *game) {
 	/* CAMERA MOVEMENT */
 	const auto state = SDL_GetKeyboardState(NULL);
-	Vector2 movement = { 0, 0 };
+	Vector2f movement = { 0, 0 };
 	if (state[SDL_SCANCODE_W])
 		movement.y += -1;
 	if (state[SDL_SCANCODE_S])
@@ -131,14 +131,14 @@ void Editor::input(Game *game) {
 	if (state[SDL_SCANCODE_A])
 		movement.x += -1;
 	movement.normalize();
-	movement *= 700 / map_camera_->zoom() * float(game->delta_time()) / 1000.0f;
+	movement *= 700 / map_camera_->zoom_ * float(game->delta_time()) / 1000.0f;
 	map_camera_->translate(movement);
 
 	/* PAINT */
 	int x = 0;
 	int y = 0;
 	auto mouse_state = SDL_GetMouseState(&x, &y);
-	auto pos = map_->pixel_to_map_transform(map_camera_->screen_to_world_transform(Point(x, y)));
+	auto pos = map_->pixel_to_map_transform(map_camera_->screen_to_world_transform(SDL_Point{ x, y }));
 
 	if (x < atlas_position.x) {
 		if (mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) {
@@ -168,7 +168,7 @@ void Editor::input(Game *game) {
 	}
 }
 
-void Editor::paint(const Uint32 mouse_button, const Point pos) {
+void Editor::paint(const Uint32 mouse_button, const SDL_Point pos) {
 	for (unsigned int x = pos.x - brush_size_ + 1; x < unsigned int(pos.x + brush_size_); ++x) {
 		if (x < 0 || x > map_->width())
 			continue;
@@ -184,7 +184,7 @@ void Editor::paint(const Uint32 mouse_button, const Point pos) {
 }
 
 void Editor::update(Game *game) {
-	map_camera_->update(game);
+	//map_camera_->update(game);
 }
 
 void Editor::draw(Game *game) {

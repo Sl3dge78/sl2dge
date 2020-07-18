@@ -15,7 +15,7 @@ public:
 	virtual void start(Game *game) override;
 	virtual void handle_events(Game *game, const SDL_Event &e) override;
 	virtual void input(Game *game) override;
-	void paint(const Uint32 mouse_button, const Point pos);
+	void paint(const Uint32 mouse_button, const SDL_Point pos);
 	virtual void update(Game *game) override;
 	virtual void draw(Game *game) override;
 	void draw_map(Game *game);

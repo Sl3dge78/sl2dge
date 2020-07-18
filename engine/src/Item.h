@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scene/graphical/Sprites.h"
+#include "scene/graphical/Sprite.h"
 #include <string>
 
 namespace sl2dge {

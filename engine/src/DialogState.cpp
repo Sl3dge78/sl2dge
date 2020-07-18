@@ -1,9 +1,11 @@
 #include "DialogState.h"
 
-#include "SDL/SDL_image.h"
-#include "SDL_FontCache.h"
 #include <iostream>
 #include <string>
+
+#include <SDL/SDL_image.h>
+
+#include "addons/SDL_FontCache.h"
 
 namespace sl2dge {
 

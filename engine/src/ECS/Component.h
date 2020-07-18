@@ -5,7 +5,7 @@
 
 #include <SDL/SDL.h>
 
-#include "xml/pugixml.hpp"
+#include "addons/pugixml.hpp"
 
 namespace sl2dge {
 class Entity;

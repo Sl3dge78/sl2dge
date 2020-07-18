@@ -127,4 +127,5 @@ public:
 		return a.x <= x && a.x + a.w >= x + w && a.y <= y && a.y + a.h >= y + h;
 	}
 };
+
 } // namespace sl2dge

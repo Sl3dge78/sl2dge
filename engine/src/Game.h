@@ -4,9 +4,10 @@
 #include <string>
 #include <vector>
 
-#include "SDL_FontCache.h"
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+
+#include "addons/SDL_FontCache.h"
 
 #include "GameState.h"
 #include "QuestManager.h"
@@ -14,13 +15,10 @@
 namespace sl2dge {
 
 class Entity;
-class Camera;
 
 class Game {
 public:
 	// Creates a new game. Call loop to start the Game.
-	// The shared_ptrs main_camera, player and map are there as utility to
-	// pass them through gamestates. Intialize and use them as needed.
 	Game(const std::string window_name = "",
 			const Uint32 window_width = 800,
 			const Uint32 window_heigth = 600);

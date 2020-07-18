@@ -4,8 +4,8 @@
 
 #include "Game.h"
 #include "GameState.h"
-#include "Point.h"
-#include "Rect.h"
+#include "math/Point.h"
+#include "math/Rect.h"
 #include "scene/event/EventChain.h"
 #include "scene/event/GameEvent.h"
 

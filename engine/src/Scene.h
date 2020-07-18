@@ -5,8 +5,8 @@
 #include <string>
 
 #include "Game.h"
+#include "addons/pugixml.hpp"
 #include "scene/event/EventChain.h"
-#include "xml/pugixml.hpp"
 
 namespace sl2dge {
 /*

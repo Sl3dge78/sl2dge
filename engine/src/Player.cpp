@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "scene/graphical/Sprites.h"
+#include "scene/graphical/Sprite.h"
 
 using namespace sl2dge;
 /*

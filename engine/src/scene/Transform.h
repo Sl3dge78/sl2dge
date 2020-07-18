@@ -5,6 +5,11 @@
 
 namespace sl2dge {
 
+enum class Direction { Up,
+	Down,
+	Left,
+	Right };
+
 class Transform : public Component {
 public:
 	Transform() { position = Vector2f(0, 0); }

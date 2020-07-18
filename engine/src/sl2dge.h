@@ -2,6 +2,11 @@
 
 #include "Game.h"
 
+#include "ECS/ECS.h"
+
+#include "math/Point.h"
+#include "math/Rect.h"
+#include "math/Vector.h"
 #include "scene/Camera.h"
 #include "scene/Transform.h"
 #include "scene/event/EventChain.h"
@@ -11,27 +16,19 @@
 #include "scene/map/Atlas.h"
 #include "scene/map/TileMap.h"
 
-#include "DialogState.h"
-#include "GameState.h"
-#include "SceneState.h"
-
-#include "HelperFunctions.h"
-#include "Point.h"
-#include "Rect.h"
+#include "addons/SDL_FontCache.h"
+#include "addons/guid.h"
+#include "addons/pugixml.hpp"
 
 #include "Character.h"
 #include "Components.h"
+#include "DialogState.h"
+#include "GameState.h"
 #include "Item.h"
 #include "Player.h"
-#include "Scene.h"
-
 #include "Quest.h"
 #include "QuestManager.h"
-
-#include "ECS/ECS.h"
-
-#include "SDL_FontCache.h"
-#include "guid.h"
-#include "xml/pugixml.hpp"
+#include "Scene.h"
+#include "SceneState.h"
 
 namespace sl2dge {};

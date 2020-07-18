@@ -7,7 +7,7 @@
 #include <SDL/SDL.h>
 
 #include "ECS/Entity.h"
-#include "SDL_FontCache.h"
+#include "addons/SDL_FontCache.h"
 
 namespace sl2dge {
 

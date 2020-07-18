@@ -1,5 +1,4 @@
 #include "EventChain.h"
-#include "HelperFunctions.h"
 
 namespace sl2dge {
 EventChain::EventChain(const pugi::xml_node &chain_node) {

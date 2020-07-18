@@ -4,7 +4,6 @@
 
 #include "ECS/Component.h"
 #include "ECS/ISystem.h"
-#include "Point.h"
 
 namespace sl2dge {
 

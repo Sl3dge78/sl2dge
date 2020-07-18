@@ -1,8 +1,7 @@
 #include "Camera.h"
 
-#include <SDL\SDL.h>
+#include <SDL/SDL.h>
 
-#include "Point.h"
 #include "scene/Transform.h"
 
 namespace sl2dge {
@@ -34,6 +33,6 @@ void CameraSystem::update(const int delta_time) {
 		cam->viewport_.x = int(transform->position.x) - (cam->viewport_.w / 2) + 8;
 		cam->viewport_.y = int(transform->position.y) - (cam->viewport_.h / 2) + 8;
 	};
-} // namespace sl2dge
+}
 
 } // namespace sl2dge

@@ -4,11 +4,6 @@
 
 #include <SDL/SDL.h>
 
-#include "Components.h"
-#include "scene/graphical/Sprites.h"
-
-using namespace sl2dge;
-
 class Player /*:public Entity , public IMoveable*/ {
 	/*
 public:

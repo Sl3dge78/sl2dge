@@ -5,9 +5,9 @@
 #include <SDL/SDL.h>
 
 #include "ECS/ECS.h"
+#include "addons/pugixml.hpp"
 #include "scene/Camera.h"
 #include "scene/map/Atlas.h"
-#include "xml/pugixml.hpp"
 
 namespace sl2dge {
 

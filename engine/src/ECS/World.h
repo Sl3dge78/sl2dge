@@ -1,13 +1,12 @@
 #pragma once
+#include <SDL/SDL.h>
 #include <forward_list>
-
-#include "../SDL_FontCache.h"
-#include "SDL/SDL.h"
 
 #include "Component.h"
 #include "Entity.h"
 #include "ISystem.h"
 
+#include "addons/SDL_FontCache.h"
 #include "math/Vector.h"
 #include "scene/Camera.h"
 
