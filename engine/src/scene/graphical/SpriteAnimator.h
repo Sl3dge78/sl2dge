@@ -22,9 +22,9 @@ public:
 	};
 
 	std::string name;
-	int frame_rate; // in S
+	unsigned int frame_rate; // in S
 	std::vector<int> frame_data;
-	int size;
+	unsigned int size;
 };
 
 class SpriteAnimator : public Component {

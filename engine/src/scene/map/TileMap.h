@@ -44,8 +44,8 @@ public:
 
 	int tile_size() const { return tile_size_; }
 	Atlas *atlas() { return atlas_; }
-	unsigned int width() const { return width_; }
-	unsigned int height() const { return height_; }
+	int width() const { return width_; }
+	int height() const { return height_; }
 	void set_bounds(const SDL_Rect &bounds) { bounds_ = bounds; }
 	const SDL_Rect &bounds() const { return bounds_; }
 

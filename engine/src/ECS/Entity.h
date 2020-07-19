@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -17,12 +18,10 @@ class Entity {
 	friend class World;
 
 private:
-	std::map<int, Component *> components_;
+	std::map<int, std::unique_ptr<Component>> components_;
 
 public:
-	Entity(const Vector2f &position = Vector2f(0, 0)) {
-		transform_ = this->add_component<Transform>(position);
-	}
+	Entity(const Vector2f &position = Vector2f(0, 0));
 	~Entity();
 
 	template <class T, class... Args>

@@ -1,11 +1,13 @@
 #pragma once
-#include <SDL/SDL.h>
+
 #include <forward_list>
+#include <memory>
+
+#include <SDL/SDL.h>
 
 #include "Component.h"
 #include "Entity.h"
 #include "ISystem.h"
-
 #include "addons/SDL_FontCache.h"
 #include "math/Vector.h"
 #include "scene/Camera.h"
@@ -51,11 +53,11 @@ private:
 	FC_Font *main_font_;
 	Entity *camera_;
 
-	std::vector<Entity *> entity_list_; // TODO : Switch to unique ptr
+	std::vector<std::unique_ptr<Entity>> entity_list_;
 
 	//Systems
 	ISystem *add_system(ISystem *sys);
-	std::forward_list<ISystem *> systems_;
+	std::forward_list<std::unique_ptr<ISystem>> systems_;
 	std::forward_list<InitSystem *> init_systems_;
 	std::forward_list<InputSystem *> input_systems_;
 	std::forward_list<UpdateSystem *> update_systems_;

@@ -2,7 +2,7 @@
 
 namespace sl2dge {
 EventChain::EventChain(const pugi::xml_node &chain_node) {
-	entity()->get_component<Transform>()->set_position(Vector2f(chain_node.attribute("x_pos").as_int() * 16, chain_node.attribute("y_pos").as_int() * 16));
+	entity()->get_component<Transform>()->set_position(Vector2f(chain_node.attribute("x_pos").as_int() * 16.0f, chain_node.attribute("y_pos").as_int() * 16.0f));
 	interactable = chain_node.attribute("interactable").as_bool();
 	in_place = chain_node.attribute("in_place").as_bool();
 	activate_once = chain_node.attribute("once").as_bool();

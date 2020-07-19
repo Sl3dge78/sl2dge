@@ -1,21 +1,20 @@
 #include "Entity.h"
 
 namespace sl2dge {
-
+Entity::Entity(const Vector2f &position) {
+	transform_ = this->add_component<Transform>(position);
+}
 Entity::~Entity() {
 	this->Entity::remove_all_components();
 }
 
 void Entity::remove_all_components() {
-	for (auto pair : components_) {
-		delete pair.second;
-	}
 	components_.clear();
 }
 
 Component *Entity::add_component(const int id, Component *comp) {
 	comp->entity_ = this;
-	components_[id] = comp;
+	components_[id] = std::unique_ptr<Component>(comp);
 	return comp;
 }
 
@@ -28,14 +27,15 @@ bool Entity::has_component(const int id) const {
 
 Component *Entity::get_component(const int id) const {
 	if (has_component(id)) {
-		return components_.at(id);
-	} else
-		return nullptr;
+		return components_.at(id).get();
+	} else {
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Component id %s not found!", id);
+		throw std::runtime_error("Component not found!");
+	}
 }
 
 void Entity::remove_component(const int id) {
 	if (has_component(id)) {
-		delete components_[id];
 		components_.erase(id);
 	}
 }

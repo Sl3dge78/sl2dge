@@ -38,7 +38,7 @@ void Transform::set_position(const Vector2f &pos) {
 	local_position_ = pos;
 }
 
-void Transform::set_position(const int x, const int y) {
+void Transform::set_position(const float x, const float y) {
 	local_position_.x = x;
 	local_position_.y = y;
 }

@@ -20,15 +20,16 @@ public:
 
 	~Transform();
 
-	Vector2i tiled_position();
+	/// World position
 	Vector2f position() const;
+	// Position in map units
+	Vector2i tiled_position();
+
 	void translate(const Vector2f &translation);
 	void set_position(const Vector2f &pos);
-	void set_position(const int x, const int y);
+	void set_position(const float x, const float y);
 
 	/* Parent / child */
-	int order_ = 0;
-
 	Transform *parent = nullptr;
 	std::vector<Transform *> get_children() const;
 	void add_children(Transform *child);

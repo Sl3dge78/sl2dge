@@ -4,47 +4,40 @@
 namespace sl2dge {
 
 World::~World() {
-	delete_all_systems();
-	delete_all_entities();
 }
 
 // == ENTITIES ==
 
 Entity *World::create_entity() {
-	Entity *e = new Entity();
-	entity_list_.push_back(e);
-	e->add_component<Transform>();
+	std::unique_ptr<Entity> e = std::make_unique<Entity>();
+	auto ret = e.get();
+	entity_list_.push_back(std::move(e));
 
 	is_systems_entities_list_dirty_ = true;
 
-	return e;
+	return ret;
 }
 
 Entity *World::create_entity(const Vector2f &position) {
-	Entity *e = new Entity(position);
-	entity_list_.push_back(e);
+	std::unique_ptr<Entity> e = std::make_unique<Entity>(position);
+	auto ret = e.get();
+	entity_list_.push_back(std::move(e));
 	is_systems_entities_list_dirty_ = true;
 
-	return e;
+	return ret;
 }
 
 void World::delete_all_entities() {
-	for (Entity *e : entity_list_) {
-		delete e;
-	}
-
 	is_systems_entities_list_dirty_ = true;
-
 	entity_list_.clear();
 }
 
 void World::delete_entity(Entity *e) {
 	for (auto it = entity_list_.begin(); it < entity_list_.end(); ++it) {
-		if (*it == e) {
+		if (it->get() == e) {
 			for (auto child : e->transform()->get_children()) {
 				this->delete_entity(child->entity());
 			}
-			delete e;
 			entity_list_.erase(it);
 			is_systems_entities_list_dirty_ = true;
 			return;
@@ -82,19 +75,16 @@ ISystem *World::add_system(ISystem *sys) {
 		dynamic_cast<WorldSetSystem *>(sys)->world_ = this;
 	}
 
-	systems_.push_front(sys);
+	systems_.push_front(std::unique_ptr<ISystem>(sys));
 	return sys;
 }
 
 void World::delete_all_systems() {
-	for (ISystem *sys : systems_) {
-		delete sys;
-	}
-	systems_.clear();
 	init_systems_.clear();
 	input_systems_.clear();
 	update_systems_.clear();
 	draw_systems_.clear();
+	systems_.clear();
 }
 
 void World::start() {
@@ -127,7 +117,7 @@ void World::update_systems_entities() {
 			if (system->filter_.size() > 0) {
 				system->entities_.clear(); // TODO : Optimize this
 
-				for (auto entity : entity_list_) { // Compare each entity to the filter list
+				for (auto &entity : entity_list_) {
 					if (entity->components_.empty() || !entity)
 						continue;
 
@@ -145,7 +135,7 @@ void World::update_systems_entities() {
 						}
 					}
 					if (add)
-						system->entities_.push_front(entity);
+						system->entities_.push_front(entity.get());
 				}
 				system->on_entity_list_changed();
 			}
