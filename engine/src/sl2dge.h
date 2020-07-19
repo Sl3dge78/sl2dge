@@ -15,6 +15,7 @@
 #include "scene/graphical/SpriteAnimator.h"
 #include "scene/map/Atlas.h"
 #include "scene/map/TileMap.h"
+#include "scene/physics/Rigibody.h"
 
 #include "addons/SDL_FontCache.h"
 #include "addons/guid.h"

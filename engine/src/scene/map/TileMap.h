@@ -36,6 +36,7 @@ public:
 
 	// Return true if there is collision at tile position point
 	bool get_collision_at_tile(const SDL_Point &point) const;
+	bool get_collision_at_pixel(const SDL_Point &point) const;
 	void set_collision_at_tile(const SDL_Point &point, const bool val);
 
 	// Changes the value of a tile

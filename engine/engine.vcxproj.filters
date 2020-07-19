@@ -63,9 +63,6 @@
     <ClCompile Include="src\scene\map\TileMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\math\Vector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\scene\graphical\Sprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -177,6 +174,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\addons\pugixml.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\physics\Rigibody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

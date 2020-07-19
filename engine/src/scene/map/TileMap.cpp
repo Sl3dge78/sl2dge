@@ -122,6 +122,10 @@ bool TileMap::get_collision_at_tile(const SDL_Point &point) const {
 	return true;
 }
 
+bool TileMap::get_collision_at_pixel(const SDL_Point &point) const {
+	return get_collision_at_tile(SDL_Point{ point.x / tile_size_, point.y / tile_size_ });
+}
+
 void TileMap::set_collision_at_tile(const SDL_Point &point, const bool val) {
 	if (point.x >= 0 && point.x < width_ && point.y >= 0 && point.y < height_) {
 		collision_layer_[point.x + width_ * point.y] = val;

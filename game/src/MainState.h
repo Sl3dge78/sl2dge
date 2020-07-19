@@ -18,4 +18,5 @@ public:
 
 private:
 	Entity *camera;
+	Entity *player;
 };

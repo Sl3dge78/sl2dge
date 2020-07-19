@@ -18,15 +18,23 @@ void MainState::start(Game *game) {
 
 	//TODO : Automate this
 	world_.set_renderer(game->renderer());
-	camera = world_.create_entity(Vector2f(50, 50));
+	camera = world_.create_entity();
 	camera->add_component<Camera>(320, 288);
 	world_.create_system<CameraSystem>();
 	world_.set_camera(camera);
 
-	auto sprite = world_.create_entity();
-	sprite->add_component<Sprite>(*game->renderer(), "resources/images/char.png", 16, 16);
+	// Map
+	auto map = world_.create_entity();
+	auto tile_map = map->add_component<TileMap>(*game->renderer(), "resources/levels/maptest.map");
+	auto map_back = world_.create_system<TileMapSystem>(TileMapSystem::DrawParams::Back | TileMapSystem::DrawParams::Middle, 0);
+	auto map_front = world_.create_system<TileMapSystem>(TileMapSystem::DrawParams::Front, 2);
+
+	// Player
+	player = world_.create_entity(Vector2f(50 * 16, 50 * 16));
+	player->add_component<Sprite>(*game->renderer(), "resources/images/char.png", 16, 16);
 	world_.create_system<SpriteSystem>();
-	auto animator = sprite->add_component<SpriteAnimator>();
+
+	auto animator = player->add_component<SpriteAnimator>();
 	animator->add_animation("idle_down", 5, { 1 });
 	animator->add_animation("idle_up", 5, { 2 });
 	animator->add_animation("idle_left", 5, { 0 });
@@ -38,18 +46,15 @@ void MainState::start(Game *game) {
 	animator->play_animation("down");
 	world_.create_system<SpriteAnimatorSystem>();
 
-	camera->transform()->add_children(sprite->transform());
+	player->add_component<Rigidbody>()->collider = { 2, 1, 11, 15 };
+	world_.create_system<PhysicsSystem>(tile_map);
+
+	player->transform()->add_children(camera->transform());
 
 	auto chain_e = world_.create_entity(Vector2f(0, 0));
 	auto chain = chain_e->add_component<EventChain>();
 	chain->interactable = true;
-
 	world_.create_system<EventSystem>(camera);
-
-	auto map = world_.create_entity();
-	map->add_component<TileMap>(*game->renderer(), "resources/levels/maptest.map");
-	auto map_back = world_.create_system<TileMapSystem>(TileMapSystem::DrawParams::Back | TileMapSystem::DrawParams::Middle, 0);
-	auto map_front = world_.create_system<TileMapSystem>(TileMapSystem::DrawParams::Front, 2);
 
 	world_.update_systems_entities();
 }
@@ -60,29 +65,22 @@ void MainState::handle_events(Game *game, const SDL_Event &e) {
 
 void MainState::input(Game *game) {
 	const auto state = SDL_GetKeyboardState(NULL);
-	Vector2f movement;
+	auto rb = player->get_component<Rigidbody>();
 
 	if (state[SDL_SCANCODE_W]) {
-		movement.y += -1;
+		rb->speed.y += -1;
 	}
 	if (state[SDL_SCANCODE_S]) {
-		movement.y += 1;
+		rb->speed.y += 1;
 	}
 	if (state[SDL_SCANCODE_D]) {
-		movement.x += 1;
+		rb->speed.x += 1;
 	}
 	if (state[SDL_SCANCODE_A]) {
-		movement.x += -1;
+		rb->speed.x += -1;
 	}
-	movement.normalize();
-	movement *= 160 * float(game->delta_time()) / 1000.0f;
-
-	auto camtrfrm = camera->transform();
-	camtrfrm->translate(movement);
-	if (camtrfrm->position().x < 0)
-		camtrfrm->set_position(0, camtrfrm->position().y);
-	if (camtrfrm->position().y < 0)
-		camtrfrm->set_position(camtrfrm->position().x, 0);
+	rb->speed.normalize();
+	rb->speed *= 70 * float(game->delta_time()) / 1000.0f;
 }
 
 void MainState::update(Game *game) {
