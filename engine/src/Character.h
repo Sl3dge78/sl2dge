@@ -1,7 +1,6 @@
 #pragma once
 #include "SDL/SDL.h"
 
-#include "Components.h"
 #include "ECS/Entity.h"
 #include "Game.h"
 //#include "Sprites.h"

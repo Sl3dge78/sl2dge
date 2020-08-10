@@ -2,6 +2,7 @@
 
 #include <forward_list>
 #include <memory>
+#include <string>
 
 #include <SDL/SDL.h>
 
@@ -19,57 +20,39 @@ class Game;
 class World {
 public:
 	World() = default;
-	~World();
+	~World(){};
 
 	//Entities
-	Entity *create_entity();
 	Entity *create_entity(const Vector2f &position);
+	Entity *create_entity(const float x = 0, const float y = 0);
 	void delete_all_entities();
 	void delete_entity(Entity *e);
 
-	//Systems
 	template <class T, class... Args>
 	T *create_system(Args &&... args);
+
 	void delete_all_systems();
 
-	void start();
+	void start(Game *game);
 	void handle_events(Game *game, SDL_Event const &e);
 	void update(Game *game);
-	void draw();
+	void draw(Game *game);
 
 	void update_systems_entities();
 
-	void set_renderer(SDL_Renderer *renderer) { renderer_ = renderer; };
-	void set_main_font(FC_Font *font) { main_font_ = font; };
-	void set_camera(Entity *camera) {
-		camera_ = camera;
-		for (auto s : draw_systems_) {
-			s->camera_ = camera_->get_component<Camera>();
-		}
-	};
-
-private:
-	SDL_Renderer *renderer_;
-	FC_Font *main_font_;
-	Entity *camera_;
-
-	std::vector<std::unique_ptr<Entity>> entity_list_;
-
+protected:
 	//Systems
-	ISystem *add_system(ISystem *sys);
 	std::forward_list<std::unique_ptr<ISystem>> systems_;
 	std::forward_list<InitSystem *> init_systems_;
 	std::forward_list<InputSystem *> input_systems_;
 	std::forward_list<UpdateSystem *> update_systems_;
 	std::forward_list<DrawSystem *> draw_systems_;
+	ISystem *add_system(ISystem *sys);
+
+private:
+	std::vector<std::unique_ptr<Entity>> entity_list_;
 
 	bool is_systems_entities_list_dirty_ = false;
 };
-
-//SYSTEMS
-template <class T, class... Args>
-T *World::create_system(Args &&... args) {
-	return static_cast<T *>(add_system(new T(std::forward<Args>(args)...)));
-}
 
 } // namespace sl2dge

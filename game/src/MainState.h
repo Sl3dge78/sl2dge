@@ -17,6 +17,6 @@ public:
 	virtual ~MainState();
 
 private:
-	Entity *camera;
-	Entity *player;
+	Entity *camera = nullptr;
+	Entity *player = nullptr;
 };

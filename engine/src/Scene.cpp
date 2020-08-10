@@ -1,41 +1,46 @@
 #include "Scene.h"
-/*
-sl2dge::Scene::Scene(Game *game, const std::string &path) {
-	this->path_ = path;
 
+namespace sl2dge {
+
+Scene::Scene(const std::string &path) {
+	this->path_ = path;
+	load_from_xml(path);
+}
+
+void Scene::load_from_xml(const std::string &path) {
+	SDL_Log("Loading scene : %s", path.c_str());
 	pugi::xml_document doc;
 	open_xml_doc(&doc, path_);
+	SDL_Log("=====");
+	SDL_Log("Loading entities...");
+	for (auto entity_node : doc.children("Entity")) {
+		auto entity = this->create_entity(entity_node.attribute("x").as_int() * 16.0f, entity_node.attribute("y").as_int() * 16.0f);
+		SDL_Log("> Entity added");
 
-	auto map_node = doc.child("Map");
-	//map_ = std::make_unique<TileMap>(*game->renderer(), map_node);
-
-	auto events_node = doc.child("Events");
-	for (auto chain : events_node.children("Event_Chain")) {
-		event_chains_.push_back(std::make_unique<EventChain>(chain));
-	}
-}
-
-void sl2dge::Scene::open_xml_doc(pugi::xml_document *doc, const std::string &map_path) {
-	pugi::xml_parse_result result = doc->load_file(map_path.c_str());
-	if (!result) {
-		SDL_Log("Unable to read xml %s : %s", map_path.c_str(), result.description());
-		if (result.status == pugi::xml_parse_status::status_bad_attribute) {
-			std::ifstream file;
-			file.open(map_path);
-			file.seekg(result.offset);
-
-			std::string s;
-			s.resize(20);
-			file.read(&s[0], 20);
-			SDL_Log("Error at [...%s]", s.c_str());
+		for (auto component_node : entity_node.children("Component")) {
+			// Add component
+			std::string type = component_node.attribute("type").as_string();
+			auto comp = ECS_DB::create_component(type, entity, component_node);
+			if (type == "Camera") {
+				Camera::main_camera = dynamic_cast<Camera *>(comp);
+			}
+			SDL_Log(">> Component of type %s added", type.c_str());
 		}
-		doc = new pugi::xml_document();
 	}
-
-	SDL_Log("%s successfully loaded", map_path.c_str());
+	SDL_Log("All entities loaded!");
+	SDL_Log("=====");
+	SDL_Log("Loading systems...");
+	for (auto system_node : doc.children("System")) {
+		std::string type = system_node.attribute("type").as_string();
+		add_system(ECS_DB::create_system(type, system_node));
+		SDL_Log("> System of type %s loaded", type.c_str());
+	}
+	SDL_Log("All systems loaded!");
+	update_systems_entities();
 }
 
-void sl2dge::Scene::save() {
+void Scene::save() {
+	/*
 	pugi::xml_document doc;
 	open_xml_doc(&doc, path_);
 
@@ -72,5 +77,7 @@ void sl2dge::Scene::save() {
 
 	doc.save_file(path_.c_str());
 	SDL_Log("Saved %s!", path_.c_str());
+	*/
 }
-*/
+
+} // namespace sl2dge

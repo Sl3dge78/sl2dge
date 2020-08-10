@@ -11,11 +11,14 @@ class Game;
 
 class Camera : public Component {
 public:
-	SDL_Rect viewport_; // What the camera sees updated by the system
+	static Camera *main_camera;
+
+	SDL_Rect viewport_ = { 0, 0, 0, 0 }; // What the camera sees updated by the system
 	float zoom_;
 	int width_, height_;
 
 	Camera(const int width, const int height, const float zoom = 1);
+	Camera(pugi::xml_node &node);
 	~Camera(){};
 
 	SDL_Point world_to_screen_transform(const SDL_Point &point) const;
@@ -25,7 +28,7 @@ public:
 
 class CameraSystem : public ISystem, public UpdateSystem {
 public:
-	CameraSystem() {
+	CameraSystem(pugi::xml_node &node) {
 		this->add_component_filter<Camera>();
 	}
 	virtual void update(Game *game) override;

@@ -1,10 +1,11 @@
 #include "InventoryState.h"
-
+/*
 InventoryState::InventoryState(Inventory *inventory) {
 	this->inventory = inventory;
 }
 
 void InventoryState::start(Game *game) {
+	
 	auto tmp = IMG_Load("resources/images/ui/inventoryscreen.png");
 	this->background = SDL_CreateTextureFromSurface(game->renderer(), tmp);
 	SDL_FreeSurface(tmp);
@@ -14,6 +15,7 @@ void InventoryState::start(Game *game) {
 	SDL_FreeSurface(tmp);
 
 	UpdateCursorPosition(game);
+	
 }
 
 void InventoryState::handle_events(Game *game, const SDL_Event &e) {
@@ -60,20 +62,22 @@ void InventoryState::update(Game *game) {
 
 void InventoryState::draw(Game *game) {
 	// Draw grid
-	SDL_RenderCopy(game->renderer(), this->background, NULL, NULL);
+	
+	SDL_RenderCopy(Game::renderer(), this->background, NULL, NULL);
 	for (int i = 0; i < inventory->Length(); i++) {
 		// Render each item
 		if (inventory->GetItem(i) != nullptr) {
 			//inventory->GetItem(i)->sprite()->draw_absolute(*game->renderer(), Rect(offset_x + ((i % width) * 32), offset_y + ((i / width) * 32), 32, 32));
 		}
 	}
-	SDL_RenderCopy(game->renderer(), this->selection, NULL, &cursor_pos);
+	SDL_RenderCopy(Game::renderer(), this->selection, NULL, &cursor_pos);
 
 	// Details
 	if (currently_selected_item != nullptr) {
-		FC_DrawBoxScale(game->font(), game->renderer(), name_box, { 2, 2 }, currently_selected_item->name()->c_str());
-		FC_DrawBox(game->font(), game->renderer(), desc_box, currently_selected_item->description()->c_str());
+		FC_DrawBoxScale(Game::font(), Game::renderer(), name_box, { 2, 2 }, currently_selected_item->name()->c_str());
+		FC_DrawBox(Game::font(), Game::renderer(), desc_box, currently_selected_item->description()->c_str());
 	}
+	
 }
 
 void InventoryState::UpdateCursorPosition(Game *game) {
@@ -90,7 +94,7 @@ void InventoryState::UpdateCursorPosition(Game *game) {
 		if (currently_selected_item != nullptr)
 			SDL_Log("Selected item %s", currently_selected_item->name()->c_str());
 
-		/*
+		
 		// Create texts for name and desc
 		auto surf = TTF_RenderText_Solid(game->font, currently_selected_item->GetName().c_str(), SDL_Color{ 0,0,0,0 });
 		item_name = SDL_CreateTextureFromSurface(game->renderer, surf);
@@ -99,6 +103,7 @@ void InventoryState::UpdateCursorPosition(Game *game) {
 		auto surf = TTF_RenderText_Blended_Wrapped(game->font, currently_selected_item->GetName().c_str(), SDL_Color{ 0,0,0,0 }, text_box.w);
 		item_desc = SDL_CreateTextureFromSurface(game->renderer, surf);
 		SDL_FreeSurface(surf);
-		*/
+		
 	}
 }
+*/

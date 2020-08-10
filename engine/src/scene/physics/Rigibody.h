@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ECS/ECS.h"
+#include "addons/pugixml.hpp"
 #include "math/Vector.h"
 #include "scene/map/TileMap.h"
 
@@ -8,30 +9,48 @@ namespace sl2dge {
 
 class Rigidbody : public Component {
 public:
+	Rigidbody(pugi::xml_node &node){};
+
 	Vector2f speed = Vector2f(0, 0);
 	SDL_Rect collider = SDL_Rect{ 0, 0, 16, 16 };
 };
 
 class PhysicsSystem : public ISystem, public UpdateSystem {
 public:
-	PhysicsSystem(TileMap *map) {
+	PhysicsSystem() {
 		this->add_component_filter<Rigidbody>();
-		map_ = map;
+		this->add_component_filter<TileMap>();
+		this->set_filter_type(FilterType::FILTER_OR);
+	}
+
+	PhysicsSystem(pugi::xml_node &node) :
+			PhysicsSystem() {}
+
+	virtual void on_entity_list_changed() override {
+		for (auto &e : entities_) {
+			if (e->has_component<TileMap>()) {
+				this->map_ = e->get_component<TileMap>();
+				break;
+			}
+		}
+		entities_.remove(this->map_->entity());
 	}
 
 	void update(Game *game) override {
 		for (auto &e : entities_) {
-			auto rb = e->get_component<Rigidbody>();
-			if (!rb->speed.is_zero()) {
-				auto translation = move_and_slide(rb);
-				e->transform()->translate(translation);
-				rb->speed = Vector2f(0, 0);
+			if (e->has_component<Rigidbody>()) {
+				auto rb = e->get_component<Rigidbody>();
+				if (!rb->speed.is_zero()) {
+					auto translation = move_and_slide(rb);
+					e->transform()->translate(translation);
+					rb->speed = Vector2f(0, 0);
+				}
 			}
 		}
 	}
 
 private:
-	TileMap *map_;
+	TileMap *map_ = nullptr;
 
 	Vector2f move_and_slide(Rigidbody *rb) const {
 		// Move in X

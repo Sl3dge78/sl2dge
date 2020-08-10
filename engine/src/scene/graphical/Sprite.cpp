@@ -6,6 +6,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
+#include "Game.h"
 #include "scene/Camera.h"
 #include "scene/Transform.h"
 
@@ -34,16 +35,16 @@ SpriteSystem::SpriteSystem() {
 	this->add_component_filter<Transform>();
 	this->set_filter_type(FilterType::FILTER_AND);
 
-	this->pos_z = 1;
+	this->pos_z_ = 1;
 }
 
-void SpriteSystem::draw() {
+void SpriteSystem::draw(Game *game) {
 	for (auto e : entities_) {
 		auto tsrfm = e->transform();
 		auto sprite = e->get_component<Sprite>();
 
-		SDL_Rect screen_dest = camera_->world_to_screen_transform({ int(tsrfm->position().x), int(tsrfm->position().y), sprite->src.w, sprite->src.h });
-		SDL_RenderCopy(renderer_, sprite->texture, &(sprite->src), &screen_dest);
+		SDL_Rect screen_dest = Camera::main_camera->world_to_screen_transform({ int(tsrfm->position().x), int(tsrfm->position().y), sprite->src.w, sprite->src.h });
+		SDL_RenderCopy(game->renderer(), sprite->texture, &(sprite->src), &screen_dest);
 	}
 }
 

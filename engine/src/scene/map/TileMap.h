@@ -15,11 +15,10 @@ class Game;
 
 class TileMap : public Component {
 public:
-	TileMap(SDL_Renderer &renderer, const pugi::xml_node &map_node);
-	TileMap(SDL_Renderer &renderer, const std::string &path);
+	TileMap(const pugi::xml_node &map_node);
 	~TileMap();
 
-	void load(SDL_Renderer &renderer, const pugi::xml_node &map_node);
+	void load(const pugi::xml_node &map_node);
 	void save(pugi::xml_node &node);
 
 	void draw(Game *game, int params);
@@ -63,15 +62,13 @@ private:
 	int width_ = 0, height_ = 0;
 };
 
-class TileMapSystem : public ISystem, public DrawSystem, public WorldSetSystem {
+class TileMapSystem : public ISystem, public DrawSystem {
 public:
-	TileMapSystem(int params, int order = 0) {
-		this->draw_params_ = params;
-		this->pos_z = order;
-		add_component_filter<TileMap>();
-	}
+	TileMapSystem(int params, int order = 0);
 
-	void draw();
+	TileMapSystem(pugi::xml_node &node);
+
+	virtual void draw(Game *game) override;
 
 	enum DrawParams {
 		Back = 1 << 0,

@@ -5,11 +5,18 @@
 #include "scene/Transform.h"
 
 namespace sl2dge {
+Camera *Camera::main_camera = nullptr;
 
 Camera::Camera(const int width, const int height, const float zoom) {
 	this->width_ = width;
 	this->height_ = height;
 	this->zoom_ = zoom;
+}
+
+Camera::Camera(pugi::xml_node &node) {
+	this->width_ = node.attribute("width").as_int();
+	this->height_ = node.attribute("height").as_int();
+	this->zoom_ = node.attribute("zoom").as_float();
 }
 
 SDL_Point Camera::world_to_screen_transform(const SDL_Point &point) const {

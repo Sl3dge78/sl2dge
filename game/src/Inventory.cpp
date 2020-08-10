@@ -4,6 +4,8 @@
 
 #include "Player.h"
 
+/*
+
 int Inventory::HasItem(int id) const {
 	// Check if inventory doesn't already have the item
 	for (auto &i : contents) {

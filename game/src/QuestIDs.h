@@ -1,9 +1,0 @@
-#pragma once
-
-#define Q_STD_DELIVERY_ANY 10
-#define Q_STD_DELIVERY_CENTER 11
-#define Q_STD_DELIVERY_SOUTH 12
-#define Q_STD_DELIVERY_WEST 13
-#define Q_STD_DELIVERY_EAST 14
-
-#define QS_STARTED 10

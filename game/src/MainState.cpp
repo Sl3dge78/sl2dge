@@ -15,7 +15,7 @@ void MainState::start(Game *game) {
 	game->push_state(std::make_unique<SceneState>("resources/levels/maptest.map"));
 	*/
 	//std::string path = ;
-
+	/*
 	//TODO : Automate this
 	world_.set_renderer(game->renderer());
 	camera = world_.create_entity();
@@ -51,12 +51,20 @@ void MainState::start(Game *game) {
 
 	player->transform()->add_children(camera->transform());
 
+	// Events
 	auto chain_e = world_.create_entity(Vector2f(0, 0));
 	auto chain = chain_e->add_component<EventChain>();
 	chain->interactable = true;
 	world_.create_system<EventSystem>(camera);
 
 	world_.update_systems_entities();
+	world_.start();
+	*/
+
+	//world_.load_from_xml("resources/test.map");
+	//world_.start();
+
+	Scene scene = Scene("resources/test.map");
 }
 
 void MainState::handle_events(Game *game, const SDL_Event &e) {
@@ -65,6 +73,7 @@ void MainState::handle_events(Game *game, const SDL_Event &e) {
 
 void MainState::input(Game *game) {
 	const auto state = SDL_GetKeyboardState(NULL);
+	/*
 	auto rb = player->get_component<Rigidbody>();
 
 	if (state[SDL_SCANCODE_W]) {
@@ -81,6 +90,7 @@ void MainState::input(Game *game) {
 	}
 	rb->speed.normalize();
 	rb->speed *= 70 * float(game->delta_time()) / 1000.0f;
+	*/
 }
 
 void MainState::update(Game *game) {
@@ -88,7 +98,7 @@ void MainState::update(Game *game) {
 }
 
 void MainState::draw(Game *game) {
-	world_.draw();
+	world_.draw(game);
 }
 
 void MainState::on_state_resume(Game *game) {
@@ -98,5 +108,4 @@ void MainState::on_state_pause(Game *game) {
 }
 
 MainState::~MainState() {
-	//Items::ClearItems();
 }

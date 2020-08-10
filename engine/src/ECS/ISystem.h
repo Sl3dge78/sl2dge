@@ -40,11 +40,6 @@ protected:
 	virtual void on_entity_list_changed(){};
 };
 
-template <class T>
-void ISystem::add_component_filter() {
-	add_component_filter(ComponentID::Get<T>());
-}
-
 // == CHILDS ==
 
 class Game;
@@ -57,23 +52,19 @@ public:
 	virtual void update(Game *game) = 0;
 };
 
-class Camera;
-
 /// Draw gets called every frame after all logic
 class DrawSystem {
 	friend class World;
 
 protected:
 	DrawSystem() = default;
-	FC_Font *font_ = nullptr;
-	SDL_Renderer *renderer_ = nullptr;
-	Camera *camera_ = nullptr;
-
-	int pos_z = 0;
+	int pos_z_ = 0;
 
 public:
 	virtual ~DrawSystem() = default;
-	virtual void draw() = 0;
+	virtual void draw(Game *game) = 0;
+
+	int pos_z() const { return pos_z_; }
 };
 
 /// Input gets called when an event gets registered
@@ -97,7 +88,7 @@ protected:
 
 public:
 	virtual ~InitSystem() = default;
-	virtual void start() = 0;
+	virtual void start(Game *game) = 0;
 };
 
 /// A system that requires a reference to the world to work.
@@ -111,5 +102,10 @@ protected:
 public:
 	virtual ~WorldSetSystem() = default;
 };
+
+template <class T>
+inline void ISystem::add_component_filter() {
+	add_component_filter(ComponentID::Get<T>());
+}
 
 } // namespace sl2dge

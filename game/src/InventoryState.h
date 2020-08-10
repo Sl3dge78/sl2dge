@@ -8,6 +8,7 @@
 #include "Inventory.h"
 
 using namespace sl2dge;
+/*
 
 class InventoryState : public GameState {
 public:
@@ -46,3 +47,4 @@ private:
 
 	void UpdateCursorPosition(Game *game);
 };
+*/

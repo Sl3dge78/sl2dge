@@ -155,10 +155,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ECS\ECS_DB.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\scene\graphical\SpriteAnimator.cpp" />
     <ClCompile Include="src\scene\map\Atlas.cpp" />
     <ClCompile Include="src\scene\Camera.cpp" />
-    <ClCompile Include="src\Components.cpp" />
     <ClCompile Include="src\DialogState.cpp" />
     <ClCompile Include="src\ECS\Component.cpp" />
     <ClCompile Include="src\ECS\Entity.cpp" />
@@ -171,20 +172,20 @@
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\addons\pugixml.cpp" />
     <ClCompile Include="src\QuestManager.cpp" />
-    <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\SceneState.cpp" />
     <ClCompile Include="src\addons\SDL_FontCache.c" />
     <ClCompile Include="src\scene\graphical\Sprite.cpp" />
     <ClCompile Include="src\scene\map\TileMap.cpp" />
+    <ClCompile Include="src\scene\physics\Rigibody.cpp" />
     <ClCompile Include="src\scene\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ECS\ECS_DB.h" />
     <ClInclude Include="src\math\Vector.h" />
     <ClInclude Include="src\scene\graphical\SpriteAnimator.h" />
     <ClInclude Include="src\scene\map\Atlas.h" />
     <ClInclude Include="src\scene\Camera.h" />
     <ClInclude Include="src\Character.h" />
-    <ClInclude Include="src\Components.h" />
     <ClInclude Include="src\DialogState.h" />
     <ClInclude Include="src\ECS\Component.h" />
     <ClInclude Include="src\ECS\ECS.h" />

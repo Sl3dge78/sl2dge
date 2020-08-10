@@ -1,22 +1,10 @@
 #include "World.h"
-#include <scene\Transform.h>
+#include "ECS_DB.h"
+#include "scene\Transform.h"
 
 namespace sl2dge {
 
-World::~World() {
-}
-
 // == ENTITIES ==
-
-Entity *World::create_entity() {
-	std::unique_ptr<Entity> e = std::make_unique<Entity>();
-	auto ret = e.get();
-	entity_list_.push_back(std::move(e));
-
-	is_systems_entities_list_dirty_ = true;
-
-	return ret;
-}
 
 Entity *World::create_entity(const Vector2f &position) {
 	std::unique_ptr<Entity> e = std::make_unique<Entity>(position);
@@ -25,6 +13,10 @@ Entity *World::create_entity(const Vector2f &position) {
 	is_systems_entities_list_dirty_ = true;
 
 	return ret;
+}
+
+Entity *World::create_entity(const float x, const float y) {
+	return create_entity(Vector2f(x, y));
 }
 
 void World::delete_all_entities() {
@@ -62,12 +54,9 @@ ISystem *World::add_system(ISystem *sys) {
 
 	if (dynamic_cast<DrawSystem *>(sys) != nullptr) {
 		draw_systems_.push_front(dynamic_cast<DrawSystem *>(sys));
-		dynamic_cast<DrawSystem *>(sys)->renderer_ = this->renderer_;
-		dynamic_cast<DrawSystem *>(sys)->font_ = this->main_font_;
-		dynamic_cast<DrawSystem *>(sys)->camera_ = this->camera_->get_component<Camera>();
 
 		draw_systems_.sort([](const DrawSystem *sys1, const DrawSystem *sys2) {
-			return sys1->pos_z < sys2->pos_z;
+			return sys1->pos_z() < sys2->pos_z();
 		});
 	}
 
@@ -87,9 +76,9 @@ void World::delete_all_systems() {
 	systems_.clear();
 }
 
-void World::start() {
+void World::start(Game *game) {
 	for (InitSystem *system : init_systems_) {
-		system->start();
+		system->start(game);
 	}
 }
 
@@ -105,9 +94,9 @@ void World::update(Game *game) {
 	}
 }
 
-void World::draw() {
+void World::draw(Game *game) {
 	for (DrawSystem *system : draw_systems_) {
-		system->draw();
+		system->draw(game);
 	}
 }
 
@@ -144,4 +133,8 @@ void World::update_systems_entities() {
 	}
 }
 
+template <class T, class... Args>
+T *World::create_system(Args &&... args) {
+	return static_cast<T *>(add_system(new T(std::forward<Args>(args)...)));
+}
 } // namespace sl2dge

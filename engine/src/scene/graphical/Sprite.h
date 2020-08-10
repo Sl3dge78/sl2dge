@@ -22,7 +22,7 @@ public:
 class SpriteSystem : public ISystem, public DrawSystem {
 public:
 	SpriteSystem();
-	virtual void draw() override;
+	virtual void draw(Game *game) override;
 };
 
 } // namespace sl2dge

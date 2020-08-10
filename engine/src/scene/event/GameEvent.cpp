@@ -4,7 +4,6 @@
 #include <time.h>
 #include <memory>
 
-#include "Components.h"
 #include "DialogState.h"
 #include "EventChain.h"
 #include "Game.h"
@@ -254,8 +253,6 @@ void DialogChoice::handle_events(Game *game, const SDL_Event &e) {
 		gem->next_event(game);
 
 	}
-
-	// Inherited via GameEvent
 
 	void QuestGTBranch::on_activate(Game* game, EventChain* gem) {
 		auto status = game->quest_manager()->quest(quest_id_)->status;

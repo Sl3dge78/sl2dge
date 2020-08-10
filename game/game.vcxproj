@@ -164,7 +164,6 @@
     <ClInclude Include="src\InventoryState.h" />
     <ClInclude Include="src\ItemList.h" />
     <ClInclude Include="src\MainState.h" />
-    <ClInclude Include="src\QuestIDs.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

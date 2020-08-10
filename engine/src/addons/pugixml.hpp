@@ -30,8 +30,8 @@
 
 // Include STL headers
 #ifndef PUGIXML_NO_STL
-#include <iterator>
 #include <iosfwd>
+#include <iterator>
 #include <string>
 #endif
 
@@ -1447,6 +1447,10 @@ std::bidirectional_iterator_tag PUGIXML_FUNCTION __iterator_category(const pugi:
 #define PUGIXML_SOURCE "pugixml.cpp"
 #include PUGIXML_SOURCE
 #endif
+
+namespace sl2dge {
+void open_xml_doc(pugi::xml_document *doc, const std::string &map_path);
+} // namespace sl2dge
 
 /**
  * Copyright (c) 2006-2019 Arseny Kapoulkine

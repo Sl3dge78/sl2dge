@@ -6,6 +6,8 @@
 
 using namespace sl2dge;
 
+/*
+
 namespace Items {
 
 static std::vector<std::unique_ptr<Item>> *item_list;
@@ -15,3 +17,5 @@ void ClearItems();
 
 Item *GetItem(const int id);
 } // namespace Items
+
+*/

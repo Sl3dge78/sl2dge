@@ -9,6 +9,7 @@
 
 #include "addons/SDL_FontCache.h"
 
+#include "ECS/ECS_DB.h"
 #include "GameState.h"
 #include "QuestManager.h"
 
@@ -27,7 +28,7 @@ public:
 	// Will start the game's main loop.
 	int loop();
 
-	SDL_Renderer *renderer() { return renderer_; }
+	static SDL_Renderer *renderer() { return renderer_; }
 
 	unsigned int window_width() { return window_width_; }
 	unsigned int window_height() { return window_height_; }
@@ -47,11 +48,9 @@ public:
 	void push_state(std::unique_ptr<GameState> state);
 	void pop_state();
 
-	QuestManager *quest_manager() { return quest_manager_.get(); }
-
 private:
+	static SDL_Renderer *renderer_;
 	SDL_Window *window_;
-	SDL_Renderer *renderer_;
 
 	Uint32 window_width_;
 	Uint32 window_height_;
@@ -67,8 +66,6 @@ private:
 	float max_frame_time_ = 1.0f / target_FPS_;
 
 	std::vector<std::unique_ptr<GameState>> states_;
-
-	std::unique_ptr<QuestManager> quest_manager_ = nullptr;
 
 	void pop_state_();
 	bool pop_state_next_frame = false;

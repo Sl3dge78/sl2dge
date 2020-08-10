@@ -6,24 +6,17 @@
 
 #include <SDL/SDL.h>
 
+#include "Game.h"
 #include "scene/Camera.h"
 #include "scene/map/Atlas.h"
 
 namespace sl2dge {
 
-TileMap::TileMap(SDL_Renderer &renderer, const pugi::xml_node &map_node) {
-	load(renderer, map_node);
+TileMap::TileMap(const pugi::xml_node &map_node) {
+	load(map_node);
 }
 
-TileMap::TileMap(SDL_Renderer &renderer, const std::string &path) {
-	pugi::xml_document doc;
-	open_xml_doc(&doc, path);
-
-	auto map_node = doc.child("Map");
-	load(renderer, map_node);
-}
-
-void TileMap::load(SDL_Renderer &renderer, const pugi::xml_node &map_node) {
+void TileMap::load(const pugi::xml_node &map_node) {
 	if (!map_node) {
 		// Throw error
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "No map data to read");
@@ -31,7 +24,7 @@ void TileMap::load(SDL_Renderer &renderer, const pugi::xml_node &map_node) {
 	}
 	std::string atlas_path = map_node.attribute("tile_map").as_string();
 	tile_size_ = map_node.attribute("tile_size").as_int();
-	atlas_ = new Atlas(renderer, atlas_path, tile_size_);
+	atlas_ = new Atlas(*Game::renderer(), atlas_path, tile_size_);
 	width_ = map_node.attribute("width").as_int();
 	height_ = map_node.attribute("height").as_int();
 
@@ -152,15 +145,29 @@ int TileMap::get_tile(const int layer, const SDL_Point &pos) {
 		return -1;
 }
 
-void TileMapSystem::draw() {
+TileMapSystem::TileMapSystem(int params, int order) {
+	this->draw_params_ = params;
+	this->pos_z_ = order;
+	add_component_filter<TileMap>();
+}
+
+TileMapSystem::TileMapSystem(pugi::xml_node &node) {
+	//TODO
+	this->draw_params_ = node.attribute("params").as_int();
+	this->pos_z_ = node.attribute("pos_z").as_int();
+}
+
+void TileMapSystem::draw(Game *game) {
+	auto camera = Camera::main_camera;
+
 	for (auto e : entities_) {
 		auto map = e->get_component<TileMap>();
 
-		SDL_Point first_tile = { camera_->viewport_.x / map->tile_size(), camera_->viewport_.y / map->tile_size() };
+		SDL_Point first_tile = { camera->viewport_.x / map->tile_size(), camera->viewport_.y / map->tile_size() };
 
 		SDL_Point last_tile = {
-			first_tile.x + (camera_->viewport_.w / map->tile_size()) + 1,
-			first_tile.y + (camera_->viewport_.h / map->tile_size()) + 1
+			first_tile.x + (camera->viewport_.w / map->tile_size()) + 1,
+			first_tile.y + (camera->viewport_.h / map->tile_size()) + 1
 		};
 
 		if (first_tile.x < 0)
@@ -181,24 +188,24 @@ void TileMapSystem::draw() {
 				if (draw_params_ & DrawParams::Back) {
 					auto tile = map->get_tile(0, { x, y });
 					if (tile != -1) {
-						SDL_Rect dst = camera_->world_to_screen_transform({ x * map->tile_size(), y * map->tile_size(), map->tile_size(), map->tile_size() });
+						SDL_Rect dst = camera->world_to_screen_transform({ x * map->tile_size(), y * map->tile_size(), map->tile_size(), map->tile_size() });
 						auto tex = map->atlas()->texture();
 						auto tilerec = map->atlas()->get_tile(tile);
-						SDL_RenderCopy(renderer_, map->atlas()->texture(), map->atlas()->get_tile(tile), &dst);
+						SDL_RenderCopy(game->renderer(), map->atlas()->texture(), map->atlas()->get_tile(tile), &dst);
 					}
 				}
 				if (draw_params_ & DrawParams::Middle) {
 					auto tile = map->get_tile(1, { x, y });
 					if (tile != -1) {
-						SDL_Rect dst = camera_->world_to_screen_transform({ x * map->tile_size(), y * map->tile_size(), map->tile_size(), map->tile_size() });
-						SDL_RenderCopy(renderer_, map->atlas()->texture(), map->atlas()->get_tile(tile), &dst);
+						SDL_Rect dst = camera->world_to_screen_transform({ x * map->tile_size(), y * map->tile_size(), map->tile_size(), map->tile_size() });
+						SDL_RenderCopy(game->renderer(), map->atlas()->texture(), map->atlas()->get_tile(tile), &dst);
 					}
 				}
 				if (draw_params_ & DrawParams::Front) {
 					auto tile = map->get_tile(2, { x, y });
 					if (tile != -1) {
-						SDL_Rect dst = camera_->world_to_screen_transform({ x * map->tile_size(), y * map->tile_size(), map->tile_size(), map->tile_size() });
-						SDL_RenderCopy(renderer_, map->atlas()->texture(), map->atlas()->get_tile(tile), &dst);
+						SDL_Rect dst = camera->world_to_screen_transform({ x * map->tile_size(), y * map->tile_size(), map->tile_size(), map->tile_size() });
+						SDL_RenderCopy(game->renderer(), map->atlas()->texture(), map->atlas()->get_tile(tile), &dst);
 					}
 				}
 

@@ -22,7 +22,6 @@
 #include "addons/pugixml.hpp"
 
 #include "Character.h"
-#include "Components.h"
 #include "DialogState.h"
 #include "GameState.h"
 #include "Item.h"

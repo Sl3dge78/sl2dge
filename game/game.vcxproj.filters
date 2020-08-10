@@ -47,8 +47,5 @@
     <ClInclude Include="src\MainState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\QuestIDs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

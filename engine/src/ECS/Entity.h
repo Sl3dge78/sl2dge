@@ -13,6 +13,7 @@
 
 namespace sl2dge {
 class World;
+class Game;
 
 class Entity {
 	friend class World;
@@ -26,6 +27,10 @@ public:
 
 	template <class T, class... Args>
 	inline T *add_component(Args &&... args);
+
+	template <class T>
+	Component *load_component(pugi::xml_node &node);
+
 	template <class T>
 	inline bool has_component() const;
 	template <class T>
@@ -57,6 +62,11 @@ protected:
 template <class T, class... Args>
 T *Entity::add_component(Args &&... args) {
 	return static_cast<T *>(add_component(ComponentID::Get<T>(), new T{ std::forward<Args>(args)... }));
+}
+
+template <class T>
+Component *Entity::load_component(pugi::xml_node &node) {
+	return add_component(ComponentID::Get<T>(), new T(node));
 }
 
 template <class T>
