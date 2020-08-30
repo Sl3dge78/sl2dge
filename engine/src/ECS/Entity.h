@@ -22,7 +22,7 @@ private:
 	std::map<int, std::unique_ptr<Component>> components_;
 
 public:
-	Entity(const Vector2f &position = Vector2f(0, 0));
+	Entity();
 	~Entity();
 
 	template <class T, class... Args>
@@ -45,6 +45,9 @@ public:
 	void set_is_active(bool val);
 
 	Transform *transform() {
+		if (transform_ == nullptr)
+			transform_ = this->get_component<Transform>();
+
 		return transform_;
 	};
 

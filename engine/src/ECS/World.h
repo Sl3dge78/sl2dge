@@ -23,8 +23,7 @@ public:
 	void save(const std::string &path);
 
 	//Entities
-	Entity *create_entity(const Vector2f &position);
-	Entity *create_entity(const float x = 0, const float y = 0);
+	Entity *create_entity();
 	void delete_all_entities();
 	void delete_entity(Entity *e);
 
@@ -32,9 +31,11 @@ public:
 	void handle_events(Game *game, SDL_Event const &e);
 	void update(Game *game);
 	void draw(Game *game);
+	void draw_layer(Game *game, int layer);
 
 private:
 	std::vector<std::unique_ptr<Entity>> entity_list_;
+	const int MAX_LAYERS = 4;
 };
 
 } // namespace sl2dge

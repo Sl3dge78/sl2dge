@@ -1,9 +1,9 @@
 #include "Entity.h"
 
 namespace sl2dge {
-Entity::Entity(const Vector2f &position) {
-	transform_ = this->add_component<Transform>(position);
+Entity::Entity() {
 }
+
 Entity::~Entity() {
 	this->Entity::remove_all_components();
 }

@@ -35,16 +35,12 @@ void World::save(const std::string &path) {
 	// TODO
 }
 
-Entity *World::create_entity(const Vector2f &position) {
-	std::unique_ptr<Entity> e = std::make_unique<Entity>(position);
+Entity *World::create_entity() {
+	std::unique_ptr<Entity> e = std::make_unique<Entity>();
 	auto ret = e.get();
 	entity_list_.push_back(std::move(e));
 
 	return ret;
-}
-
-Entity *World::create_entity(const float x, const float y) {
-	return create_entity(Vector2f(x, y));
 }
 
 void World::delete_all_entities() {
@@ -52,13 +48,12 @@ void World::delete_all_entities() {
 }
 
 void World::delete_entity(Entity *e) {
-	for (auto it = entity_list_.begin(); it < entity_list_.end(); ++it) {
+	for (auto it = entity_list_.begin(); it != entity_list_.end(); ++it) {
 		if (it->get() == e) {
 			for (auto child : e->transform()->get_children()) {
 				this->delete_entity(child->entity());
 			}
 			entity_list_.erase(it);
-
 			return;
 		}
 	}
@@ -89,9 +84,17 @@ void World::update(Game *game) {
 }
 
 void World::draw(Game *game) {
+	for (int i = 0; i < 3; ++i) {
+		draw_layer(game, i);
+	}
+}
+
+void World::draw_layer(Game *game, int layer) {
 	for (auto &&et : entity_list_) {
-		for (auto &&comp : et->components_) {
-			comp.second->draw(game);
+		if (et->transform()->z == layer) {
+			for (auto &&comp : et->components_) {
+				comp.second->draw(game);
+			}
 		}
 	}
 }

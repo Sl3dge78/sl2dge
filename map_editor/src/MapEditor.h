@@ -5,7 +5,7 @@
 #include "sl2dge.h"
 
 using namespace sl2dge;
-
+/*
 class Editor : public GameState {
 public:
 	Editor(const std::string &map_path);
@@ -51,3 +51,4 @@ private:
 	Layer current_layer = Layer::Back;
 	int brush_size_ = 1;
 };
+*/

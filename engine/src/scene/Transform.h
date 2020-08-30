@@ -29,6 +29,8 @@ public:
 	// Position in map units
 	Vector2i tiled_position();
 
+	int z = 0;
+
 	void translate(const Vector2f &translation);
 	void set_position(const Vector2f &pos);
 	void set_position(const float x, const float y);
