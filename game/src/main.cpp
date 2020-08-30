@@ -1,5 +1,6 @@
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
+
 #include <stdlib.h>
 
 #include <fstream>
@@ -13,12 +14,13 @@
 using namespace sl2dge;
 
 int main(int argc, char *argv[]) {
-	//_crtBreakAlloc = 3724;
+	//_crtBreakAlloc = 155;
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	Game *app = new Game("", 320, 288);
 
 	app->change_state(std::make_unique<MainState>());
 	app->loop();
 	delete app;
-	_CrtDumpMemoryLeaks();
 	return 1;
 }

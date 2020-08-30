@@ -1,5 +1,4 @@
 #pragma once
-
 #include <memory>
 #include <string>
 #include <vector>
@@ -11,7 +10,6 @@
 
 #include "ECS/ECS_DB.h"
 #include "GameState.h"
-#include "QuestManager.h"
 
 namespace sl2dge {
 
@@ -19,16 +17,23 @@ class Entity;
 
 class Game {
 public:
+	enum class Platform {
+		Editor,
+		Runtime
+	};
+
 	// Creates a new game. Call loop to start the Game.
 	Game(const std::string window_name = "",
 			const Uint32 window_width = 800,
-			const Uint32 window_heigth = 600);
+			const Uint32 window_heigth = 600, Platform platform = Platform::Runtime);
 	~Game();
 
 	// Will start the game's main loop.
 	int loop();
 
-	static SDL_Renderer *renderer() { return renderer_; }
+	SDL_Renderer *renderer() { return renderer_; }
+
+	Platform current_platform() { return platform_; }
 
 	unsigned int window_width() { return window_width_; }
 	unsigned int window_height() { return window_height_; }
@@ -49,8 +54,11 @@ public:
 	void pop_state();
 
 private:
-	static SDL_Renderer *renderer_;
+	SDL_Renderer *renderer_;
 	SDL_Window *window_;
+
+	ECS_DB db;
+	Platform platform_;
 
 	Uint32 window_width_;
 	Uint32 window_height_;

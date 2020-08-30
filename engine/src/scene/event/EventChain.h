@@ -8,10 +8,11 @@
 namespace sl2dge {
 
 class EventChain : public Component {
+	EventChain(const pugi::xml_node &node) { load(node); };
+
 public:
-	EventChain(const pugi::xml_node &node);
-	EventChain(){};
-	~EventChain(){};
+	void load(const pugi::xml_node &node) override;
+	void save(pugi::xml_node &node) override;
 
 	void add_event(GameEvent *e);
 	GameEvent *get_event(const Guid id);
@@ -32,19 +33,12 @@ public:
 	GameEvent *current_event = nullptr;
 
 	void next_event(Game *game);
-	void save(pugi::xml_node &node);
 
-private:
-	std::vector<std::unique_ptr<GameEvent>> events_;
-};
-
-class EventSystem : public ISystem, public UpdateSystem, public InputSystem {
-public:
-	EventSystem(Entity *player);
 	void update(Game *game) override;
 	void handle_events(Game *game, SDL_Event const &e) override;
 
 private:
+	std::vector<std::unique_ptr<GameEvent>> events_;
 	Entity *player_;
 
 	EventChain *get_chain_at(const Vector2i &pos);

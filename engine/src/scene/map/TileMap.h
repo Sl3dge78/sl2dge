@@ -8,77 +8,37 @@
 #include "addons/pugixml.hpp"
 #include "scene/Camera.h"
 #include "scene/map/Atlas.h"
+#include "scene/map/Map2D.h"
 
 namespace sl2dge {
 
 class Game;
 
-class TileMap : public Component {
+class TileMap : public Map2D {
 public:
-	TileMap(const pugi::xml_node &map_node);
+	TileMap(const pugi::xml_node &node);
 	~TileMap();
 
-	void load(const pugi::xml_node &map_node);
-	void save(pugi::xml_node &node);
+	void start(Game *game);
+	Atlas *atlas() { return atlas_; }
 
-	void draw(Game *game, int params);
+private:
+	std::string atlas_path_;
+	Atlas *atlas_ = nullptr;
 
-	// Returns a rect containing all tiles to be drawn by the camera provided
-	//SDL_Rect get_bounds(const Camera &camera);
+	void draw_tile(Game *game, int x, int y, int tile) override;
+};
 
-	SDL_Rect map_to_pixel_transform(const SDL_Rect &rect) const { return SDL_Rect{ rect.x * tile_size_, rect.y * tile_size_, rect.h * tile_size_, rect.w * tile_size_ }; }
-	SDL_Rect pixel_to_map_transform(const SDL_Rect &rect) const { return SDL_Rect{ rect.x / tile_size_, rect.y / tile_size_, rect.h / tile_size_, rect.w / tile_size_ }; }
-	SDL_Point map_to_pixel_transform(const SDL_Point &point) const { return SDL_Point{ point.x * tile_size_, point.y * tile_size_ }; }
-	SDL_Point pixel_to_map_transform(const SDL_Point &point) const {
-		return SDL_Point{ point.x / tile_size_, point.y / tile_size_ };
-	}
-
+class CollisionMap : public Map2D {
+public:
+	CollisionMap(const pugi::xml_node &node) {
+		load(node);
+	};
 	// Return true if there is collision at tile position point
 	bool get_collision_at_tile(const SDL_Point &point) const;
 	bool get_collision_at_pixel(const SDL_Point &point) const;
 	void set_collision_at_tile(const SDL_Point &point, const bool val);
-
-	// Changes the value of a tile
-	void set_tile(const int layer, const SDL_Point &pos, const int tile);
-	int get_tile(const int layer, const SDL_Point &pos);
-
-	int tile_size() const { return tile_size_; }
-	Atlas *atlas() { return atlas_; }
-	int width() const { return width_; }
-	int height() const { return height_; }
-	void set_bounds(const SDL_Rect &bounds) { bounds_ = bounds; }
-	const SDL_Rect &bounds() const { return bounds_; }
-
-private:
-	SDL_Rect bounds_{ 0, 0, 1, 1 };
-	Atlas *atlas_ = nullptr;
-
-	int *back_layer_ = nullptr;
-	int *middle_layer_ = nullptr;
-	int *front_layer_ = nullptr;
-	bool *collision_layer_ = nullptr;
-
-	int tile_size_ = 16;
-	int width_ = 0, height_ = 0;
-};
-
-class TileMapSystem : public ISystem, public DrawSystem {
-public:
-	TileMapSystem(int params, int order = 0);
-
-	TileMapSystem(pugi::xml_node &node);
-
-	virtual void draw(Game *game) override;
-
-	enum DrawParams {
-		Back = 1 << 0,
-		Middle = 1 << 1,
-		Front = 1 << 2,
-		Collision = 1 << 3
-	};
-
-private:
-	int draw_params_;
+	void draw_tile(Game *game, int x, int y, int tile) override;
 };
 
 } // namespace sl2dge

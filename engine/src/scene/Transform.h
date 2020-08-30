@@ -15,10 +15,14 @@ enum class Direction { Up,
 class Transform : public Component {
 public:
 	Transform();
+	Transform(const pugi::xml_node &node) { load(node); };
 	Transform(const Vector2f &position);
 	Transform(const float x, const float y);
 
 	~Transform();
+
+	virtual void load(const pugi::xml_node &node) override;
+	virtual void save(pugi::xml_node &node) override;
 
 	/// World position
 	Vector2f position() const;

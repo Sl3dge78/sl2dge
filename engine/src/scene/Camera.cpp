@@ -11,12 +11,22 @@ Camera::Camera(const int width, const int height, const float zoom) {
 	this->width_ = width;
 	this->height_ = height;
 	this->zoom_ = zoom;
+
+	Camera::main_camera = this;
 }
 
-Camera::Camera(pugi::xml_node &node) {
+void Camera::load(pugi::xml_node const &node) {
 	this->width_ = node.attribute("width").as_int();
 	this->height_ = node.attribute("height").as_int();
 	this->zoom_ = node.attribute("zoom").as_float();
+
+	Camera::main_camera = this;
+}
+
+void Camera::save(pugi::xml_node &node) {
+	node.append_attribute("width").set_value(this->width_);
+	node.append_attribute("height").set_value(this->height_);
+	node.append_attribute("zoom").set_value(this->zoom_);
 }
 
 SDL_Point Camera::world_to_screen_transform(const SDL_Point &point) const {
@@ -31,15 +41,12 @@ SDL_Point Camera::screen_to_world_transform(const SDL_Point &point) const {
 	return SDL_Point{ int(float(point.x / zoom_ + viewport_.x)), int(float(point.y / zoom_ + viewport_.y)) };
 }
 
-void CameraSystem::update(Game *game) {
-	for (auto &e : entities_) {
-		auto cam = e->get_component<Camera>();
-		auto transform = e->get_component<Transform>();
-		cam->viewport_.w = int(float(cam->width_) / cam->zoom_);
-		cam->viewport_.h = int(float(cam->height_) / cam->zoom_);
-		cam->viewport_.x = int(transform->position().x) - (cam->viewport_.w / 2) + 8;
-		cam->viewport_.y = int(transform->position().y) - (cam->viewport_.h / 2) + 8;
-	};
+void Camera::update(Game *game) {
+	auto transform = entity()->get_component<Transform>();
+	viewport_.w = int(float(width_) / zoom_);
+	viewport_.h = int(float(height_) / zoom_);
+	viewport_.x = int(transform->position().x) - (viewport_.w / 2) + 8;
+	viewport_.y = int(transform->position().y) - (viewport_.h / 2) + 8;
 }
 
 } // namespace sl2dge

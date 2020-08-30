@@ -31,8 +31,5 @@ public:
 
 	virtual ~GameState() = default;
 	GameState(){};
-
-protected:
-	World world_;
 };
 } // namespace sl2dge

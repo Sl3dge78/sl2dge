@@ -7,26 +7,17 @@
 using namespace sl2dge;
 
 component_map ECS_DB::component_list;
-system_map ECS_DB::system_list;
 
-void ECS_DB::register_all_systems() {
-	register_system<TileMapSystem>("TileMapSystem");
-	register_system<CameraSystem>("CameraSystem");
-	register_system<PhysicsSystem>("PhysicsSystem");
-}
-
-void ECS_DB::register_all_components() {
+ECS_DB::ECS_DB() {
 	register_component<TileMap>("TileMap");
+	register_component<CollisionMap>("CollisionMap");
 	register_component<Camera>("Camera");
 	register_component<Rigidbody>("Rigidbody");
+	register_component<Transform>("Transform");
 }
 
-ISystem *ECS_DB::create_system(const std::string &type, pugi::xml_node &node) {
-	if (system_list.find(type) == system_list.end()) {
-		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "System type %s not registered!", type.c_str());
-		throw std::runtime_error("System type unknown!");
-	}
-	return system_list[type](node);
+ECS_DB::~ECS_DB() {
+	ECS_DB::component_list.clear();
 }
 
 Component *ECS_DB::create_component(const std::string &type, Entity *entity, pugi::xml_node &node) {

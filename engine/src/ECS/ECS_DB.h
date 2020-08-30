@@ -11,31 +11,15 @@ class ISystem;
 class Component;
 
 typedef std::map<std::string, Component *(*)(Entity *entity, pugi::xml_node &)> component_map;
-typedef std::map<std::string, ISystem *(*)(pugi::xml_node &)> system_map;
 
 class ECS_DB {
 public:
-	static void register_all_systems();
-	static void register_all_components();
+	ECS_DB();
+	~ECS_DB();
 
-	static ISystem *create_system(const std::string &type, pugi::xml_node &node);
 	static Component *create_component(const std::string &type, Entity *entity, pugi::xml_node &node);
 
 private:
-	/* SYSTEMS */
-
-	template <class T>
-	static void register_system(std::string name) {
-		system_list[name] = &make_system<T>;
-	}
-
-	template <class T>
-	static ISystem *make_system(pugi::xml_node &node) {
-		return new T(node);
-	}
-
-	static system_map system_list;
-
 	/* COMPONENTS */
 
 	template <class T>

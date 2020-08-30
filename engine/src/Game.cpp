@@ -2,9 +2,7 @@
 
 namespace sl2dge {
 
-SDL_Renderer *Game::renderer_ = nullptr;
-
-Game::Game(const std::string window_name, const Uint32 window_width, const Uint32 window_height) {
+Game::Game(const std::string window_name, const Uint32 window_width, const Uint32 window_height, Platform platform) {
 	SDL_Init(SDL_INIT_VIDEO);
 	IMG_Init(IMG_INIT_PNG);
 	window_width_ = window_width;
@@ -16,9 +14,7 @@ Game::Game(const std::string window_name, const Uint32 window_width, const Uint3
 	FC_LoadFont(black_font_, Game::renderer(), font_path_.c_str(), font_size_, SDL_Color{ 0, 0, 0, 255 }, TTF_STYLE_NORMAL);
 	this->white_font_ = FC_CreateFont();
 	FC_LoadFont(white_font_, Game::renderer(), font_path_.c_str(), font_size_, SDL_Color{ 255, 255, 255, 255 }, TTF_STYLE_NORMAL);
-
-	ECS_DB::register_all_components();
-	ECS_DB::register_all_systems();
+	platform_ = platform;
 }
 
 Game::~Game() {
@@ -32,7 +28,7 @@ Game::~Game() {
 
 	TTF_Quit();
 
-	SDL_DestroyRenderer(Game::renderer());
+	SDL_DestroyRenderer(renderer_);
 	SDL_DestroyWindow(this->window_);
 
 	IMG_Quit();

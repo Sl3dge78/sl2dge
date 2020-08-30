@@ -33,7 +33,7 @@ public:
 	void delete_animation(const std::string &name);
 	void play_animation(const std::string &name);
 	void pause();
-
+	void update(Game *game) override;
 	bool is_animation_playing();
 	SpriteAnimation *current_animation() const;
 
@@ -52,11 +52,5 @@ private:
 	std::map<std::string, std::unique_ptr<SpriteAnimation>> animations;
 	SpriteAnimation *current_animation_ = nullptr;
 	bool is_animation_playing_ = false;
-};
-
-class SpriteAnimatorSystem : public ISystem, public UpdateSystem {
-public:
-	SpriteAnimatorSystem();
-	virtual void update(Game *game) override;
 };
 } // namespace sl2dge

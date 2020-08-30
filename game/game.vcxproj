@@ -152,17 +152,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Inventory.cpp" />
-    <ClCompile Include="src\InventoryState.cpp" />
-    <ClCompile Include="src\ItemList.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MainState.cpp" />
     <ClCompile Include="src\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Inventory.h" />
-    <ClInclude Include="src\InventoryState.h" />
-    <ClInclude Include="src\ItemList.h" />
     <ClInclude Include="src\MainState.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

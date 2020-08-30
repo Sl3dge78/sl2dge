@@ -6,6 +6,7 @@ using namespace sl2dge;
 
 class MainState : public GameState {
 public:
+	MainState();
 	// Inherited via GameState
 	virtual void start(Game *game) override;
 	virtual void input(Game *game) override;
@@ -19,4 +20,5 @@ public:
 private:
 	Entity *camera = nullptr;
 	Entity *player = nullptr;
+	std::unique_ptr<World> world_;
 };

@@ -70,4 +70,12 @@ void Transform::remove_all_children() {
 	}
 	childs_.clear();
 }
+void Transform::load(const pugi::xml_node &node) {
+	this->local_position_.x = node.attribute("local_position_x").as_int();
+	this->local_position_.y = node.attribute("local_position_y").as_int();
+}
+void Transform::save(pugi::xml_node &node) {
+	node.append_attribute("local_position_x").set_value(local_position_.x);
+	node.append_attribute("local_position_y").set_value(local_position_.y);
+}
 } // namespace sl2dge

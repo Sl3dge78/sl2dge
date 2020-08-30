@@ -17,12 +17,12 @@ public:
 	SDL_Texture *texture;
 	unsigned int columns;
 	unsigned int rows;
-};
 
-class SpriteSystem : public ISystem, public DrawSystem {
-public:
-	SpriteSystem();
-	virtual void draw(Game *game) override;
+	void draw(Game *game) override;
+
+	// Inherited via Component
+	virtual void load(const pugi::xml_node &node) override;
+	virtual void save(pugi::xml_node &node) override;
 };
 
 } // namespace sl2dge

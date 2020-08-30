@@ -2,6 +2,10 @@
 
 using namespace sl2dge;
 
+MainState::MainState() {
+	world_ = std::make_unique<World>("resources/test.map");
+}
+
 void MainState::start(Game *game) {
 	/*
 	Items::InitItems(game);
@@ -62,13 +66,11 @@ void MainState::start(Game *game) {
 	*/
 
 	//world_.load_from_xml("resources/test.map");
-	//world_.start();
-
-	Scene scene = Scene("resources/test.map");
+	world_->start(game);
 }
 
 void MainState::handle_events(Game *game, const SDL_Event &e) {
-	world_.handle_events(game, e);
+	world_->handle_events(game, e);
 }
 
 void MainState::input(Game *game) {
@@ -94,11 +96,11 @@ void MainState::input(Game *game) {
 }
 
 void MainState::update(Game *game) {
-	world_.update(game);
+	world_->update(game);
 }
 
 void MainState::draw(Game *game) {
-	world_.draw(game);
+	world_->draw(game);
 }
 
 void MainState::on_state_resume(Game *game) {

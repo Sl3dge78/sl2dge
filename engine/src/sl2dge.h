@@ -24,11 +24,5 @@
 #include "Character.h"
 #include "DialogState.h"
 #include "GameState.h"
-#include "Item.h"
-#include "Player.h"
-#include "Quest.h"
-#include "QuestManager.h"
-#include "Scene.h"
-#include "SceneState.h"
 
 namespace sl2dge {};

@@ -30,22 +30,17 @@ Sprite::~Sprite() {
 	SDL_DestroyTexture(texture);
 }
 
-SpriteSystem::SpriteSystem() {
-	this->add_component_filter<Sprite>();
-	this->add_component_filter<Transform>();
-	this->set_filter_type(FilterType::FILTER_AND);
+void Sprite::draw(Game *game) {
+	auto tsrfm = entity()->transform();
 
-	this->pos_z_ = 1;
+	SDL_Rect screen_dest = Camera::main_camera->world_to_screen_transform({ int(tsrfm->position().x), int(tsrfm->position().y), src.w, src.h });
+	SDL_RenderCopy(game->renderer(), texture, &(src), &screen_dest);
 }
 
-void SpriteSystem::draw(Game *game) {
-	for (auto e : entities_) {
-		auto tsrfm = e->transform();
-		auto sprite = e->get_component<Sprite>();
+void Sprite::load(const pugi::xml_node &node) {
+}
 
-		SDL_Rect screen_dest = Camera::main_camera->world_to_screen_transform({ int(tsrfm->position().x), int(tsrfm->position().y), sprite->src.w, sprite->src.h });
-		SDL_RenderCopy(game->renderer(), sprite->texture, &(sprite->src), &screen_dest);
-	}
+void Sprite::save(pugi::xml_node &node) {
 }
 
 } // namespace sl2dge
