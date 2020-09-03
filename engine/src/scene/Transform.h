@@ -15,7 +15,6 @@ enum class Direction { Up,
 class Transform : public Component {
 public:
 	Transform();
-	Transform(const pugi::xml_node &node) { load(node); };
 	Transform(const Vector2f &position);
 	Transform(const float x, const float y);
 

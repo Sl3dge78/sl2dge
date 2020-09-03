@@ -103,14 +103,17 @@ void Editor::create_ui(Game *game) {
 
 	int y = 0;
 	for (auto &e : *scene_->all_entities()) {
-		auto e = editor_->create_entity(0, y * 20);
-		entity_panel->transform()->add_children(e->transform());
-		e->add_component<UIText>("Entity", game->white_font());
+		auto entity_text = editor_->create_entity(0, y * 20);
+		entity_panel->transform()->add_children(entity_text->transform());
+		entity_text->add_component<UIText>("Entity", game->white_font());
 		y++;
-		for (int j = 0; j < e->all_components().size(); ++j) {
-			auto c = editor_->create_entity(16, 20 + j * 20);
-			e->transform()->add_children(c->transform());
-			c->add_component<UIText>("Component", game->white_font());
+		int y2 = 0;
+		for (auto comp : e->all_components_id()) {
+			auto comp_text = editor_->create_entity(16, 20 + y2 * 20);
+			entity_text->transform()->add_children(comp_text->transform());
+			comp_text->add_component<UIText>(ECS_DB::get_component_string(comp), game->white_font());
+
+			y2++;
 			y++;
 		}
 	}

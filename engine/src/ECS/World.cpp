@@ -23,7 +23,8 @@ void World::load(const std::string &path) {
 		for (auto component_node : entity_node.children("Component")) {
 			// Add component
 			std::string type = component_node.attribute("type").as_string();
-			auto comp = ECS_DB::create_component(type, entity, component_node);
+			auto comp = ECS_DB::create_component(type, component_node);
+			entity->add_component(ECS_DB::get_component_id(type), comp);
 			SDL_Log(">> Component of type %s added", type.c_str());
 		}
 		count++;

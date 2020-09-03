@@ -7,6 +7,7 @@
 #include <utility>
 #include <vector>
 
+#include "ECS/ECS_DB.h"
 #include "math/Vector.h"
 #include "scene/Transform.h"
 
@@ -39,8 +40,8 @@ public:
 	template <class T>
 	inline void remove_component();
 
+	const std::vector<int> all_components_id();
 	void remove_all_components();
-	const std::vector<Component *> all_components();
 
 	bool get_is_active() const { return is_active_; };
 	void set_is_active(bool val);
@@ -65,30 +66,29 @@ protected:
 //The following functions are user side functions for adding, getting and removing specific components
 template <class T, class... Args>
 T *Entity::add_component(Args &&...args) {
-	return static_cast<T *>(add_component(ComponentID::Get<T>(), new T{ std::forward<Args>(args)... }));
+	return static_cast<T *>(add_component(ECS_DB::get_component_id<T>(), new T{ std::forward<Args>(args)... }));
 }
 
 template <class T>
 Component *Entity::load_component(pugi::xml_node &node) {
-	auto comp = add_component(ComponentID::Get<T>(), new T());
+	auto comp = add_component(ECS_DB::get_component_id<T>(), new T());
 	comp->load(node);
 	return comp;
 }
 
 template <class T>
 bool Entity::has_component() const {
-	return has_component(ComponentID::Get<T>());
+	return has_component(ECS_DB::get_component_id<T>());
 }
 
 template <class T>
 T *Entity::get_component() const {
-	return static_cast<T *>(get_component(ComponentID::Get<T>()));
+	return static_cast<T *>(get_component(ECS_DB::get_component_id<T>()));
 }
 
 //Removes a component from an entity
 template <class T>
 void Entity::remove_component() {
-	remove_component(ComponentID::Get<T>());
+	remove_component(ECS_DB::get_component_id<T>());
 }
-
 } // namespace sl2dge

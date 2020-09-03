@@ -5,6 +5,8 @@
 
 #include <SDL/SDL.h>
 
+#include "ECS/ECS_DB.h"
+
 #include "addons/pugixml.hpp"
 
 namespace sl2dge {
@@ -30,21 +32,22 @@ public:
 	Entity *entity() { return entity_; }
 	Transform *transform();
 
-private:
-	Entity *entity_ = nullptr;
-	Transform *transform_ = nullptr;
-};
-
-// Used by entities to refer to components with an unique id
-struct ComponentID {
-public:
-	template <class T>
-	static const int Get() {
-		static int id = count++;
-		return id;
+	std::string to_string() {
+		return _to_string(this);
 	}
 
 private:
-	static int count;
+	Entity *entity_ = nullptr;
+	Transform *transform_ = nullptr;
+
+	template <class T>
+	std::string _to_string(T comp);
 };
+
+template <class T>
+std::string Component::_to_string(T comp) {
+	auto a = ECS_DB::get_component_string<T>();
+	return a;
+}
+
 } // namespace sl2dge
