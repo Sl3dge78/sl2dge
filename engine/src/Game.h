@@ -57,7 +57,6 @@ private:
 	SDL_Renderer *renderer_;
 	SDL_Window *window_;
 
-	ECS_DB db;
 	Platform platform_;
 
 	Uint32 window_width_;

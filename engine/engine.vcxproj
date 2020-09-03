@@ -155,7 +155,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\ECS\ECS_DB.cpp" />
     <ClCompile Include="src\scene\graphical\SpriteAnimator.cpp" />
     <ClCompile Include="src\scene\map\Atlas.cpp" />
     <ClCompile Include="src\scene\Camera.cpp" />
@@ -178,7 +177,6 @@
     <ClCompile Include="src\ui\UIText.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ECS\ECS_DB.h" />
     <ClInclude Include="src\math\Vector.h" />
     <ClInclude Include="src\scene\graphical\SpriteAnimator.h" />
     <ClInclude Include="src\scene\map\Map2D.h" />

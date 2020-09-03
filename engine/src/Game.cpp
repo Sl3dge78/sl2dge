@@ -15,6 +15,8 @@ Game::Game(const std::string window_name, const Uint32 window_width, const Uint3
 	this->white_font_ = FC_CreateFont();
 	FC_LoadFont(white_font_, Game::renderer(), font_path_.c_str(), font_size_, SDL_Color{ 255, 255, 255, 255 }, TTF_STYLE_NORMAL);
 	platform_ = platform;
+
+	Component::register_components();
 }
 
 Game::~Game() {

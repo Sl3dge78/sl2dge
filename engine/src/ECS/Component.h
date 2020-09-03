@@ -1,6 +1,7 @@
 #pragma once
 
 #include <fstream>
+#include <map>
 #include <string>
 
 #include <SDL/SDL.h>
@@ -32,22 +33,66 @@ public:
 	Entity *entity() { return entity_; }
 	Transform *transform();
 
-	std::string to_string() {
-		return _to_string(this);
-	}
-
 private:
 	Entity *entity_ = nullptr;
 	Transform *transform_ = nullptr;
 
+	/* 
+	* STATIC MEMBERS 
+	*/
+public:
+	static void register_components();
+	static Component *create_component(const std::string &type, pugi::xml_node &node);
+
 	template <class T>
-	std::string _to_string(T comp);
+	static const int get_component_id();
+
+	static const int get_component_id(const std::string &name);
+
+	template <class T>
+	static const std::string get_component_string();
+
+	static const std::string get_component_string(const int id) {
+		return component_names[id];
+	}
+
+private:
+	static int comp_id;
+
+	template <class T>
+	static Component *load_component(pugi::xml_node &node);
+
+	typedef std::map<std::string, Component *(*)(pugi::xml_node &)> component_map;
+	static component_map component_list;
+	static std::map<int, std::string> component_names;
+
+	template <class T>
+	static void register_component(std::string name);
 };
 
 template <class T>
-std::string Component::_to_string(T comp) {
-	auto a = ECS_DB::get_component_string<T>();
+const int Component::get_component_id() {
+	static int id = comp_id++;
+	return id;
+}
+
+template <class T>
+const std::string Component::get_component_string() {
+	auto a = component_names[get_component_id<T>()];
 	return a;
+}
+
+template <class T>
+void Component::register_component(std::string name) {
+	component_list[name] = &load_component<T>;
+	component_names[get_component_id<T>()] = name;
+}
+
+template <class T>
+inline Component *Component::load_component(pugi::xml_node &node) {
+	auto c = new T();
+	c->load(node);
+	return c;
 }
 
 } // namespace sl2dge

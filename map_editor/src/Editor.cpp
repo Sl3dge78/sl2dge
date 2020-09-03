@@ -111,7 +111,7 @@ void Editor::create_ui(Game *game) {
 		for (auto comp : e->all_components_id()) {
 			auto comp_text = editor_->create_entity(16, 20 + y2 * 20);
 			entity_text->transform()->add_children(comp_text->transform());
-			comp_text->add_component<UIText>(ECS_DB::get_component_string(comp), game->white_font());
+			comp_text->add_component<UIText>(Component::get_component_string(comp), game->white_font());
 
 			y2++;
 			y++;

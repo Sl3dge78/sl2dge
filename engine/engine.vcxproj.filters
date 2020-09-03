@@ -66,9 +66,6 @@
     <ClCompile Include="src\scene\physics\Rigibody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ECS\ECS_DB.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\scene\map\Map2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -150,9 +147,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\scene\physics\Rigibody.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\ECS_DB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\scene\map\Map2D.h">
