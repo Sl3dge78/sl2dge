@@ -27,13 +27,27 @@ void TileMap::draw_tile(Game *game, int x, int y, int tile) {
 	}
 }
 
-TileMap::TileMap(const pugi::xml_node &node) {
-	load(node);
-	atlas_path_ = node.attribute("atlas").as_string();
+void TileMap::update(Game *game) {
+}
+
+void TileMap::handle_events(Game *game, SDL_Event const &e) {
+}
+
+TileMap::TileMap() {
 }
 
 TileMap::~TileMap() {
 	delete atlas_;
+}
+
+void TileMap::load(const pugi::xml_node &node) {
+	Map2D::load(node);
+	atlas_path_ = node.attribute("atlas").as_string();
+}
+
+void TileMap::save(pugi::xml_node &node) {
+	Map2D::save(node);
+	atlas_path_ = node.attribute("atlas").as_string();
 }
 
 void TileMap::start(Game *game) {
@@ -62,6 +76,15 @@ void CollisionMap::draw_tile(Game *game, int x, int y, int tile) {
 		SDL_SetRenderDrawColor(game->renderer(), 255, 150, 150, 255);
 		SDL_RenderDrawRect(game->renderer(), &Camera::main_camera->world_to_screen_transform(SDL_Rect{ x * tile_size(), y * tile_size(), tile_size(), tile_size() }));
 	}
+}
+
+void CollisionMap::start(Game *game) {
+}
+
+void CollisionMap::update(Game *game) {
+}
+
+void CollisionMap::handle_events(Game *game, SDL_Event const &e) {
 }
 
 } // namespace sl2dge

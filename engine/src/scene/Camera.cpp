@@ -41,6 +41,15 @@ SDL_Point Camera::screen_to_world_transform(const SDL_Point &point) const {
 	return SDL_Point{ int(float(point.x / zoom_ + viewport_.x)), int(float(point.y / zoom_ + viewport_.y)) };
 }
 
+void Camera::start(Game *game) {
+}
+
+void Camera::handle_events(Game *game, SDL_Event const &e) {
+}
+
+void Camera::draw(Game *game) {
+}
+
 void Camera::update(Game *game) {
 	auto transform = entity()->get_component<Transform>();
 	viewport_.w = int(float(width_) / zoom_);

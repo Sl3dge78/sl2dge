@@ -45,6 +45,12 @@ public:
 private:
 	Vector2f local_position_;
 	std::vector<Transform *> childs_;
+
+	// Inherited via Component
+	virtual void start(Game *game) override;
+	virtual void update(Game *game) override;
+	virtual void handle_events(Game *game, SDL_Event const &e) override;
+	virtual void draw(Game *game) override;
 };
 
 } // namespace sl2dge

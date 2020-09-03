@@ -21,5 +21,7 @@ private:
 	std::unique_ptr<World> editor_;
 	Camera *map_camera_ = nullptr;
 	int current_layer = 0;
+
+	void create_ui();
 };
 } // namespace sl2dge

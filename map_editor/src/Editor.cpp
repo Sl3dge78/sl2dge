@@ -12,6 +12,8 @@ Editor::Editor(const std::string &map_path) {
 	camera->add_component<Transform>(0.0f, 0.0f);
 	map_camera_ = camera->add_component<Camera>(1280, 720);
 	Camera::main_camera = map_camera_;
+
+	create_ui();
 }
 
 Editor::~Editor() {
@@ -90,5 +92,16 @@ void Editor::draw(Game *game) {
 	}
 
 	editor_->draw(game);
+}
+void Editor::create_ui() {
+	SDL_Color d_gray = SDL_Color{ 25, 25, 25, 255 };
+	auto ui_root = editor_->create_entity(0, 0);
+	auto left_panel = editor_->create_entity(0, 0);
+	left_panel->add_component<UIPanel>(200, 720, d_gray);
+	ui_root->transform()->add_children(left_panel->transform());
+
+	auto bottom_panel = editor_->create_entity(0, 700);
+	bottom_panel->add_component<UIPanel>(1280, 20, d_gray);
+	ui_root->transform()->add_children(bottom_panel->transform());
 }
 } // namespace sl2dge

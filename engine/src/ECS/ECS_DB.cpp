@@ -3,6 +3,7 @@
 #include "scene/Camera.h"
 #include "scene/map/TileMap.h"
 #include "scene/physics/Rigibody.h"
+#include "ui/UIPanel.h"
 
 using namespace sl2dge;
 
@@ -14,6 +15,7 @@ ECS_DB::ECS_DB() {
 	register_component<Camera>("Camera");
 	register_component<Rigidbody>("Rigidbody");
 	register_component<Transform>("Transform");
+	register_component<UIPanel>("UIPanel");
 }
 
 ECS_DB::~ECS_DB() {

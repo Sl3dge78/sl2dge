@@ -9,7 +9,7 @@ namespace sl2dge {
 
 class Rigidbody : public Component {
 public:
-	Rigidbody(const pugi::xml_node &node) { load(node); };
+	Rigidbody(){};
 
 	Vector2f speed = Vector2f(0, 0);
 	SDL_Rect collider = SDL_Rect{ 0, 0, 16, 16 };
@@ -24,5 +24,10 @@ public:
 private:
 	CollisionMap *map_ = nullptr;
 	Vector2f move_and_slide();
+
+	// Inherited via Component
+	virtual void start(Game *game) override;
+	virtual void handle_events(Game *game, SDL_Event const &e) override;
+	virtual void draw(Game *game) override;
 };
 } // namespace sl2dge

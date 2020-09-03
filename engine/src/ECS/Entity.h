@@ -7,13 +7,13 @@
 #include <utility>
 #include <vector>
 
-#include "Component.h"
 #include "math/Vector.h"
 #include "scene/Transform.h"
 
 namespace sl2dge {
 class World;
 class Game;
+class Component;
 
 class Entity {
 	friend class World;
@@ -26,7 +26,7 @@ public:
 	~Entity();
 
 	template <class T, class... Args>
-	inline T *add_component(Args &&... args);
+	inline T *add_component(Args &&...args);
 
 	template <class T>
 	Component *load_component(pugi::xml_node &node);
@@ -63,13 +63,15 @@ protected:
 
 //The following functions are user side functions for adding, getting and removing specific components
 template <class T, class... Args>
-T *Entity::add_component(Args &&... args) {
+T *Entity::add_component(Args &&...args) {
 	return static_cast<T *>(add_component(ComponentID::Get<T>(), new T{ std::forward<Args>(args)... }));
 }
 
 template <class T>
 Component *Entity::load_component(pugi::xml_node &node) {
-	return add_component(ComponentID::Get<T>(), new T(node));
+	auto comp = add_component(ComponentID::Get<T>(), new T());
+	comp->load(node);
+	return comp;
 }
 
 template <class T>

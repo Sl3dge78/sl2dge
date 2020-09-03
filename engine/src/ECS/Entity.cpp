@@ -1,5 +1,7 @@
 #include "Entity.h"
 
+#include "ECS/Component.h"
+
 namespace sl2dge {
 Entity::Entity() {
 }

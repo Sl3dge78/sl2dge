@@ -35,6 +35,15 @@ Vector2f sl2dge::Rigidbody::move_and_slide() {
 	return ret;
 }
 
+void sl2dge::Rigidbody::start(Game *game) {
+}
+
+void sl2dge::Rigidbody::handle_events(Game *game, SDL_Event const &e) {
+}
+
+void sl2dge::Rigidbody::draw(Game *game) {
+}
+
 void sl2dge::Rigidbody::load(const pugi::xml_node &node) {
 }
 

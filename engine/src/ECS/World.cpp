@@ -43,6 +43,12 @@ Entity *World::create_entity() {
 	return ret;
 }
 
+Entity *World::create_entity(const float x, const float y) {
+	auto e = create_entity();
+	e->add_component<Transform>(x, y);
+	return e;
+}
+
 void World::delete_all_entities() {
 	entity_list_.clear();
 }
