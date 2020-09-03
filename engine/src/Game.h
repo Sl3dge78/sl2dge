@@ -8,7 +8,6 @@
 
 #include "addons/SDL_FontCache.h"
 
-#include "ECS/ECS_DB.h"
 #include "GameState.h"
 
 namespace sl2dge {

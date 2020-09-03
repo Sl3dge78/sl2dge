@@ -1,5 +1,4 @@
 #include "World.h"
-#include "ECS_DB.h"
 
 namespace sl2dge {
 

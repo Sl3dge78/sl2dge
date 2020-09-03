@@ -7,7 +7,6 @@
 #include <utility>
 #include <vector>
 
-#include "ECS/ECS_DB.h"
 #include "math/Vector.h"
 #include "scene/Transform.h"
 

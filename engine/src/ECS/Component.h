@@ -6,8 +6,6 @@
 
 #include <SDL/SDL.h>
 
-#include "ECS/ECS_DB.h"
-
 #include "addons/pugixml.hpp"
 
 namespace sl2dge {
