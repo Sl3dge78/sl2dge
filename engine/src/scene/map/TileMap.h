@@ -15,6 +15,7 @@ namespace sl2dge {
 class Game;
 
 class TileMap : public Map2D {
+	COMPONENT_DFLT_BEHAVIOUR(TileMap)
 public:
 	TileMap();
 	~TileMap();
@@ -37,6 +38,7 @@ private:
 };
 
 class CollisionMap : public Map2D {
+	COMPONENT_DFLT_BEHAVIOUR(CollisionMap)
 public:
 	CollisionMap(){
 

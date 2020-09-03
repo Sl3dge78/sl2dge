@@ -79,8 +79,8 @@ void Transform::handle_events(Game *game, SDL_Event const &e) {
 void Transform::draw(Game *game) {
 }
 void Transform::load(const pugi::xml_node &node) {
-	this->local_position_.x = node.attribute("local_position_x").as_int();
-	this->local_position_.y = node.attribute("local_position_y").as_int();
+	this->local_position_.x = node.attribute("local_position_x").as_float();
+	this->local_position_.y = node.attribute("local_position_y").as_float();
 	this->z = node.attribute("z").as_int();
 }
 void Transform::save(pugi::xml_node &node) {

@@ -23,7 +23,7 @@ void World::load(const std::string &path) {
 			// Add component
 			std::string type = component_node.attribute("type").as_string();
 			auto comp = Component::create_component(type, component_node);
-			entity->add_component(Component::get_component_id(type), comp);
+			entity->add_component(comp);
 			SDL_Log(">> Component of type %s added", type.c_str());
 		}
 		count++;

@@ -53,7 +53,7 @@ public:
 	};
 
 protected:
-	Component *add_component(const int id, Component *comp);
+	Component *add_component(Component *comp);
 	Component *get_component(const int id) const;
 	bool has_component(const int id) const;
 	void remove_component(const int id);
@@ -65,29 +65,29 @@ protected:
 //The following functions are user side functions for adding, getting and removing specific components
 template <class T, class... Args>
 T *Entity::add_component(Args &&...args) {
-	return static_cast<T *>(add_component(Component::get_component_id<T>(), new T{ std::forward<Args>(args)... }));
+	return static_cast<T *>(add_component(new T{ std::forward<Args>(args)... }));
 }
 
 template <class T>
 Component *Entity::load_component(pugi::xml_node &node) {
-	auto comp = add_component(Component::get_component_id<T>(), new T());
+	auto comp = add_component(new T());
 	comp->load(node);
 	return comp;
 }
 
 template <class T>
 bool Entity::has_component() const {
-	return has_component(Component::get_component_id<T>());
+	return has_component(Component::get_id<T>());
 }
 
 template <class T>
 T *Entity::get_component() const {
-	return static_cast<T *>(get_component(Component::get_component_id<T>()));
+	return static_cast<T *>(get_component(Component::get_id<T>()));
 }
 
 //Removes a component from an entity
 template <class T>
 void Entity::remove_component() {
-	remove_component(Component::get_component_id<T>());
+	remove_component(Component::get_id<T>());
 }
 } // namespace sl2dge

@@ -8,6 +8,8 @@
 namespace sl2dge {
 
 class Rigidbody : public Component {
+	COMPONENT_DFLT_BEHAVIOUR(Rigidbody)
+
 public:
 	Rigidbody(){};
 

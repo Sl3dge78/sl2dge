@@ -13,6 +13,8 @@ enum class Direction { Up,
 	Right };
 
 class Transform : public Component {
+	COMPONENT_DFLT_BEHAVIOUR(Transform)
+
 public:
 	Transform();
 	Transform(const Vector2f &position);

@@ -8,6 +8,15 @@
 
 #include "addons/pugixml.hpp"
 
+#define COMPONENT_DFLT_BEHAVIOUR(TYPE)             \
+public:                                            \
+	const std::string type_name() const override { \
+		return Component::get_type_name<TYPE>();   \
+	}                                              \
+	const int type_id() const override {           \
+		return Component::get_id<TYPE>();          \
+	}
+
 namespace sl2dge {
 class Game;
 class Entity;
@@ -31,6 +40,9 @@ public:
 	Entity *entity() { return entity_; }
 	Transform *transform();
 
+	virtual const std::string type_name() const = 0;
+	virtual const int type_id() const = 0;
+
 private:
 	Entity *entity_ = nullptr;
 	Transform *transform_ = nullptr;
@@ -43,47 +55,45 @@ public:
 	static Component *create_component(const std::string &type, pugi::xml_node &node);
 
 	template <class T>
-	static const int get_component_id();
+	static const int get_id();
 
-	static const int get_component_id(const std::string &name);
+	static const int get_id(const std::string &name);
 
 	template <class T>
-	static const std::string get_component_string();
+	static const std::string get_type_name();
 
-	static const std::string get_component_string(const int id) {
+	static const std::string get_type_name(const int id) {
 		return component_names[id];
 	}
 
 private:
 	static int comp_id;
-
-	template <class T>
-	static Component *load_component(pugi::xml_node &node);
-
 	typedef std::map<std::string, Component *(*)(pugi::xml_node &)> component_map;
 	static component_map component_list;
 	static std::map<int, std::string> component_names;
+
+	template <class T>
+	static Component *load_component(pugi::xml_node &node);
 
 	template <class T>
 	static void register_component(std::string name);
 };
 
 template <class T>
-const int Component::get_component_id() {
+const int Component::get_id() {
 	static int id = comp_id++;
 	return id;
 }
 
 template <class T>
-const std::string Component::get_component_string() {
-	auto a = component_names[get_component_id<T>()];
-	return a;
+const std::string Component::get_type_name() {
+	return component_names[get_id<T>()];
 }
 
 template <class T>
 void Component::register_component(std::string name) {
 	component_list[name] = &load_component<T>;
-	component_names[get_component_id<T>()] = name;
+	component_names[get_id<T>()] = name;
 }
 
 template <class T>

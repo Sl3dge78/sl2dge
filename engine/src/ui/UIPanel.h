@@ -6,6 +6,7 @@
 namespace sl2dge {
 
 class UIPanel : public Component {
+	COMPONENT_DFLT_BEHAVIOUR(UIPanel)
 public:
 	UIPanel() {}
 	UIPanel(const int w, const int h, const SDL_Color &color);

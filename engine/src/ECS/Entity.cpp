@@ -24,9 +24,9 @@ const std::vector<int> Entity::all_components_id() {
 	return v;
 }
 
-Component *Entity::add_component(const int id, Component *comp) {
+Component *Entity::add_component(Component *comp) {
 	comp->entity_ = this;
-	components_[id] = std::unique_ptr<Component>(comp);
+	components_[comp->type_id()] = std::unique_ptr<Component>(comp);
 	return comp;
 }
 

@@ -23,7 +23,7 @@ void sl2dge::UIPanel::draw(Game *game) {
 	SDL_GetRenderDrawColor(game->renderer(), &previous.r, &previous.g, &previous.b, &previous.a);
 
 	SDL_SetRenderDrawColor(game->renderer(), color_.r, color_.g, color_.b, color_.a);
-	SDL_Rect rect = { transform()->position().x, transform()->position().y, w_, h_ };
+	SDL_Rect rect = { int(transform()->position().x), int(transform()->position().y), w_, h_ };
 	SDL_RenderFillRect(game->renderer(), &rect);
 	SDL_SetRenderDrawColor(game->renderer(), previous.r, previous.g, previous.b, previous.a);
 }

@@ -9,6 +9,7 @@ namespace sl2dge {
 class Game;
 
 class Camera : public Component {
+	COMPONENT_DFLT_BEHAVIOUR(Camera)
 public:
 	static Camera *main_camera;
 

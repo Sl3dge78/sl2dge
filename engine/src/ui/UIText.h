@@ -5,6 +5,8 @@
 namespace sl2dge {
 
 class UIText : public Component {
+	COMPONENT_DFLT_BEHAVIOUR(UIText)
+
 public:
 	UIText() = default;
 	UIText(const std::string &text, FC_Font *font = nullptr) {

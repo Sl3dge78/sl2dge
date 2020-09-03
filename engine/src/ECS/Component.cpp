@@ -40,7 +40,7 @@ Component *Component::create_component(const std::string &type, pugi::xml_node &
 	return component_list[type](node);
 }
 
-const int Component::get_component_id(const std::string &name) {
+const int Component::get_id(const std::string &name) {
 	for (auto it = component_names.begin(); it != component_names.end(); ++it) {
 		if (it->second == name)
 			return it->first;

@@ -103,15 +103,15 @@ void Editor::create_ui(Game *game) {
 
 	int y = 0;
 	for (auto &e : *scene_->all_entities()) {
-		auto entity_text = editor_->create_entity(0, y * 20);
+		auto entity_text = editor_->create_entity(0.0f, y * 20.0f);
 		entity_panel->transform()->add_children(entity_text->transform());
 		entity_text->add_component<UIText>("Entity", game->white_font());
 		y++;
 		int y2 = 0;
 		for (auto comp : e->all_components_id()) {
-			auto comp_text = editor_->create_entity(16, 20 + y2 * 20);
+			auto comp_text = editor_->create_entity(16.0f, 20 + y2 * 20.0f);
 			entity_text->transform()->add_children(comp_text->transform());
-			comp_text->add_component<UIText>(Component::get_component_string(comp), game->white_font());
+			comp_text->add_component<UIText>(Component::get_type_name(comp), game->white_font());
 
 			y2++;
 			y++;
