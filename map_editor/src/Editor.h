@@ -22,6 +22,7 @@ private:
 	Camera *map_camera_ = nullptr;
 	int current_layer = 0;
 
-	void create_ui();
+	void create_ui(Game *game);
+	Entity *entity_panel = nullptr;
 };
 } // namespace sl2dge

@@ -28,6 +28,8 @@ public:
 	void delete_all_entities();
 	void delete_entity(Entity *e);
 
+	const std::vector<std::unique_ptr<Entity>> *all_entities() const { return &entity_list_; }
+
 	void start(Game *game);
 	void handle_events(Game *game, SDL_Event const &e);
 	void update(Game *game);

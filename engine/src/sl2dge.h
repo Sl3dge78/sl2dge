@@ -17,6 +17,7 @@
 #include "scene/map/TileMap.h"
 #include "scene/physics/Rigibody.h"
 #include "ui/UIPanel.h"
+#include "ui/UIText.h"
 
 #include "addons/SDL_FontCache.h"
 #include "addons/guid.h"

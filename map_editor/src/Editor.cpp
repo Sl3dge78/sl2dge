@@ -12,14 +12,14 @@ Editor::Editor(const std::string &map_path) {
 	camera->add_component<Transform>(0.0f, 0.0f);
 	map_camera_ = camera->add_component<Camera>(1280, 720);
 	Camera::main_camera = map_camera_;
-
-	create_ui();
 }
 
 Editor::~Editor() {
 }
 
 void Editor::start(Game *game) {
+	create_ui(game);
+
 	scene_->start(game);
 	editor_->start(game);
 }
@@ -93,15 +93,33 @@ void Editor::draw(Game *game) {
 
 	editor_->draw(game);
 }
-void Editor::create_ui() {
+
+void Editor::create_ui(Game *game) {
 	SDL_Color d_gray = SDL_Color{ 25, 25, 25, 255 };
 	auto ui_root = editor_->create_entity(0, 0);
-	auto left_panel = editor_->create_entity(0, 0);
-	left_panel->add_component<UIPanel>(200, 720, d_gray);
-	ui_root->transform()->add_children(left_panel->transform());
+	entity_panel = editor_->create_entity(0, 0);
+	entity_panel->add_component<UIPanel>(200, 720, d_gray);
+	ui_root->transform()->add_children(entity_panel->transform());
+
+	int y = 0;
+	for (auto &e : *scene_->all_entities()) {
+		auto e = editor_->create_entity(0, y * 20);
+		entity_panel->transform()->add_children(e->transform());
+		e->add_component<UIText>("Entity", game->white_font());
+		y++;
+		for (int j = 0; j < e->all_components().size(); ++j) {
+			auto c = editor_->create_entity(16, 20 + j * 20);
+			e->transform()->add_children(c->transform());
+			c->add_component<UIText>("Component", game->white_font());
+			y++;
+		}
+	}
 
 	auto bottom_panel = editor_->create_entity(0, 700);
 	bottom_panel->add_component<UIPanel>(1280, 20, d_gray);
 	ui_root->transform()->add_children(bottom_panel->transform());
+
+	auto input_tip = editor_->create_entity(0, 0)->add_component<UIText>("Hello world!", game->white_font());
+	bottom_panel->transform()->add_children(input_tip->transform());
 }
 } // namespace sl2dge

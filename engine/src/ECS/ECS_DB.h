@@ -33,6 +33,7 @@ private:
 	}
 
 	static component_map component_list;
+	static component_map component_names_list;
 };
 
 } // namespace sl2dge

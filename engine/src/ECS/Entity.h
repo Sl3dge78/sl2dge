@@ -40,6 +40,7 @@ public:
 	inline void remove_component();
 
 	void remove_all_components();
+	const std::vector<Component *> all_components();
 
 	bool get_is_active() const { return is_active_; };
 	void set_is_active(bool val);

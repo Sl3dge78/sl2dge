@@ -14,6 +14,16 @@ void Entity::remove_all_components() {
 	components_.clear();
 }
 
+const std::vector<Component *> Entity::all_components() {
+	std::vector<Component *> v;
+
+	for (const auto &i : components_) {
+		v.push_back(i.second.get());
+	}
+
+	return v;
+}
+
 Component *Entity::add_component(const int id, Component *comp) {
 	comp->entity_ = this;
 	components_[id] = std::unique_ptr<Component>(comp);

@@ -175,6 +175,7 @@
     <ClCompile Include="src\scene\physics\Rigibody.cpp" />
     <ClCompile Include="src\scene\Transform.cpp" />
     <ClCompile Include="src\ui\UIPanel.cpp" />
+    <ClCompile Include="src\ui\UIText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ECS\ECS_DB.h" />
@@ -204,6 +205,7 @@
     <ClInclude Include="src\scene\graphical\Sprite.h" />
     <ClInclude Include="src\scene\map\TileMap.h" />
     <ClInclude Include="src\ui\UIPanel.h" />
+    <ClInclude Include="src\ui\UIText.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
