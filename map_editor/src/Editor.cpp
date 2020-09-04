@@ -104,15 +104,25 @@ void Editor::draw(Game *game) {
 
 void Editor::create_ui(Game *game) {
 	SDL_Color d_gray = SDL_Color{ 25, 25, 25, 255 };
-	auto ui_root = editor_->create_entity(0, 0);
-	entity_panel = editor_->create_entity(0, 0);
-	entity_panel->add_component<UIPanel>(200, 720, d_gray);
-	ui_root->transform()->add_children(entity_panel->transform());
+	ui_root = editor_->create_entity(0, 0);
 
-	auto add_entity = editor_->create_entity(190, 0);
-	ui_root->transform()->add_children(add_entity->transform());
-	add_entity_but = add_entity->add_component<UIButton>();
-	add_entity->add_component<UIText>("+", game->white_font());
+	update_entity_list(game);
+
+	auto bottom_panel = editor_->create_entity(0, 700);
+	bottom_panel->add_component<UIPanel>(1280, 20, d_gray);
+	ui_root->transform()->add_children(bottom_panel->transform());
+
+	auto input_tip = editor_->create_entity(0, 0)->add_component<UIText>("Hello world!", game->white_font());
+	bottom_panel->transform()->add_children(input_tip->transform());
+}
+
+void Editor::update_entity_list(Game *game) {
+	if (entity_panel != nullptr)
+		editor_->delete_entity(entity_panel);
+
+	entity_panel = editor_->create_entity(0, 0);
+	entity_panel->add_component<UIPanel>(200, 720, SDL_Color{ 25, 25, 25, 255 });
+	ui_root->transform()->add_children(entity_panel->transform());
 
 	int y = 0;
 	for (auto &e : *scene_->all_entities()) {
@@ -131,15 +141,14 @@ void Editor::create_ui(Game *game) {
 		}
 	}
 
-	auto bottom_panel = editor_->create_entity(0, 700);
-	bottom_panel->add_component<UIPanel>(1280, 20, d_gray);
-	ui_root->transform()->add_children(bottom_panel->transform());
-
-	auto input_tip = editor_->create_entity(0, 0)->add_component<UIText>("Hello world!", game->white_font());
-	bottom_panel->transform()->add_children(input_tip->transform());
+	auto add_entity = editor_->create_entity(200 - 16, 0);
+	entity_panel->transform()->add_children(add_entity->transform());
+	add_entity_but = add_entity->add_component<UIButton>();
+	add_entity->add_component<UIText>("+", game->white_font());
 }
 
 void Editor::on_add_entity_click(Game *game) {
-	SDL_Log("ADDED ENTITY");
+	scene_->create_entity(0, 0);
+	update_entity_list(game);
 }
 } // namespace sl2dge

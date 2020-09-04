@@ -22,10 +22,12 @@ private:
 	Camera *map_camera_ = nullptr;
 	int current_layer = 0;
 
+	Entity *ui_root = nullptr;
 	Entity *entity_panel = nullptr;
 	UIButton *add_entity_but = nullptr;
 
 	void create_ui(Game *game);
+	void update_entity_list(Game *game);
 
 	void on_add_entity_click(Game *game);
 };
