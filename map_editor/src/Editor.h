@@ -30,5 +30,6 @@ private:
 	void update_entity_list(Game *game);
 
 	void on_add_entity_click(Game *game);
+	void on_delete_entity_click(Game *game, UIButton *button);
 };
 } // namespace sl2dge

@@ -25,6 +25,7 @@ public:
 	//Entities
 	Entity *create_entity();
 	Entity *create_entity(const float x, const float y);
+	Entity *create_entity(const float x, const float y, Entity *parent);
 	void delete_all_entities();
 	void delete_entity(Entity *e);
 

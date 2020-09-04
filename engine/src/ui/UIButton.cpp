@@ -6,7 +6,7 @@ namespace sl2dge {
 
 Uint32 UIButton::ON_CLICK = 0;
 
-UIButton::UIButton() {
+UIButton::UIButton(const std::string &text, void *target) {
 	if (UIButton::ON_CLICK == 0)
 		UIButton::ON_CLICK = SDL_RegisterEvents(1);
 
@@ -15,6 +15,8 @@ UIButton::UIButton() {
 		event_.type = ON_CLICK;
 		event_.user.data1 = this;
 	}
+	event_name = text;
+	this->target = target;
 }
 
 void UIButton::load(const pugi::xml_node &node) {
@@ -32,7 +34,7 @@ void UIButton::update(Game *game) {
 void UIButton::handle_events(Game *game, SDL_Event const &e) {
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
 		if (e.button.button == SDL_BUTTON_LEFT) {
-			SDL_Rect pos{ transform()->position().x, transform()->position().y, w, h };
+			SDL_Rect pos{ int(transform()->position().x), int(transform()->position().y), w, h };
 			SDL_Point mouse_pos{ e.button.x, e.button.y };
 			if (SDL_PointInRect(&mouse_pos, &pos)) {
 				SDL_PushEvent(&event_);

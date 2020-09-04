@@ -10,13 +10,15 @@ class UIButton : public Component {
 	typedef void (*EventCallback)(Game *game, UIButton *button);
 
 public:
-	UIButton();
+	UIButton(const std::string &text, void *target);
 
 	virtual void load(const pugi::xml_node &node) override;
 	virtual void save(pugi::xml_node &node) override;
 	virtual void handle_events(Game *game, SDL_Event const &e) override;
 
 	static Uint32 ON_CLICK;
+	std::string event_name = "";
+	void *target;
 
 private:
 	int w = 10;

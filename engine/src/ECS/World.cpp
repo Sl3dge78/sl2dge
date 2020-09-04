@@ -49,6 +49,12 @@ Entity *World::create_entity(const float x, const float y) {
 	return e;
 }
 
+Entity *World::create_entity(const float x, const float y, Entity *parent) {
+	auto e = create_entity(x, y);
+	parent->transform()->add_children(e->transform());
+	return e;
+}
+
 void World::delete_all_entities() {
 	entity_list_.clear();
 }
@@ -63,6 +69,7 @@ void World::delete_entity(Entity *e) {
 			return;
 		}
 	}
+	SDL_LogWarn(0, "Entity not found!");
 }
 
 void World::start(Game *game) {

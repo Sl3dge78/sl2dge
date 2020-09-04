@@ -65,8 +65,12 @@ void Editor::handle_events(Game *game, const SDL_Event &e) {
 	}
 
 	if (e.type == UIButton::ON_CLICK) {
-		if (e.user.data1 == add_entity_but) {
+		UIButton *button = static_cast<UIButton *>(e.user.data1);
+
+		if (button->event_name == "Create_Entity") {
 			on_add_entity_click(game);
+		} else if (button->event_name == "Delete_Entity") {
+			on_delete_entity_click(game, button);
 		}
 	}
 }
@@ -108,32 +112,32 @@ void Editor::create_ui(Game *game) {
 
 	update_entity_list(game);
 
-	auto bottom_panel = editor_->create_entity(0, 700);
+	auto bottom_panel = editor_->create_entity(0, 700, ui_root);
 	bottom_panel->add_component<UIPanel>(1280, 20, d_gray);
-	ui_root->transform()->add_children(bottom_panel->transform());
 
-	auto input_tip = editor_->create_entity(0, 0)->add_component<UIText>("Hello world!", game->white_font());
-	bottom_panel->transform()->add_children(input_tip->transform());
+	auto input_tip = editor_->create_entity(0, 0, bottom_panel)->add_component<UIText>("Hello world!", game->white_font());
 }
 
 void Editor::update_entity_list(Game *game) {
 	if (entity_panel != nullptr)
 		editor_->delete_entity(entity_panel);
 
-	entity_panel = editor_->create_entity(0, 0);
+	entity_panel = editor_->create_entity(0, 0, ui_root);
 	entity_panel->add_component<UIPanel>(200, 720, SDL_Color{ 25, 25, 25, 255 });
-	ui_root->transform()->add_children(entity_panel->transform());
 
-	int y = 0;
+	int y = 1;
 	for (auto &e : *scene_->all_entities()) {
-		auto entity_text = editor_->create_entity(0.0f, y * 20.0f);
-		entity_panel->transform()->add_children(entity_text->transform());
+		auto entity_text = editor_->create_entity(0.0f, y * 20.0f, entity_panel);
 		entity_text->add_component<UIText>("Entity", game->white_font());
+
+		auto delete_entity = editor_->create_entity(200 - 16, 0, entity_text);
+		delete_entity->add_component<UIText>("-", game->white_font());
+		delete_entity->add_component<UIButton>("Delete_Entity", e.get());
+
 		y++;
 		int y2 = 0;
 		for (auto comp : e->all_components_id()) {
-			auto comp_text = editor_->create_entity(16.0f, 20 + y2 * 20.0f);
-			entity_text->transform()->add_children(comp_text->transform());
+			auto comp_text = editor_->create_entity(16.0f, 20 + y2 * 20.0f, entity_text);
 			comp_text->add_component<UIText>(Component::get_type_name(comp), game->white_font());
 
 			y2++;
@@ -141,14 +145,19 @@ void Editor::update_entity_list(Game *game) {
 		}
 	}
 
-	auto add_entity = editor_->create_entity(200 - 16, 0);
-	entity_panel->transform()->add_children(add_entity->transform());
-	add_entity_but = add_entity->add_component<UIButton>();
+	auto add_entity = editor_->create_entity(200 - 16, 0, entity_panel);
+	add_entity_but = add_entity->add_component<UIButton>("Create_Entity", nullptr);
 	add_entity->add_component<UIText>("+", game->white_font());
 }
 
 void Editor::on_add_entity_click(Game *game) {
 	scene_->create_entity(0, 0);
 	update_entity_list(game);
+	SDL_Log("Create entity!");
+}
+void Editor::on_delete_entity_click(Game *game, UIButton *button) {
+	scene_->delete_entity(static_cast<Entity *>(button->target));
+	update_entity_list(game);
+	SDL_Log("Delete entity!");
 }
 } // namespace sl2dge
