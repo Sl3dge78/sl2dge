@@ -173,6 +173,7 @@
     <ClCompile Include="src\scene\map\TileMap.cpp" />
     <ClCompile Include="src\scene\physics\Rigibody.cpp" />
     <ClCompile Include="src\scene\Transform.cpp" />
+    <ClCompile Include="src\ui\UIButton.cpp" />
     <ClCompile Include="src\ui\UIPanel.cpp" />
     <ClCompile Include="src\ui\UIText.cpp" />
   </ItemGroup>
@@ -202,6 +203,7 @@
     <ClInclude Include="src\sl2dge.h" />
     <ClInclude Include="src\scene\graphical\Sprite.h" />
     <ClInclude Include="src\scene\map\TileMap.h" />
+    <ClInclude Include="src\ui\UIButton.h" />
     <ClInclude Include="src\ui\UIPanel.h" />
     <ClInclude Include="src\ui\UIText.h" />
   </ItemGroup>

@@ -22,7 +22,11 @@ private:
 	Camera *map_camera_ = nullptr;
 	int current_layer = 0;
 
-	void create_ui(Game *game);
 	Entity *entity_panel = nullptr;
+	UIButton *add_entity_but = nullptr;
+
+	void create_ui(Game *game);
+
+	void on_add_entity_click(Game *game);
 };
 } // namespace sl2dge

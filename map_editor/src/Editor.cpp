@@ -25,6 +25,8 @@ void Editor::start(Game *game) {
 }
 
 void Editor::handle_events(Game *game, const SDL_Event &e) {
+	editor_->handle_events(game, e);
+
 	if (e.type == SDL_MOUSEWHEEL) {
 		if (e.wheel.y < 0) {
 			float zoom = map_camera_->zoom_;
@@ -59,6 +61,12 @@ void Editor::handle_events(Game *game, const SDL_Event &e) {
 			case SDL_SCANCODE_4:
 				current_layer = 3;
 				break;
+		}
+	}
+
+	if (e.type == UIButton::ON_CLICK) {
+		if (e.user.data1 == add_entity_but) {
+			on_add_entity_click(game);
 		}
 	}
 }
@@ -101,6 +109,11 @@ void Editor::create_ui(Game *game) {
 	entity_panel->add_component<UIPanel>(200, 720, d_gray);
 	ui_root->transform()->add_children(entity_panel->transform());
 
+	auto add_entity = editor_->create_entity(190, 0);
+	ui_root->transform()->add_children(add_entity->transform());
+	add_entity_but = add_entity->add_component<UIButton>();
+	add_entity->add_component<UIText>("+", game->white_font());
+
 	int y = 0;
 	for (auto &e : *scene_->all_entities()) {
 		auto entity_text = editor_->create_entity(0.0f, y * 20.0f);
@@ -124,5 +137,9 @@ void Editor::create_ui(Game *game) {
 
 	auto input_tip = editor_->create_entity(0, 0)->add_component<UIText>("Hello world!", game->white_font());
 	bottom_panel->transform()->add_children(input_tip->transform());
+}
+
+void Editor::on_add_entity_click(Game *game) {
+	SDL_Log("ADDED ENTITY");
 }
 } // namespace sl2dge

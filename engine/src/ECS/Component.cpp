@@ -26,6 +26,7 @@ void Component::register_components() {
 	register_component<Rigidbody>("Rigidbody");
 	register_component<UIPanel>("UIPanel");
 	register_component<UIText>("UIText");
+	register_component<UIText>("UIButton");
 }
 
 Component::component_map Component::component_list;
