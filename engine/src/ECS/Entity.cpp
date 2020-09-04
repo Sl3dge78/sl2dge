@@ -14,11 +14,25 @@ void Entity::remove_all_components() {
 	components_.clear();
 }
 
+void Entity::remove_component(Component *component) {
+	remove_component(component->type_id());
+}
+
 const std::vector<int> Entity::all_components_id() {
 	std::vector<int> v;
 
 	for (const auto &i : components_) {
 		v.push_back(i.first);
+	}
+
+	return v;
+}
+
+const std::vector<Component *> Entity::all_components() {
+	std::vector<Component *> v;
+
+	for (const auto &i : components_) {
+		v.push_back(i.second.get());
 	}
 
 	return v;
