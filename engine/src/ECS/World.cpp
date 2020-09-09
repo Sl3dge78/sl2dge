@@ -22,7 +22,8 @@ void World::load(const std::string &path) {
 		for (auto component_node : entity_node.children("Component")) {
 			// Add component
 			std::string type = component_node.attribute("type").as_string();
-			auto comp = Component::create_component(type, component_node);
+			auto comp = Component::create_component(type);
+			comp->load(component_node);
 			entity->add_component(comp);
 			SDL_Log(">> Component of type %s added", type.c_str());
 		}
@@ -36,10 +37,9 @@ void World::save(const std::string &path) {
 }
 
 Entity *World::create_entity() {
-	std::unique_ptr<Entity> e = std::make_unique<Entity>();
+	std::unique_ptr<Entity> e = std::make_unique<Entity>(this);
 	auto ret = e.get();
 	entity_list_.push_back(std::move(e));
-
 	return ret;
 }
 
@@ -60,16 +60,19 @@ void World::delete_all_entities() {
 }
 
 void World::delete_entity(Entity *e) {
-	for (auto it = entity_list_.begin(); it != entity_list_.end(); ++it) {
-		if (it->get() == e) {
-			for (auto child : e->transform()->get_children()) {
-				this->delete_entity(child->entity());
-			}
-			entity_list_.erase(it);
-			return;
-		}
+	e->to_delete = true;
+	for (auto child : e->transform()->get_children()) {
+		child->entity()->to_delete = true;
 	}
-	SDL_LogWarn(0, "Entity not found!");
+}
+void World::delete_entity_imm(Entity *e) {
+	for (auto child : e->transform()->get_children()) {
+		this->delete_entity_imm(child->entity());
+	}
+	entity_list_.remove_if([&](const std::unique_ptr<Entity> &e2) { return e == e2.get(); });
+}
+void World::delete_scheduled_entities() {
+	entity_list_.remove_if([&](const std::unique_ptr<Entity> &e) { return e->to_delete; });
 }
 
 void World::start(Game *game) {
@@ -110,6 +113,10 @@ void World::draw_layer(Game *game, int layer) {
 			}
 		}
 	}
+}
+
+void World::cleanup(Game *game) {
+	delete_scheduled_entities();
 }
 
 } // namespace sl2dge

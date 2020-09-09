@@ -22,11 +22,13 @@ private:
 	std::map<int, std::unique_ptr<Component>> components_;
 
 public:
-	Entity();
+	Entity(World *world);
 	~Entity();
 
 	template <class T, class... Args>
 	inline T *add_component(Args &&...args);
+
+	Component *add_component_from_id(int id);
 
 	template <class T>
 	Component *load_component(pugi::xml_node &node);
@@ -55,6 +57,12 @@ public:
 		return transform_;
 	};
 
+	World *world() {
+		return world_;
+	}
+
+	bool to_delete = false;
+
 protected:
 	Component *add_component(Component *comp);
 	Component *get_component(const int id) const;
@@ -63,6 +71,7 @@ protected:
 	bool is_active_ = true;
 
 	Transform *transform_ = nullptr;
+	World *world_ = nullptr;
 };
 
 //The following functions are user side functions for adding, getting and removing specific components

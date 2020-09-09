@@ -1,9 +1,7 @@
 #include "UIPanel.h"
 
-sl2dge::UIPanel::UIPanel(const int w, const int h, const SDL_Color &color) {
-	color_ = color;
-	w_ = w;
-	h_ = h;
+sl2dge::UIPanel::UIPanel(const int w, const int h, const SDL_Color &color) :
+		color_(color), w_(w), h_(h) {
 }
 
 void sl2dge::UIPanel::load(const pugi::xml_node &node) {

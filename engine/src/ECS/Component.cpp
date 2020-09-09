@@ -26,19 +26,20 @@ void Component::register_components() {
 	register_component<Rigidbody>("Rigidbody");
 	register_component<UIPanel>("UIPanel");
 	register_component<UIText>("UIText");
-	register_component<UIText>("UIButton");
+	register_component<UIButton>("UIButton");
+	register_component<UIContextMenu>("UIContextMenu");
 }
 
 Component::component_map Component::component_list;
 std::map<int, std::string> Component::component_names;
 int Component::comp_id = 0;
 
-Component *Component::create_component(const std::string &type, pugi::xml_node &node) {
+Component *Component::create_component(const std::string &type) {
 	if (component_list.find(type) == component_list.end()) {
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Component type %s not registered!", type.c_str());
 		throw std::runtime_error("Component type unknown!");
 	}
-	return component_list[type](node);
+	return component_list[type]();
 }
 
 const int Component::get_id(const std::string &name) {

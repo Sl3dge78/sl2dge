@@ -3,11 +3,18 @@
 #include "ECS/Component.h"
 
 namespace sl2dge {
-Entity::Entity() {
+Entity::Entity(World *world) :
+		world_(world) {
 }
 
 Entity::~Entity() {
 	this->Entity::remove_all_components();
+}
+
+Component *Entity::add_component_from_id(int id) {
+	auto comp = Component::create_component(Component::get_type_name(id));
+	add_component(comp);
+	return comp;
 }
 
 void Entity::remove_all_components() {

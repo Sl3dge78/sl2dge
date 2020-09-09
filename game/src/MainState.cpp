@@ -20,7 +20,7 @@ void MainState::start(Game *game) {
 	*/
 	//std::string path = ;
 	/*
-	//TODO : Automate this
+	
 	world_.set_renderer(game->renderer());
 	camera = world_.create_entity();
 	camera->add_component<Camera>(320, 288);

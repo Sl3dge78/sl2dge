@@ -71,6 +71,10 @@ int Game::loop() {
 			}
 			SDL_RenderPresent(Game::renderer());
 
+			for (auto &&it : states_) {
+				it->cleanup(this);
+			}
+
 			if (pop_state_next_frame) {
 				pop_state_();
 				pop_state_next_frame = false;

@@ -29,13 +29,13 @@ public:
 	Component() = default;
 	virtual ~Component() = default;
 
-	virtual void load(const pugi::xml_node &node) = 0;
-	virtual void save(pugi::xml_node &node) = 0;
+	virtual void load(const pugi::xml_node &node){};
+	virtual void save(pugi::xml_node &node){};
 
-	virtual void start(Game *game) = 0;
-	virtual void update(Game *game) = 0;
-	virtual void handle_events(Game *game, SDL_Event const &e) = 0;
-	virtual void draw(Game *game) = 0;
+	virtual void start(Game *game){};
+	virtual void update(Game *game){};
+	virtual void handle_events(Game *game, SDL_Event const &e){};
+	virtual void draw(Game *game){};
 
 	Entity *entity() { return entity_; }
 	Transform *transform();
@@ -52,28 +52,30 @@ private:
 	*/
 public:
 	static void register_components();
-	static Component *create_component(const std::string &type, pugi::xml_node &node);
+	static Component *create_component(const std::string &type);
 
 	template <class T>
 	static const int get_id();
-
 	static const int get_id(const std::string &name);
 
 	template <class T>
 	static const std::string get_type_name();
-
 	static const std::string get_type_name(const int id) {
 		return component_names[id];
 	}
 
+	static const size_t component_amount() {
+		return component_list.size();
+	}
+
 private:
 	static int comp_id;
-	typedef std::map<std::string, Component *(*)(pugi::xml_node &)> component_map;
+	typedef std::map<std::string, Component *(*)()> component_map;
 	static component_map component_list;
 	static std::map<int, std::string> component_names;
 
 	template <class T>
-	static Component *load_component(pugi::xml_node &node);
+	static Component *load_component();
 
 	template <class T>
 	static void register_component(std::string name);
@@ -97,9 +99,8 @@ void Component::register_component(std::string name) {
 }
 
 template <class T>
-inline Component *Component::load_component(pugi::xml_node &node) {
+inline Component *Component::load_component() {
 	auto c = new T();
-	c->load(node);
 	return c;
 }
 

@@ -25,6 +25,8 @@ public:
 	// Called for each state in the stack
 	virtual void draw(Game *game) = 0;
 
+	virtual void cleanup(Game *game){};
+
 	virtual void on_state_resume(Game *game){};
 	virtual void on_state_pause(Game *game){};
 	virtual void on_state_exit(Game *game){};

@@ -20,9 +20,9 @@ public:
 	virtual void update(Game *game) override;
 	virtual void draw(Game *game) override;
 
-private:
-	int w_ = 10;
-	int h_ = 10;
+protected:
+	int w_ = 16;
+	int h_ = 16;
 	SDL_Color color_ = { 255,
 		255,
 		255,

@@ -17,6 +17,7 @@
 #include "scene/map/TileMap.h"
 #include "scene/physics/Rigibody.h"
 #include "ui/UIButton.h"
+#include "ui/UIContextMenu.h"
 #include "ui/UIPanel.h"
 #include "ui/UIText.h"
 

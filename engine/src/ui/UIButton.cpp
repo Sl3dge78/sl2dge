@@ -4,31 +4,8 @@
 
 namespace sl2dge {
 
-Uint32 UIButton::ON_CLICK = 0;
-
-UIButton::UIButton(const std::string &text, void *target) {
-	if (UIButton::ON_CLICK == 0)
-		UIButton::ON_CLICK = SDL_RegisterEvents(1);
-
-	if (ON_CLICK != ((Uint32)-1)) {
-		SDL_memset(&event_, 0, sizeof(event_));
-		event_.type = ON_CLICK;
-		event_.user.data1 = this;
-	}
-	event_name = text;
-	this->target = target;
-}
-
-void UIButton::load(const pugi::xml_node &node) {
-}
-
-void UIButton::save(pugi::xml_node &node) {
-}
-
-void UIButton::start(Game *game) {
-}
-
-void UIButton::update(Game *game) {
+UIButton::UIButton(std::function<void()> on_click) {
+	on_click_ = on_click;
 }
 
 void UIButton::handle_events(Game *game, SDL_Event const &e) {
@@ -37,11 +14,9 @@ void UIButton::handle_events(Game *game, SDL_Event const &e) {
 			SDL_Rect pos{ int(transform()->position().x), int(transform()->position().y), w, h };
 			SDL_Point mouse_pos{ e.button.x, e.button.y };
 			if (SDL_PointInRect(&mouse_pos, &pos)) {
-				SDL_PushEvent(&event_);
+				on_click_();
 			}
 		}
 	}
-}
-void UIButton::draw(Game *game) {
 }
 } // namespace sl2dge

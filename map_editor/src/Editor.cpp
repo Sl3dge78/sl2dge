@@ -63,18 +63,6 @@ void Editor::handle_events(Game *game, const SDL_Event &e) {
 				break;
 		}
 	}
-
-	if (e.type == UIButton::ON_CLICK) {
-		UIButton *button = static_cast<UIButton *>(e.user.data1);
-
-		if (button->event_name == "Create_Entity") {
-			on_add_entity_click(game);
-		} else if (button->event_name == "Delete_Entity") {
-			on_delete_entity_click(game, button);
-		} else if (button->event_name == "Delete_Component") {
-			on_delete_component_click(game, button);
-		}
-	}
 }
 
 void Editor::input(Game *game) {
@@ -95,6 +83,11 @@ void Editor::input(Game *game) {
 
 void Editor::update(Game *game) {
 	editor_->update(game);
+
+	if (entity_list_dirty) {
+		update_entity_list(game);
+		entity_list_dirty = false;
+	}
 }
 
 void Editor::draw(Game *game) {
@@ -104,15 +97,19 @@ void Editor::draw(Game *game) {
 		SDL_RenderFillRect(game->renderer(), NULL);
 		scene_->draw_layer(game, i);
 	}
-
 	editor_->draw(game);
+}
+
+void Editor::cleanup(Game *game) {
+	scene_->cleanup(game);
+	editor_->cleanup(game);
 }
 
 void Editor::create_ui(Game *game) {
 	SDL_Color d_gray = SDL_Color{ 25, 25, 25, 255 };
 	ui_root = editor_->create_entity(0, 0);
 
-	update_entity_list(game);
+	entity_list_dirty = true;
 
 	auto bottom_panel = editor_->create_entity(0, 700, ui_root);
 	bottom_panel->add_component<UIPanel>(1280, 20, d_gray);
@@ -134,7 +131,11 @@ void Editor::update_entity_list(Game *game) {
 
 		auto delete_entity = editor_->create_entity(-16, 0, entity_text);
 		delete_entity->add_component<UIText>("-", game->white_font());
-		delete_entity->add_component<UIButton>("Delete_Entity", e.get());
+		delete_entity->add_component<UIButton>([&, this]() { this->on_delete_entity_click(e.get()); });
+
+		auto add_component = editor_->create_entity(200 - 32, 0, entity_text);
+		add_component->add_component<UIText>("+", game->white_font());
+		add_component->add_component<UIButton>([this, game, &e, y]() { this->on_add_component_click(game, e.get(), y * 20); });
 
 		y++;
 		int y2 = 0;
@@ -142,36 +143,57 @@ void Editor::update_entity_list(Game *game) {
 			auto comp_text = editor_->create_entity(32.0f, 20 + y2 * 20.0f, entity_text);
 			comp_text->add_component<UIText>(comp->type_name(), game->white_font());
 
-			auto delete_component = editor_->create_entity(-16, 0, comp_text);
-			delete_component->add_component<UIText>("-", game->white_font());
-			delete_component->add_component<UIButton>("Delete_Component", comp);
-
 			y2++;
 			y++;
+
+			if (comp->type_name() == "Transform")
+				continue;
+
+			auto delete_component = editor_->create_entity(-16, 0, comp_text);
+			delete_component->add_component<UIText>("-", game->white_font());
+			delete_component->add_component<UIButton>([comp, this]() { this->on_delete_component_click(comp); });
 		}
 	}
 
 	auto add_entity = editor_->create_entity(200 - 16, 0, entity_panel);
-	add_entity_but = add_entity->add_component<UIButton>("Create_Entity", nullptr);
+	add_entity_but = add_entity->add_component<UIButton>([&, this]() { this->on_add_entity_click(); });
 	add_entity->add_component<UIText>("+", game->white_font());
 }
 
-void Editor::on_add_entity_click(Game *game) {
+void Editor::on_add_entity_click() {
 	scene_->create_entity(0, 0);
-	update_entity_list(game);
+	entity_list_dirty = true;
 	SDL_Log("Create entity!");
 }
-void Editor::on_delete_entity_click(Game *game, UIButton *button) {
-	scene_->delete_entity(static_cast<Entity *>(button->target));
-	update_entity_list(game);
+void Editor::on_delete_entity_click(Entity *entity) {
+	scene_->delete_entity(entity);
+	entity_list_dirty = true;
 	SDL_Log("Delete entity!");
 }
 
-void Editor::on_delete_component_click(Game *game, UIButton *button) {
-	auto comp = static_cast<Component *>(button->target);
-	comp->entity()->remove_component(comp);
-	update_entity_list(game);
+void Editor::on_delete_component_click(Component *component) {
+	component->entity()->remove_component(component);
+	entity_list_dirty = true;
 	SDL_Log("Delete component!");
+}
+
+void Editor::on_add_component_click(Game *game, Entity *e, int y) {
+	auto context_menu = editor_->create_entity(200, y);
+	int amount = Component::component_amount();
+	context_menu->add_component<UIContextMenu>(100, amount * 16, SDL_Color{ 25, 25, 25, 255 });
+	for (int i = 0; i < amount; i++) {
+		auto e = editor_->create_entity(0, i * 16, context_menu);
+		e->add_component<UIButton>([e, i, this]() {
+			this->on_add_component_to_click(e, i);
+		});
+		e->add_component<UIText>(Component::get_type_name(i), game->white_font());
+	}
+}
+
+void Editor::on_add_component_to_click(Entity *e, int comp_id) {
+	e->add_component_from_id(comp_id);
+	entity_list_dirty = true;
+	SDL_Log("Added Component %s", Component::get_type_name(comp_id).c_str());
 }
 
 } // namespace sl2dge
