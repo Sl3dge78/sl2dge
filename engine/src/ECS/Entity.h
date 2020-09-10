@@ -35,6 +35,8 @@ public:
 
 	template <class T>
 	inline bool has_component() const;
+	bool has_component(const int id) const;
+
 	template <class T>
 	inline T *get_component() const;
 
@@ -66,7 +68,7 @@ public:
 protected:
 	Component *add_component(Component *comp);
 	Component *get_component(const int id) const;
-	bool has_component(const int id) const;
+
 	void remove_component(const int id);
 	bool is_active_ = true;
 

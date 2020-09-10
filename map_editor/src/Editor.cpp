@@ -83,11 +83,6 @@ void Editor::input(Game *game) {
 
 void Editor::update(Game *game) {
 	editor_->update(game);
-
-	if (entity_list_dirty) {
-		update_entity_list(game);
-		entity_list_dirty = false;
-	}
 }
 
 void Editor::draw(Game *game) {
@@ -103,6 +98,11 @@ void Editor::draw(Game *game) {
 void Editor::cleanup(Game *game) {
 	scene_->cleanup(game);
 	editor_->cleanup(game);
+
+	if (entity_list_dirty) {
+		update_entity_list(game);
+		entity_list_dirty = false;
+	}
 }
 
 void Editor::create_ui(Game *game) {
@@ -126,16 +126,18 @@ void Editor::update_entity_list(Game *game) {
 
 	int y = 1;
 	for (auto &e : *scene_->all_entities()) {
+		auto entity_ptr = e.get();
+
 		auto entity_text = editor_->create_entity(16.0f, y * 20.0f, entity_panel);
 		entity_text->add_component<UIText>("Entity", game->white_font());
 
 		auto delete_entity = editor_->create_entity(-16, 0, entity_text);
 		delete_entity->add_component<UIText>("-", game->white_font());
-		delete_entity->add_component<UIButton>([&, this]() { this->on_delete_entity_click(e.get()); });
+		delete_entity->add_component<UIButton>([entity_ptr, this]() { this->on_delete_entity_click(entity_ptr); });
 
 		auto add_component = editor_->create_entity(200 - 32, 0, entity_text);
 		add_component->add_component<UIText>("+", game->white_font());
-		add_component->add_component<UIButton>([this, game, &e, y]() { this->on_add_component_click(game, e.get(), y * 20); });
+		add_component->add_component<UIButton>([this, game, entity_ptr, y]() { this->on_add_component_click(game, entity_ptr, y * 20); });
 
 		y++;
 		int y2 = 0;
@@ -156,7 +158,7 @@ void Editor::update_entity_list(Game *game) {
 	}
 
 	auto add_entity = editor_->create_entity(200 - 16, 0, entity_panel);
-	add_entity_but = add_entity->add_component<UIButton>([&, this]() { this->on_add_entity_click(); });
+	add_entity_but = add_entity->add_component<UIButton>([this]() { this->on_add_entity_click(); });
 	add_entity->add_component<UIText>("+", game->white_font());
 }
 
@@ -182,15 +184,18 @@ void Editor::on_add_component_click(Game *game, Entity *e, int y) {
 	int amount = Component::component_amount();
 	context_menu->add_component<UIContextMenu>(100, amount * 16, SDL_Color{ 25, 25, 25, 255 });
 	for (int i = 0; i < amount; i++) {
-		auto e = editor_->create_entity(0, i * 16, context_menu);
-		e->add_component<UIButton>([e, i, this]() {
+		auto component_label = editor_->create_entity(0, i * 16, context_menu);
+		component_label->add_component<UIButton>([e, i, this]() {
 			this->on_add_component_to_click(e, i);
 		});
-		e->add_component<UIText>(Component::get_type_name(i), game->white_font());
+		component_label->add_component<UIText>(Component::get_type_name(i), game->white_font());
 	}
 }
 
 void Editor::on_add_component_to_click(Entity *e, int comp_id) {
+	if (e->has_component(comp_id))
+		return;
+
 	e->add_component_from_id(comp_id);
 	entity_list_dirty = true;
 	SDL_Log("Added Component %s", Component::get_type_name(comp_id).c_str());
