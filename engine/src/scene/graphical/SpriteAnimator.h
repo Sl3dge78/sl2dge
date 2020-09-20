@@ -28,6 +28,8 @@ public:
 };
 
 class SpriteAnimator : public Component {
+	COMPONENT_DFLT_BEHAVIOUR(SpriteAnimator);
+
 public:
 	void add_animation(std::string name, unsigned int frame_rate, std::initializer_list<int> list);
 	void delete_animation(const std::string &name);

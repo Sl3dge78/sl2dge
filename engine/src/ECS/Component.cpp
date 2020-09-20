@@ -20,6 +20,8 @@ Transform *Component::transform() {
 
 void Component::register_components() {
 	register_component<Transform>("Transform");
+	register_component<Sprite>("Sprite");
+	register_component<SpriteAnimator>("SpriteAnimator");
 	register_component<TileMap>("TileMap");
 	register_component<CollisionMap>("CollisionMap");
 	register_component<Camera>("Camera");

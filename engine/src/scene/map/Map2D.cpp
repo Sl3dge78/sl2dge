@@ -30,11 +30,6 @@ void Map2D::load(const pugi::xml_node &node) {
 	}
 }
 void Map2D::save(pugi::xml_node &node) {
-	// Cleanup
-	node.remove_attributes();
-	node.remove_children();
-
-	//node.append_attribute("atlas").set_value(atlas_->path.c_str());
 	node.append_attribute("tile_size").set_value(tile_size_);
 
 	node.append_attribute("width").set_value(width_);

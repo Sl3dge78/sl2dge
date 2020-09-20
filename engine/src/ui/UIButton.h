@@ -12,6 +12,7 @@ class UIButton : public Component {
 public:
 	UIButton(){};
 	UIButton(std::function<void()> on_click);
+	UIButton(std::function<void()> on_click, int w, int h);
 
 	virtual void handle_events(Game *game, SDL_Event const &e) override;
 

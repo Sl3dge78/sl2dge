@@ -61,6 +61,8 @@ void Editor::handle_events(Game *game, const SDL_Event &e) {
 			case SDL_SCANCODE_4:
 				current_layer = 3;
 				break;
+			case SDL_SCANCODE_F5:
+				scene_->save(map_path_);
 		}
 	}
 }
@@ -114,7 +116,7 @@ void Editor::create_ui(Game *game) {
 	auto bottom_panel = editor_->create_entity(0, 700, ui_root);
 	bottom_panel->add_component<UIPanel>(1280, 20, d_gray);
 
-	auto input_tip = editor_->create_entity(0, 0, bottom_panel)->add_component<UIText>("W, A, S, D : Move cam", game->white_font());
+	auto input_tip = editor_->create_entity(0, 0, bottom_panel)->add_component<UIText>("W, A, S, D : Move cam ; F5 : Save scene", game->white_font());
 }
 
 void Editor::update_entity_list(Game *game) {
@@ -185,9 +187,7 @@ void Editor::on_add_component_click(Game *game, Entity *e, int y) {
 	context_menu->add_component<UIContextMenu>(100, amount * 16, SDL_Color{ 25, 25, 25, 255 });
 	for (int i = 0; i < amount; i++) {
 		auto component_label = editor_->create_entity(0, i * 16, context_menu);
-		component_label->add_component<UIButton>([e, i, this]() {
-			this->on_add_component_to_click(e, i);
-		});
+		component_label->add_component<UIButton>([e, i, this]() { this->on_add_component_to_click(e, i); }, 100, 16);
 		component_label->add_component<UIText>(Component::get_type_name(i), game->white_font());
 	}
 }

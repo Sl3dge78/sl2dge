@@ -33,7 +33,27 @@ void World::load(const std::string &path) {
 }
 
 void World::save(const std::string &path) {
-	// TODO
+	SDL_Log("Saving scene : %s", path.c_str());
+	pugi::xml_document doc;
+	SDL_Log("=====");
+	SDL_Log("Saving entities...");
+	for (auto &&et : entity_list_) {
+		auto entity = doc.append_child("Entity");
+		for (auto &&comp : et->components_) {
+			auto component = entity.append_child("Component");
+			auto type = comp.second->type_name();
+			if (type == "")
+				SDL_LogError(0, "Component type is empty!");
+
+			component.append_attribute("type").set_value(type.c_str());
+			comp.second->save(component);
+			SDL_Log(">> Component of type %s saved", type.c_str());
+		}
+		SDL_Log("> Entity saved");
+	}
+	doc.save_file(path.c_str());
+	SDL_Log("=====");
+	SDL_Log("Saved scene : %s", path.c_str());
 }
 
 Entity *World::create_entity() {

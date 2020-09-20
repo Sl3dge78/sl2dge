@@ -65,8 +65,8 @@ void SpriteAnimator::update(Game *game) {
 			}
 
 			auto sprite = entity()->get_component<Sprite>();
-			sprite->src.x = (frame_data() % sprite->columns) * sprite->src.w;
-			sprite->src.y = (frame_data() / sprite->columns) * sprite->src.h;
+			sprite->src.x = (frame_data() % sprite->columns()) * sprite->src.w;
+			sprite->src.y = (frame_data() / sprite->columns()) * sprite->src.h;
 		}
 	}
 }

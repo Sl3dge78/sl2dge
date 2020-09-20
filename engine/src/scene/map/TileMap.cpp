@@ -47,7 +47,7 @@ void TileMap::load(const pugi::xml_node &node) {
 
 void TileMap::save(pugi::xml_node &node) {
 	Map2D::save(node);
-	atlas_path_ = node.attribute("atlas").as_string();
+	node.append_attribute("atlas").set_value(atlas_path_.c_str());
 }
 
 void TileMap::start(Game *game) {
