@@ -1,5 +1,7 @@
 #include "Editor.h"
 
+#include "TransformInspector.h"
+
 namespace sl2dge {
 
 Editor::Editor(const std::string &map_path) {
@@ -151,7 +153,7 @@ void Editor::update_entity_list(Game *game) {
 			y++;
 
 			if (comp->type_name() == "Transform")
-				continue;
+				comp_text->add_component<UIButton>([this, game, comp]() { this->on_transform_click(game, static_cast<Transform *>(comp)); }, 100, 16);
 
 			auto delete_component = editor_->create_entity(-16, 0, comp_text);
 			delete_component->add_component<UIText>("-", game->white_font());
@@ -174,13 +176,11 @@ void Editor::on_delete_entity_click(Entity *entity) {
 	entity_list_dirty = true;
 	SDL_Log("Delete entity!");
 }
-
 void Editor::on_delete_component_click(Component *component) {
 	component->entity()->remove_component(component);
 	entity_list_dirty = true;
 	SDL_Log("Delete component!");
 }
-
 void Editor::on_add_component_click(Game *game, Entity *e, int y) {
 	auto context_menu = editor_->create_entity(200, y);
 	int amount = Component::component_amount();
@@ -191,7 +191,6 @@ void Editor::on_add_component_click(Game *game, Entity *e, int y) {
 		component_label->add_component<UIText>(Component::get_type_name(i), game->white_font());
 	}
 }
-
 void Editor::on_add_component_to_click(Entity *e, int comp_id) {
 	if (e->has_component(comp_id))
 		return;
@@ -199,6 +198,13 @@ void Editor::on_add_component_to_click(Entity *e, int comp_id) {
 	e->add_component_from_id(comp_id);
 	entity_list_dirty = true;
 	SDL_Log("Added Component %s", Component::get_type_name(comp_id).c_str());
+}
+
+void Editor::on_transform_click(Game *game, Transform *transform) {
+	if (is_inspector_open) {
+		game->pop_state();
+	}
+	game->push_state(std::make_unique<TransformInspector>(transform));
 }
 
 } // namespace sl2dge

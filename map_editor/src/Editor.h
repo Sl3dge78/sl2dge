@@ -22,6 +22,8 @@ public:
 	void on_add_component_click(Game *game, Entity *e, int y);
 	void on_add_component_to_click(Entity *e, int comp_id);
 
+	void on_transform_click(Game *game, Transform *transform);
+
 private:
 	std::string map_path_;
 	std::unique_ptr<World> scene_;
@@ -33,6 +35,8 @@ private:
 	Entity *entity_panel = nullptr;
 	UIButton *add_entity_but = nullptr;
 	bool entity_list_dirty = false;
+
+	bool is_inspector_open = false;
 
 	void create_ui(Game *game);
 	void update_entity_list(Game *game);

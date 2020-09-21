@@ -163,6 +163,7 @@
     <ClCompile Include="src\MapEditor.cpp" />
     <ClCompile Include="src\EventEditor.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\TransformInspector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\engine\engine.vcxproj">
@@ -176,6 +177,7 @@
     <ClInclude Include="src\Editor.h" />
     <ClInclude Include="src\MapEditor.h" />
     <ClInclude Include="src\EventEditor.h" />
+    <ClInclude Include="src\TransformInspector.h" />
     <ClInclude Include="src\UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
