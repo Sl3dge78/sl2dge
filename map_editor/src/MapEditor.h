@@ -5,11 +5,10 @@
 #include "sl2dge.h"
 
 using namespace sl2dge;
-/*
-class Editor : public GameState {
+class MapEditor : public GameState {
 public:
-	Editor(const std::string &map_path);
-	~Editor();
+	MapEditor(TileMap *map);
+	~MapEditor() = default;
 
 	// Inherited via GameState
 	virtual void start(Game *game) override;
@@ -18,7 +17,7 @@ public:
 	void paint(const Uint32 mouse_button, const SDL_Point pos);
 	virtual void update(Game *game) override;
 	virtual void draw(Game *game) override;
-	void draw_map(Game *game);
+
 	void draw_atlas(Game *game);
 	void draw_ui(Game *game);
 	virtual void on_state_resume(Game *game) override;
@@ -26,19 +25,7 @@ public:
 	virtual void on_state_exit(Game *game) override{};
 
 private:
-	enum Layer {
-		Back = 0,
-		Middle = 1,
-		Front = 2,
-		Event = 3,
-		Collision = 4
-	};
-
-	std::string map_path;
-
-	std::unique_ptr<Scene> scene_ = nullptr;
-	std::unique_ptr<Camera> map_camera_ = nullptr;
-	TileMap *map_ = nullptr;
+	TileMap *map_;
 	Atlas *atlas_ = nullptr;
 
 	const SDL_Rect atlas_position = { 992, 0, 288, 720 };
@@ -48,7 +35,5 @@ private:
 	int atlas_y_offset = 0;
 
 	int current_atlas_tile = 0;
-	Layer current_layer = Layer::Back;
 	int brush_size_ = 1;
 };
-*/

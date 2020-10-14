@@ -34,9 +34,6 @@ void EventChain::next_event(Game *game) {
 
 void EventChain::save(pugi::xml_node &chain_node) {
 	chain_node.remove_attributes();
-	auto position = entity()->get_component<Transform>()->tiled_position();
-	chain_node.append_attribute("x_pos").set_value(position.x);
-	chain_node.append_attribute("y_pos").set_value(position.y);
 	chain_node.append_attribute("interactable").set_value(interactable);
 	chain_node.append_attribute("in_place").set_value(in_place);
 	chain_node.append_attribute("once").set_value(activate_once);
@@ -47,6 +44,17 @@ void EventChain::save(pugi::xml_node &chain_node) {
 	for (auto &&e : events_) {
 		auto event_node = chain_node.append_child("Event");
 		e->get_xml_data(event_node);
+	}
+}
+
+void EventChain::load(const pugi::xml_node &node) {
+	interactable = node.attribute("interactable").as_bool();
+	in_place = node.attribute("in_place").as_bool();
+	activate_once = node.attribute("once").as_bool();
+	next = Guid(node.attribute("next").as_string());
+
+	for (auto event : node.children("Event")) {
+		this->events_.push_back(GameEvent::create_event(event));
 	}
 }
 
@@ -114,17 +122,6 @@ void EventChain::activate_chain(Game *game, EventChain *chain) {
 			chain->activated = true;
 		}
 		chain->queue_next_event = true;
-	}
-}
-
-void EventChain::load(const pugi::xml_node &node) {
-	interactable = node.attribute("interactable").as_bool();
-	in_place = node.attribute("in_place").as_bool();
-	activate_once = node.attribute("once").as_bool();
-	next = Guid(node.attribute("next").as_string());
-
-	for (auto event : node.children("Event")) {
-		this->events_.push_back(GameEvent::create_event(event));
 	}
 }
 

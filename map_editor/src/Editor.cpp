@@ -1,5 +1,6 @@
 #include "Editor.h"
 
+#include "MapEditor.h"
 #include "TransformInspector.h"
 
 namespace sl2dge {
@@ -65,6 +66,15 @@ void Editor::handle_events(Game *game, const SDL_Event &e) {
 				break;
 			case SDL_SCANCODE_F5:
 				scene_->save(map_path_);
+				break;
+			case SDL_SCANCODE_R:
+				auto ets = scene_->find_with_component<TileMap>();
+				for (auto e : *ets) {
+					if (e->transform()->z == current_layer) {
+						game->push_state(std::make_unique<MapEditor>(e->get_component<TileMap>()));
+					}
+				}
+				break;
 		}
 	}
 }
@@ -199,7 +209,6 @@ void Editor::on_add_component_to_click(Entity *e, int comp_id) {
 	entity_list_dirty = true;
 	SDL_Log("Added Component %s", Component::get_type_name(comp_id).c_str());
 }
-
 void Editor::on_transform_click(Game *game, Transform *transform) {
 	if (is_inspector_open) {
 		game->pop_state();
