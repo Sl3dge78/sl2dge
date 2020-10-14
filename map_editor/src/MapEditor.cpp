@@ -123,10 +123,10 @@ void MapEditor::input(Game *game) {
 }
 
 void MapEditor::paint(const Uint32 mouse_state, const SDL_Point pos) {
-	for (unsigned int x = pos.x - brush_size_ + 1; x < unsigned int(pos.x + brush_size_); ++x) {
+	for (int x = pos.x - brush_size_ + 1; x < pos.x + brush_size_; ++x) {
 		if (x < 0 || x > map_->width())
 			continue;
-		for (unsigned int y = pos.y - brush_size_ + 1; y < unsigned int(pos.y + brush_size_); ++y) {
+		for (int y = pos.y - brush_size_ + 1; y < pos.y + brush_size_; ++y) {
 			if (y < 0 || y > map_->height())
 				continue;
 			if (mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) {

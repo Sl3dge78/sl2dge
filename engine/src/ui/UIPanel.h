@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ECS/ECS.h"
-#include "Game.h"
+#include "core/Game.h"
 
 namespace sl2dge {
 

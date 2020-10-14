@@ -8,9 +8,9 @@
 
 #include <SDL/SDL.h>
 
-#include "GameState.h"
 #include "addons/guid.h"
 #include "addons/pugixml.hpp"
+#include "core/GameState.h"
 #include "math/Point.h"
 
 namespace sl2dge {

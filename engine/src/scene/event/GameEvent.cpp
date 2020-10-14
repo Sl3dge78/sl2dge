@@ -6,8 +6,8 @@
 
 #include "DialogState.h"
 #include "EventChain.h"
-#include "Game.h"
-#include "GameState.h"
+#include "core/Game.h"
+#include "core/GameState.h"
 
 namespace sl2dge {
 

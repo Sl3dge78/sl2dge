@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Game.h"
+#include "core/Game.h"
+#include "core/GameState.h"
 
 #include "ECS/ECS.h"
 
@@ -27,6 +28,5 @@
 
 #include "Character.h"
 #include "DialogState.h"
-#include "GameState.h"
 
 namespace sl2dge {};

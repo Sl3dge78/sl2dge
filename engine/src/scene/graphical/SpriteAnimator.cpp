@@ -8,7 +8,7 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
-#include "Game.h"
+#include "core/Game.h"
 #include "scene/graphical/Sprite.h"
 
 namespace sl2dge {
