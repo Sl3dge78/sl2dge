@@ -19,7 +19,7 @@ void TileMap::draw_tile(Game *game, int x, int y, int tile) {
 		return;
 	}
 
-	if (tile != -1) {
+	if (tile >= 0) {
 		SDL_Rect dst = camera->world_to_screen_transform({ x * tile_size(), y * tile_size(), tile_size(), tile_size() });
 		auto tex = atlas()->texture();
 		auto tilerec = atlas()->get_tile(tile);

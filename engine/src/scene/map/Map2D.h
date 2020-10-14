@@ -42,7 +42,7 @@ private:
 	int *data_ = nullptr;
 
 	int tile_size_ = 16;
-	int width_ = 0, height_ = 0;
+	int width_ = 100, height_ = 100;
 };
 
 } // namespace sl2dge

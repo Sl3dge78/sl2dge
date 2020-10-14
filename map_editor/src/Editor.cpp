@@ -67,14 +67,6 @@ void Editor::handle_events(Game *game, const SDL_Event &e) {
 			case SDL_SCANCODE_F5:
 				scene_->save(map_path_);
 				break;
-			case SDL_SCANCODE_R:
-				auto ets = scene_->find_with_component<TileMap>();
-				for (auto e : *ets) {
-					if (e->transform()->z == current_layer) {
-						game->push_state(std::make_unique<MapEditor>(e->get_component<TileMap>()));
-					}
-				}
-				break;
 		}
 	}
 }
@@ -205,11 +197,11 @@ void Editor::on_delete_component_click(Component *component) {
 	SDL_Log("Delete component!");
 }
 void Editor::on_add_component_click(Game *game, Entity *e, int y) {
-	auto context_menu = editor_->create_entity(200, y);
-	int amount = Component::component_amount();
+	auto context_menu = editor_->create_entity(200, float(y));
+	int amount = int(Component::component_amount());
 	context_menu->add_component<UIContextMenu>(100, amount * 16, SDL_Color{ 25, 25, 25, 255 });
 	for (int i = 0; i < amount; i++) {
-		auto component_label = editor_->create_entity(0, i * 16, context_menu);
+		auto component_label = editor_->create_entity(float(0), float(i * 16), context_menu);
 		component_label->add_component<UIButton>([e, i, this]() { this->on_add_component_to_click(e, i); }, 100, 16);
 		component_label->add_component<UIText>(Component::type_from_id(i), game->white_font());
 	}
@@ -223,8 +215,12 @@ void Editor::on_add_component_to_click(Entity *e, int comp_id) {
 	SDL_Log("Added Component %s", Component::type_from_id(comp_id).c_str());
 }
 void Editor::on_component_click(Game *game, Component *component) {
-	if (component->type_name() == "Transform")
+	if (component->type_name() == "Transform") {
 		game->push_state(std::make_unique<TransformInspector>(static_cast<Transform *>(component)));
+	} else if (component->type_name() == "TileMap") {
+		current_layer = component->transform()->z;
+		game->push_state(std::make_unique<MapEditor>(static_cast<TileMap *>(component)));
+	}
 }
 
 } // namespace sl2dge

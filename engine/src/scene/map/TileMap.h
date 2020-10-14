@@ -27,7 +27,7 @@ public:
 	Atlas *atlas() { return atlas_; }
 
 private:
-	std::string atlas_path_;
+	std::string atlas_path_ = "resources\\images\\roguelikeSheet_transparent.png";
 	Atlas *atlas_ = nullptr;
 
 	void draw_tile(Game *game, int x, int y, int tile) override;

@@ -20,13 +20,20 @@ void Map2D::load(const pugi::xml_node &node) {
 	width_ = node.attribute("width").as_int();
 	height_ = node.attribute("height").as_int();
 
-	int tmp;
+	this->data_ = new int[unsigned int(width_ * height_)]{};
+	if (node.child("Data").text().as_string() == "") {
+		// No data to read, fill with -1;
+		for (int i = 0; i < width_ * height_; ++i) {
+			this->data_[i] = -1;
+		}
+	} else {
+		int tmp;
+		std::stringstream text = std::stringstream(node.child("Data").text().as_string());
 
-	std::stringstream text = std::stringstream(node.child("Data").text().as_string());
-	this->data_ = new int[width_ * height_]{};
-	for (int i = 0; i < width_ * height_; ++i) {
-		text >> tmp;
-		this->data_[i] = tmp;
+		for (int i = 0; i < width_ * height_; ++i) {
+			text >> tmp;
+			this->data_[i] = tmp;
+		}
 	}
 }
 void Map2D::save(pugi::xml_node &node) {

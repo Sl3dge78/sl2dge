@@ -24,6 +24,7 @@ class Transform;
 
 class Component {
 	friend class Entity;
+	friend class World;
 
 public:
 	Component() = default;

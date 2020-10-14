@@ -7,6 +7,7 @@ MapEditor::MapEditor(TileMap *map) {
 }
 
 void MapEditor::start(Game *game) {
+	map_->start(game);
 	atlas_ = map_->atlas();
 }
 
