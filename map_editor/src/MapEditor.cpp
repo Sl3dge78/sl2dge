@@ -48,9 +48,7 @@ void MapEditor::handle_events(Game *game, const SDL_Event &e) {
 				SDL_Log("Tile selected %d", current_atlas_tile);
 			}
 		} else if (e.button.button == SDL_BUTTON_MIDDLE) {
-			if (current_layer <= 2) { // TILE PICKER
-				current_atlas_tile = map_->get_tile(map_->pixel_to_map_transform(Camera::main_camera->screen_to_world_transform(Point(e.button.x, e.button.y))));
-			}
+			current_atlas_tile = map_->get_tile(map_->pixel_to_map_transform(Camera::main_camera->screen_to_world_transform(Point(e.button.x, e.button.y))));
 		}
 	}
 
@@ -116,50 +114,25 @@ void MapEditor::input(Game *game) {
 	auto pos = map_->pixel_to_map_transform(Camera::main_camera->screen_to_world_transform(SDL_Point{ x, y }));
 
 	if (x < atlas_position.x) {
-		if (mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-			paint(SDL_BUTTON_LEFT, pos);
-			/*
-			if (current_layer < 3) {
-				paint(SDL_BUTTON_LEFT, pos);
-			} else if (current_layer == Layer::Event) {
-				auto chain = scene_->get_chain_at(pos.x, pos.y);
-				if (chain != nullptr) {
-					game->push_state(std::make_unique<EventEditor>(scene_.get(), chain)); // There is one, pass it
-				} else {
-					game->push_state(std::make_unique<EventEditor>(scene_.get(), scene_->create_chain_at(pos.x, pos.y))); // No chain exists, create one
-				}
-			} else if (current_layer == Layer::Collision) {
-				map_->set_collision_at_tile(pos, true);
-			}
-			*/
-		} else if (mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
-			paint(SDL_BUTTON_RIGHT, pos);
-			/*
-			if (current_layer < 3) {
-				paint(SDL_BUTTON_RIGHT, pos);
-			} else if (current_layer == Layer::Event) {
-				if (scene_->get_chain_at(pos.x, pos.y) != nullptr) {
-					scene_->delete_chain_at(pos.x, pos.y);
-				}
-			} else if (current_layer == Layer::Collision) {
-				map_->set_collision_at_tile(pos, false);
-			}
-			*/
-		}
+		paint(mouse_state, pos);
+
+	} else if (mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
+		paint(SDL_BUTTON_RIGHT, pos);
 	}
 }
 
-void MapEditor::paint(const Uint32 mouse_button, const SDL_Point pos) {
+void MapEditor::paint(const Uint32 mouse_state, const SDL_Point pos) {
 	for (unsigned int x = pos.x - brush_size_ + 1; x < unsigned int(pos.x + brush_size_); ++x) {
 		if (x < 0 || x > map_->width())
 			continue;
 		for (unsigned int y = pos.y - brush_size_ + 1; y < unsigned int(pos.y + brush_size_); ++y) {
 			if (y < 0 || y > map_->height())
 				continue;
-			if (mouse_button == SDL_BUTTON_LEFT)
+			if (mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) {
 				map_->set_tile(Point(x, y), current_atlas_tile);
-			else if (mouse_button == SDL_BUTTON_RIGHT)
+			} else if (mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT)) {
 				map_->set_tile(Point(x, y), -1);
+			}
 		}
 	}
 }
