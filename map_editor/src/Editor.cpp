@@ -1,7 +1,7 @@
 #include "Editor.h"
 
-#include "MapEditor.h"
-#include "TransformInspector.h"
+#include "editors/MapEditor.h"
+#include "editors/TransformEditor.h"
 
 namespace sl2dge {
 
@@ -216,7 +216,7 @@ void Editor::on_add_component_to_click(Entity *e, int comp_id) {
 }
 void Editor::on_component_click(Game *game, Component *component) {
 	if (component->type_name() == "Transform") {
-		game->push_state(std::make_unique<TransformInspector>(static_cast<Transform *>(component)));
+		game->push_state(std::make_unique<TransformEditor>(static_cast<Transform *>(component)));
 	} else if (component->type_name() == "TileMap") {
 		current_layer = component->transform()->z;
 		game->push_state(std::make_unique<MapEditor>(static_cast<TileMap *>(component)));

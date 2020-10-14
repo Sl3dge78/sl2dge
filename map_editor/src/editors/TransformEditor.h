@@ -3,9 +3,9 @@
 #include "sl2dge.h"
 using namespace sl2dge;
 
-class TransformInspector : public GameState {
+class TransformEditor : public GameState {
 public:
-	TransformInspector(Transform *transform);
+	TransformEditor(Transform *transform);
 	virtual void start(Game *game) override;
 	virtual void handle_events(Game *game, const SDL_Event &e) override;
 	virtual void input(Game *game) override;

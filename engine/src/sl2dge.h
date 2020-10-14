@@ -26,7 +26,4 @@
 #include "addons/guid.h"
 #include "addons/pugixml.hpp"
 
-#include "Character.h"
-#include "DialogState.h"
-
 namespace sl2dge {};

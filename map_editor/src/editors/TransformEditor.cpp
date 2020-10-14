@@ -1,10 +1,10 @@
-#include "TransformInspector.h"
+#include "TransformEditor.h"
 
-TransformInspector::TransformInspector(Transform *transform) {
+TransformEditor::TransformEditor(Transform *transform) {
 	transform_ = transform;
 }
 
-void TransformInspector::start(Game *game) {
+void TransformEditor::start(Game *game) {
 	auto panel = world.create_entity(1000, 0);
 	panel->add_component<UIPanel>(280, 720, SDL_Color{ 25, 25, 25, 255 });
 
@@ -22,7 +22,7 @@ void TransformInspector::start(Game *game) {
 	y->add_component<UIText>(std::to_string(transform_->position().y), game->white_font());
 }
 
-void TransformInspector::handle_events(Game *game, const SDL_Event &e) {
+void TransformEditor::handle_events(Game *game, const SDL_Event &e) {
 	world.handle_events(game, e);
 
 	if (e.type == SDL_KEYDOWN) {
@@ -32,17 +32,17 @@ void TransformInspector::handle_events(Game *game, const SDL_Event &e) {
 	}
 }
 
-void TransformInspector::input(Game *game) {
+void TransformEditor::input(Game *game) {
 }
 
-void TransformInspector::update(Game *game) {
+void TransformEditor::update(Game *game) {
 	world.update(game);
 }
 
-void TransformInspector::draw(Game *game) {
+void TransformEditor::draw(Game *game) {
 	world.draw(game);
 }
 
-void TransformInspector::quit(Game *game) {
+void TransformEditor::quit(Game *game) {
 	game->pop_state();
 }

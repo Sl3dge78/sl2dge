@@ -4,7 +4,6 @@
 #include <time.h>
 #include <memory>
 
-#include "DialogState.h"
 #include "EventChain.h"
 #include "core/Game.h"
 #include "core/GameState.h"
@@ -131,7 +130,7 @@ void Dialog::get_xml_data(pugi::xml_node &node) {
 }
 
 void Dialog::on_activate(Game *game, EventChain *gem) {
-	game->push_state(std::make_unique<DialogState>(gem, this));
+	//game->push_state(std::make_unique<DialogState>(gem, this));
 }
 
 void Dialog::on_end(Game *game) {
@@ -202,7 +201,7 @@ DialogChoice::DialogChoice(const pugi::xml_node &node) :
 }
 
 void DialogChoice::on_activate(Game *game, EventChain *gem) {
-	game->push_state(std::make_unique<DialogState>(gem, this));
+	//game->push_state(std::make_unique<DialogState>(gem, this));
 }
 
 void DialogChoice::on_end(Game *game) {
