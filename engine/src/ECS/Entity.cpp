@@ -12,7 +12,7 @@ Entity::~Entity() {
 }
 
 Component *Entity::add_component_from_id(int id) {
-	auto comp = Component::create_component(Component::get_type_name(id));
+	auto comp = Component::create_component(Component::type_from_id(id));
 	add_component(comp);
 	return comp;
 }

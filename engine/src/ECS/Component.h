@@ -8,13 +8,13 @@
 
 #include "addons/pugixml.hpp"
 
-#define COMPONENT_DFLT_BEHAVIOUR(TYPE)             \
-public:                                            \
-	const std::string type_name() const override { \
-		return Component::get_type_name<TYPE>();   \
-	}                                              \
-	const int type_id() const override {           \
-		return Component::get_id<TYPE>();          \
+#define COMPONENT_DFLT_BEHAVIOUR(TYPE)                \
+public:                                               \
+	const std::string type_name() const override {    \
+		return Component::type_from_template<TYPE>(); \
+	}                                                 \
+	const int type_id() const override {              \
+		return Component::get_id<TYPE>();             \
 	}
 
 namespace sl2dge {
@@ -59,8 +59,8 @@ public:
 	static const int get_id(const std::string &name);
 
 	template <class T>
-	static const std::string get_type_name();
-	static const std::string get_type_name(const int id) {
+	static const std::string type_from_template();
+	static const std::string type_from_id(const int id) {
 		return component_names[id];
 	}
 
@@ -88,7 +88,7 @@ const int Component::get_id() {
 }
 
 template <class T>
-const std::string Component::get_type_name() {
+const std::string Component::type_from_template() {
 	return component_names[get_id<T>()];
 }
 
