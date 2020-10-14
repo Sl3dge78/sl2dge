@@ -106,7 +106,9 @@ void Editor::draw(Game *game) {
 		SDL_RenderFillRect(game->renderer(), NULL);
 		scene_->draw_layer(game, i);
 	}
-	editor_->draw(game);
+	if (is_focused) {
+		editor_->draw(game);
+	}
 }
 
 void Editor::cleanup(Game *game) {
@@ -117,6 +119,18 @@ void Editor::cleanup(Game *game) {
 		update_entity_list(game);
 		entity_list_dirty = false;
 	}
+}
+
+void Editor::on_state_resume(Game *game) {
+	is_focused = true;
+}
+
+void Editor::on_state_pause(Game *game) {
+	is_focused = false;
+}
+
+void Editor::on_state_exit(Game *game) {
+	is_focused = false;
 }
 
 void Editor::create_ui(Game *game) {
@@ -162,8 +176,7 @@ void Editor::update_entity_list(Game *game) {
 			y2++;
 			y++;
 
-			if (comp->type_name() == "Transform")
-				comp_text->add_component<UIButton>([this, game, comp]() { this->on_transform_click(game, static_cast<Transform *>(comp)); }, 100, 16);
+			comp_text->add_component<UIButton>([this, game, comp]() { this->on_component_click(game, comp); }, 100, 16);
 
 			auto delete_component = editor_->create_entity(-16, 0, comp_text);
 			delete_component->add_component<UIText>("-", game->white_font());
@@ -198,7 +211,7 @@ void Editor::on_add_component_click(Game *game, Entity *e, int y) {
 	for (int i = 0; i < amount; i++) {
 		auto component_label = editor_->create_entity(0, i * 16, context_menu);
 		component_label->add_component<UIButton>([e, i, this]() { this->on_add_component_to_click(e, i); }, 100, 16);
-		component_label->add_component<UIText>(Component::get_type_name(i), game->white_font());
+		component_label->add_component<UIText>(Component::type_from_id(i), game->white_font());
 	}
 }
 void Editor::on_add_component_to_click(Entity *e, int comp_id) {
@@ -207,13 +220,11 @@ void Editor::on_add_component_to_click(Entity *e, int comp_id) {
 
 	e->add_component_from_id(comp_id);
 	entity_list_dirty = true;
-	SDL_Log("Added Component %s", Component::get_type_name(comp_id).c_str());
+	SDL_Log("Added Component %s", Component::type_from_id(comp_id).c_str());
 }
-void Editor::on_transform_click(Game *game, Transform *transform) {
-	if (is_inspector_open) {
-		game->pop_state();
-	}
-	game->push_state(std::make_unique<TransformInspector>(transform));
+void Editor::on_component_click(Game *game, Component *component) {
+	if (component->type_name() == "Transform")
+		game->push_state(std::make_unique<TransformInspector>(static_cast<Transform *>(component)));
 }
 
 } // namespace sl2dge

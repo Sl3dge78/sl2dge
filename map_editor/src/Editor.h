@@ -16,13 +16,17 @@ public:
 	virtual void draw(Game *game) override;
 	virtual void cleanup(Game *game) override;
 
+	virtual void on_state_resume(Game *game);
+	virtual void on_state_pause(Game *game);
+	virtual void on_state_exit(Game *game);
+
 	void on_add_entity_click();
 	void on_delete_entity_click(Entity *entity);
 	void on_delete_component_click(Component *component);
 	void on_add_component_click(Game *game, Entity *e, int y);
 	void on_add_component_to_click(Entity *e, int comp_id);
 
-	void on_transform_click(Game *game, Transform *transform);
+	void on_component_click(Game *game, Component *component);
 
 private:
 	std::string map_path_;
@@ -36,7 +40,7 @@ private:
 	UIButton *add_entity_but = nullptr;
 	bool entity_list_dirty = false;
 
-	bool is_inspector_open = false;
+	bool is_focused = true;
 
 	void create_ui(Game *game);
 	void update_entity_list(Game *game);
