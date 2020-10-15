@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Entity>
-	<Component type="Transform" local_position_x="25" local_position_y="50" z="0" />
+	<Component type="Transform" local_position_x="65" local_position_y="92" z="0" />
 	<Component type="Camera" width="320" height="288" zoom="1" />
 </Entity>
 <Entity>

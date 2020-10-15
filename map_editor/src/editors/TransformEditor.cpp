@@ -15,11 +15,17 @@ void TransformEditor::start(Game *game) {
 	auto title = world.create_entity(0, 0, panel);
 	title->add_component<UIText>("Transform", game->white_font());
 
-	auto x = world.create_entity(16, 16, panel);
-	x->add_component<UIText>(std::to_string(transform_->position().x), game->white_font());
+	world.create_entity(16, 16, panel)->add_component<UIText>("X:", game->white_font());
+	auto x = world.create_entity(48, 16, panel);
+	x->add_component<UIFloatField>(&transform_->local_position()->x, game->white_font());
 
-	auto y = world.create_entity(128, 16, panel);
-	y->add_component<UIText>(std::to_string(transform_->position().y), game->white_font());
+	world.create_entity(16, 32, panel)->add_component<UIText>("Y:", game->white_font());
+	auto y = world.create_entity(48, 32, panel);
+	y->add_component<UIFloatField>(&transform_->local_position()->y, game->white_font());
+
+	world.create_entity(16, 48, panel)->add_component<UIText>("Z:", game->white_font());
+	auto z = world.create_entity(48, 48, panel);
+	z->add_component<UIIntField>(&transform_->z, game->white_font());
 }
 
 void TransformEditor::handle_events(Game *game, const SDL_Event &e) {

@@ -30,6 +30,7 @@ void Component::register_components() {
 	register_component<UIText>("UIText");
 	register_component<UIButton>("UIButton");
 	register_component<UIContextMenu>("UIContextMenu");
+	register_component<UIContextMenu>("UINumberField");
 }
 
 Component::component_map Component::component_list;

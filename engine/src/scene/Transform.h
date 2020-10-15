@@ -27,6 +27,7 @@ public:
 
 	/// World position
 	Vector2f position() const;
+	Vector2f *local_position();
 	// Position in map units
 	Vector2i tiled_position();
 

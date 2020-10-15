@@ -30,6 +30,10 @@ Vector2f Transform::position() const {
 	}
 }
 
+Vector2f *Transform::local_position() {
+	return &local_position_;
+}
+
 void Transform::translate(const Vector2f &translation) {
 	local_position_ += translation;
 }
